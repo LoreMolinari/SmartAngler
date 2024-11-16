@@ -1,4 +1,4 @@
-package com.smartangler.smartangler.ui.slideshow;
+package com.smartangler.smartangler.ui.fishLocationDatabase;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,21 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.smartangler.smartangler.databinding.FragmentSlideshowBinding;
+import com.smartangler.smartangler.databinding.FragmentFishDatabaseBinding;
 
-public class SlideshowFragment extends Fragment {
+public class FishDBFragment extends Fragment {
 
-    private FragmentSlideshowBinding binding;
+    private FragmentFishDatabaseBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        SlideshowViewModel slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
+        FishDBViewModel slideshowViewModel =
+                new ViewModelProvider(this).get(FishDBViewModel.class);
 
-        binding = FragmentSlideshowBinding.inflate(inflater, container, false);
+        binding = FragmentFishDatabaseBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textSlideshow;
+        final TextView textView = binding.textFishingDB;
         slideshowViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }

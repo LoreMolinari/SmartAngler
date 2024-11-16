@@ -12,18 +12,6 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.smartangler.smartangler.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.smartangler.smartangler.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
-
-    <fragment
         android:id="@+id/nav_fishing"
         android:name="com.smartangler.smartangler.ui.fishing.FishingFragment"
         android:label="@string/menu_action" />
@@ -32,4 +20,9 @@
         android:id="@+id/nav_statistics"
         android:name="com.smartangler.smartangler.ui.statistics.StatisticsFragment"
         android:label="@string/menu_statistics" />
+
+    <fragment
+        android:id="@+id/nav_fishDB"
+        android:name="com.smartangler.smartangler.ui.fishLocationDatabase.FishDBFragment"
+        android:label="@string/fish_DB" />
 </navigation>

@@ -10,21 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.smartangler.smartangler.databinding.FragmentSlideshowBinding;
+import com.smartangler.smartangler.databinding.FragmentFishingBinding;
 
 public class FishingFragment extends Fragment {
 
-    private FragmentSlideshowBinding binding;
+    private FragmentFishingBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         FishingViewModel slideshowViewModel =
                 new ViewModelProvider(this).get(FishingViewModel.class);
 
-        binding = FragmentSlideshowBinding.inflate(inflater, container, false);
+        binding = FragmentFishingBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textSlideshow;
+        final TextView textView = binding.textFishing;
         slideshowViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
