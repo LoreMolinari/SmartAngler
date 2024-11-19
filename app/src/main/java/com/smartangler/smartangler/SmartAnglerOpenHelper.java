@@ -56,7 +56,21 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                     "'" + "Dropshot,Spinning" + "', " +
                     "'" + "Creature bait,Shad,Spoon" + "', " +
                     "'" + "SUMMER,AUTUMN" + "', " +
-                    "'" + "MORNING,AFTERNOON" + "');"
+                    "'" + "MORNING,AFTERNOON" + "');",
+            "INSERT INTO " + FISH_TABLE_NAME + " (" +
+                    KEY_NAME + ", " +
+                    KEY_DESCRIPTION + ", " +
+                    KEY_TECHNIQUES + ", " +
+                    KEY_BAITS_AND_LURES + ", " +
+                    KEY_SEASONS + ", " +
+                    KEY_TIMES_OF_DAY + ") " +
+                    "VALUES (" +
+                    "'" + "Zander" + "', " +
+                    "'" + "Big" + "', " +
+                    "'" + "Dropshot,Spinning" + "', " +
+                    "'" + "Creature bait,Shad" + "', " +
+                    "'" + "AUTUMN,WINTER" + "', " +
+                    "'" + "EVENING,NIGHT" + "');"
     };
     // Maybe these should all be ints referencing android strings?
 
