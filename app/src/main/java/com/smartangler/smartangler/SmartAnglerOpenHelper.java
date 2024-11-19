@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class StepAppOpenHelper extends SQLiteOpenHelper {
+public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "smartAngler";
@@ -25,7 +25,7 @@ public class StepAppOpenHelper extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_SQL = "CREATE TABLE  " + TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, " +
             KEY_DAY + " TEXT, " + KEY_HOUR + "  TEXT, " + KEY_TIMESTAMP + "  TEXT);";
 
-    public StepAppOpenHelper(Context context)
+    public SmartAnglerOpenHelper(Context context)
     {
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
     }
@@ -33,11 +33,11 @@ public class StepAppOpenHelper extends SQLiteOpenHelper {
         // Load all records in the database
     public static void loadRecords(Context context){
         List<String> dates = new LinkedList<String>();
-        StepAppOpenHelper databaseHelper = new StepAppOpenHelper(context);
+        SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-        String [] columns = new String [] {StepAppOpenHelper.KEY_TIMESTAMP};
-        Cursor cursor = database.query(StepAppOpenHelper.TABLE_NAME, columns, null, null, StepAppOpenHelper.KEY_TIMESTAMP,
+        String [] columns = new String [] {SmartAnglerOpenHelper.KEY_TIMESTAMP};
+        Cursor cursor = database.query(SmartAnglerOpenHelper.TABLE_NAME, columns, null, null, SmartAnglerOpenHelper.KEY_TIMESTAMP,
                 null, null );
 
         // iterate over returned elements
@@ -55,13 +55,13 @@ public class StepAppOpenHelper extends SQLiteOpenHelper {
     public static Integer loadSingleRecord(Context context, String date){
         List<String> steps = new LinkedList<String>();
         // Get the readable database
-        StepAppOpenHelper databaseHelper = new StepAppOpenHelper(context);
+        SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-        String where = StepAppOpenHelper.KEY_DAY + " = ?";
+        String where = SmartAnglerOpenHelper.KEY_DAY + " = ?";
         String [] whereArgs = { date };
 
-        Cursor cursor = database.query(StepAppOpenHelper.TABLE_NAME, null, where, whereArgs, null,
+        Cursor cursor = database.query(SmartAnglerOpenHelper.TABLE_NAME, null, where, whereArgs, null,
                 null, null );
 
         // iterate over returned elements
@@ -78,12 +78,12 @@ public class StepAppOpenHelper extends SQLiteOpenHelper {
     }
 
     public static void deleteRecords (Context context) {
-        StepAppOpenHelper databaseHelper = new StepAppOpenHelper(context);
+        SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
         int numberDeletedRecords = 0;
 
-        numberDeletedRecords = database.delete(StepAppOpenHelper.TABLE_NAME, null, null);
+        numberDeletedRecords = database.delete(SmartAnglerOpenHelper.TABLE_NAME, null, null);
         database.close();
 
         Toast.makeText(context, "Deleted + "+ String.valueOf(numberDeletedRecords) + " steps", Toast.LENGTH_LONG).show();
@@ -97,7 +97,7 @@ public class StepAppOpenHelper extends SQLiteOpenHelper {
         Map<Integer, Integer>  map = new HashMap<>();
 
         // 2. Get the readable database
-        StepAppOpenHelper databaseHelper = new StepAppOpenHelper(context);
+        SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
         // 3. Define the query to get the data
