@@ -9,15 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-
-import com.anychart.*;
+import com.anychart.AnyChart;
+import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian;
@@ -26,9 +19,16 @@ import com.anychart.enums.Anchor;
 import com.anychart.enums.HoverMode;
 import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
-import com.smartangler.smartangler.SmartAnglerOpenHelper;
 import com.smartangler.smartangler.R;
+import com.smartangler.smartangler.SmartAnglerOpenHelper;
 import com.smartangler.smartangler.databinding.FragmentStatisticsBinding;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class StatisticsFragment extends Fragment {
 
@@ -67,7 +67,7 @@ public class StatisticsFragment extends Fragment {
         binding = null;
     }
 
-    public Cartesian createColumnChart(){
+    public Cartesian createColumnChart() {
         //***** Read data from SQLiteDatabase *********/
         // TODO 1 (YOUR TURN): Get the map with hours and number of steps for today
         //  from the database and assign it to variable stepsByHour
@@ -76,7 +76,7 @@ public class StatisticsFragment extends Fragment {
         // TODO 2 (YOUR TURN): Creating a new map that contains hours of the day from 0 to 23 and
         //  number of steps during each hour set to 0
         Map<Integer, Integer> graph_map = new TreeMap<>();
-        for(int i =0; i<23; i++){
+        for (int i = 0; i < 23; i++) {
             graph_map.put(i, 0);
         }
 
@@ -91,7 +91,7 @@ public class StatisticsFragment extends Fragment {
         // TODO 5: Create data entries for x and y axis of the graph
         List<DataEntry> data = new ArrayList<>();
 
-        for (Map.Entry<Integer,Integer> entry : graph_map.entrySet())
+        for (Map.Entry<Integer, Integer> entry : graph_map.entrySet())
             data.add(new ValueDataEntry(entry.getKey(), entry.getValue()));
 
         // TODO 6: Add the data to column chart and get the columns

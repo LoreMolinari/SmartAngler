@@ -1,5 +1,6 @@
 package com.smartangler.smartangler;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,24 +26,23 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_SQL = "CREATE TABLE  " + TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, " +
             KEY_DAY + " TEXT, " + KEY_HOUR + "  TEXT, " + KEY_TIMESTAMP + "  TEXT);";
 
-    public SmartAnglerOpenHelper(Context context)
-    {
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+    public SmartAnglerOpenHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-        // Load all records in the database
-    public static void loadRecords(Context context){
-        List<String> dates = new LinkedList<String>();
+    // Load all records in the database
+    public static void loadRecords(Context context) {
+        List<String> dates = new LinkedList<>();
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-        String [] columns = new String [] {SmartAnglerOpenHelper.KEY_TIMESTAMP};
-        Cursor cursor = database.query(SmartAnglerOpenHelper.TABLE_NAME, columns, null, null, SmartAnglerOpenHelper.KEY_TIMESTAMP,
-                null, null );
+        String[] columns = new String[]{SmartAnglerOpenHelper.KEY_TIMESTAMP};
+        @SuppressLint("Recycle") Cursor cursor = database.query(SmartAnglerOpenHelper.TABLE_NAME, columns, null, null, SmartAnglerOpenHelper.KEY_TIMESTAMP,
+                null, null);
 
         // iterate over returned elements
         cursor.moveToFirst();
-        for (int index=0; index < cursor.getCount(); index++){
+        for (int index = 0; index < cursor.getCount(); index++) {
             dates.add(cursor.getString(0));
             cursor.moveToNext();
         }
@@ -52,21 +52,21 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     }
 
     // load records from a single day
-    public static Integer loadSingleRecord(Context context, String date){
-        List<String> steps = new LinkedList<String>();
+    public static Integer loadSingleRecord(Context context, String date) {
+        List<String> steps = new LinkedList<>();
         // Get the readable database
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
         String where = SmartAnglerOpenHelper.KEY_DAY + " = ?";
-        String [] whereArgs = { date };
+        String[] whereArgs = {date};
 
-        Cursor cursor = database.query(SmartAnglerOpenHelper.TABLE_NAME, null, where, whereArgs, null,
-                null, null );
+        @SuppressLint("Recycle") Cursor cursor = database.query(SmartAnglerOpenHelper.TABLE_NAME, null, where, whereArgs, null,
+                null, null);
 
         // iterate over returned elements
         cursor.moveToFirst();
-        for (int index=0; index < cursor.getCount(); index++){
+        for (int index = 0; index < cursor.getCount(); index++) {
             steps.add(cursor.getString(0));
             cursor.moveToNext();
         }
@@ -77,51 +77,40 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         return numSteps;
     }
 
-    public static void deleteRecords (Context context) {
+    public static void deleteRecords(Context context) {
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
-        int numberDeletedRecords = 0;
+        int numberDeletedRecords;
 
         numberDeletedRecords = database.delete(SmartAnglerOpenHelper.TABLE_NAME, null, null);
         database.close();
 
-        Toast.makeText(context, "Deleted + "+ String.valueOf(numberDeletedRecords) + " steps", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Deleted + " + numberDeletedRecords + " steps", Toast.LENGTH_LONG).show();
 
     }
 
 
+    public static Map<Integer, Integer> loadStepsByHour(Context context, String date) {
+        Map<Integer, Integer> map = new HashMap<>();
 
-    public static Map<Integer, Integer> loadStepsByHour(Context context, String date){
-        // 1. Define a map to store the hour and number of steps as key-value pairs
-        Map<Integer, Integer>  map = new HashMap<>();
-
-        // 2. Get the readable database
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-        // 3. Define the query to get the data
         Cursor cursor = database.rawQuery("SELECT hour, COUNT(*)  FROM num_steps " +
-                "WHERE day = ? GROUP BY hour ORDER BY  hour ASC ", new String [] {date});
+                "WHERE day = ? GROUP BY hour ORDER BY  hour ASC ", new String[]{date});
 
-        // 4. Iterate over returned elements on the cursor
-        cursor.moveToFirst();
-        for (int index=0; index < cursor.getCount(); index++){
-            Integer tmpKey = Integer.parseInt(cursor.getString(0));
-            Integer tmpValue = Integer.parseInt(cursor.getString(1));
-
-            //2. Put the data from the database into the map
-            map.put(tmpKey, tmpValue);
-
-
-            cursor.moveToNext();
+        if (cursor.moveToFirst()) {
+            do {
+                Integer tmpKey = Integer.parseInt(cursor.getString(0));
+                Integer tmpValue = Integer.parseInt(cursor.getString(1));
+                map.put(tmpKey, tmpValue);
+            } while (cursor.moveToNext());
         }
 
-        // 5. Close the cursor and database
         cursor.close();
         database.close();
 
-        // 6. Return the map with hours and number of steps
         return map;
     }
 
