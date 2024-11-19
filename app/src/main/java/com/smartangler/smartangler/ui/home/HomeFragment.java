@@ -20,7 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.smartangler.smartangler.StepAppOpenHelper;
+import com.smartangler.smartangler.SmartAnglerOpenHelper;
 import com.smartangler.smartangler.R;
 import com.smartangler.smartangler.databinding.FragmentHomeBinding;
 import com.google.android.material.button.MaterialButtonToggleGroup;
@@ -71,7 +71,7 @@ public class HomeFragment extends Fragment {
 
         stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
-        StepAppOpenHelper databaseOpenHelper = new StepAppOpenHelper(this.getContext());
+        SmartAnglerOpenHelper databaseOpenHelper = new SmartAnglerOpenHelper(this.getContext());
         SQLiteDatabase database = databaseOpenHelper.getWritableDatabase();
 
 
@@ -222,12 +222,12 @@ class  StepCounterListener implements SensorEventListener{
                 progressBar.setProgress(accStepCounter);
 
                 ContentValues databaseEntry = new ContentValues();
-                databaseEntry.put(StepAppOpenHelper.KEY_TIMESTAMP, timePointList.get(i));
+                databaseEntry.put(SmartAnglerOpenHelper.KEY_TIMESTAMP, timePointList.get(i));
 
-                databaseEntry.put(StepAppOpenHelper.KEY_DAY, this.day);
-                databaseEntry.put(StepAppOpenHelper.KEY_HOUR, this.hour);
+                databaseEntry.put(SmartAnglerOpenHelper.KEY_DAY, this.day);
+                databaseEntry.put(SmartAnglerOpenHelper.KEY_HOUR, this.hour);
 
-                database.insert(StepAppOpenHelper.TABLE_NAME, null, databaseEntry);
+                database.insert(SmartAnglerOpenHelper.TABLE_NAME, null, databaseEntry);
 
             }
         }

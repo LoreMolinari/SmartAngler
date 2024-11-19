@@ -1,24 +1,19 @@
 package com.smartangler.smartangler.ui.statistics;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.ColorLong;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.TreeMap;
 
 
@@ -31,8 +26,7 @@ import com.anychart.enums.Anchor;
 import com.anychart.enums.HoverMode;
 import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
-import com.smartangler.smartangler.StepAppOpenHelper;
-import com.smartangler.smartangler.databinding.FragmentHomeBinding;
+import com.smartangler.smartangler.SmartAnglerOpenHelper;
 import com.smartangler.smartangler.R;
 import com.smartangler.smartangler.databinding.FragmentStatisticsBinding;
 
@@ -77,7 +71,7 @@ public class StatisticsFragment extends Fragment {
         //***** Read data from SQLiteDatabase *********/
         // TODO 1 (YOUR TURN): Get the map with hours and number of steps for today
         //  from the database and assign it to variable stepsByHour
-        stepsByHour = StepAppOpenHelper.loadStepsByHour(getContext(), current_time);
+        stepsByHour = SmartAnglerOpenHelper.loadStepsByHour(getContext(), current_time);
 
         // TODO 2 (YOUR TURN): Creating a new map that contains hours of the day from 0 to 23 and
         //  number of steps during each hour set to 0
