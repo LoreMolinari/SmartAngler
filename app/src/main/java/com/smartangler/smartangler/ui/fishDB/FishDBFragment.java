@@ -29,7 +29,6 @@ public class FishDBFragment extends Fragment {
     private FishDBViewModel mViewModel;
     private FragmentFishDbBinding binding;
     private List<Fish> fishList;
-    private TextView textFishDB;
 
     public static FishDBFragment newInstance() {
         return new FishDBFragment();
@@ -53,9 +52,6 @@ public class FishDBFragment extends Fragment {
         for (Fish fish : fishList) {
             fishString = fishString.concat(fish.toString());
         }
-
-        textFishDB = (TextView) root.findViewById(R.id.text_fishDB);
-        textFishDB.setText(fishString);
 
         ItemAdapter adapter = new ItemAdapter(fishList);
         recyclerView.setAdapter(adapter);
