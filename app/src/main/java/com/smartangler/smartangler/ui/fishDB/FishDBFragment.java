@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +41,9 @@ public class FishDBFragment extends Fragment {
         binding = FragmentFishDbBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        RecyclerView recyclerView = root.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         SmartAnglerOpenHelper databaseOpenHelper = new SmartAnglerOpenHelper(this.getContext());
 
         fishList = new ArrayList<>();
@@ -52,6 +57,9 @@ public class FishDBFragment extends Fragment {
         textFishDB = (TextView) root.findViewById(R.id.text_fishDB);
         textFishDB.setText(fishString);
 
+        ItemAdapter adapter = new ItemAdapter(fishList);
+        recyclerView.setAdapter(adapter);
+
         return root;
     }
 
@@ -62,4 +70,43 @@ public class FishDBFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
+}
+
+class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
+    private List<Fish> fishList;
+
+    public ItemAdapter(List<Fish> fishList) {
+        this.fishList = fishList;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item_fish_db, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Fish item = fishList.get(position);
+        holder.fishNameTextView.setText(item.getName());
+        holder.fishDescriptionTextView.setText(item.getDescription());
+    }
+
+    @Override
+    public int getItemCount() {
+        return fishList.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView fishNameTextView;
+        TextView fishDescriptionTextView;
+
+        ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            fishNameTextView = itemView.findViewById(R.id.text_fish_name);
+            fishDescriptionTextView = itemView.findViewById(R.id.text_fish_description);
+        }
+    }
 }
