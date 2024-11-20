@@ -18,11 +18,12 @@
 
             <!-- Media -->
             <ImageView
+                android:id="@+id/picture_fish"
                 android:layout_width="match_parent"
                 android:layout_height="194dp"
                 android:contentDescription="@string/perch"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/fishing_svg_icon" />
+                app:srcCompat="@drawable/perch" />
 
             <LinearLayout
                 android:layout_width="match_parent"

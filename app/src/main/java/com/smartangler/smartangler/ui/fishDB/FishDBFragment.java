@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartangler.smartangler.Fish;
@@ -85,6 +86,11 @@ class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Fish item = fishList.get(position);
+        if (item.getName().equals("Perch")) {
+            holder.fishPictureImageView.setImageResource(R.drawable.perch);
+        } else if (item.getName().equals("Zander")) {
+            holder.fishPictureImageView.setImageResource(R.drawable.zander);
+        }
         holder.fishNameTextView.setText(item.getName());
         holder.fishDescriptionTextView.setText(item.getDescription());
     }
@@ -96,11 +102,13 @@ class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
+        ImageView fishPictureImageView;
         TextView fishNameTextView;
         TextView fishDescriptionTextView;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            fishPictureImageView = itemView.findViewById(R.id.picture_fish);
             fishNameTextView = itemView.findViewById(R.id.text_fish_name);
             fishDescriptionTextView = itemView.findViewById(R.id.text_fish_description);
         }
