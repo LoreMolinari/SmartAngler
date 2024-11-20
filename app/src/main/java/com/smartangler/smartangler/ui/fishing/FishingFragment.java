@@ -10,22 +10,23 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.smartangler.smartangler.SmartAnglerPhotoHelper;
 import com.smartangler.smartangler.databinding.FragmentFishingBinding;
+
+import java.util.List;
 
 public class FishingFragment extends Fragment {
 
     private FragmentFishingBinding binding;
+    private SmartAnglerPhotoHelper databaseHelper;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        FishingViewModel slideshowViewModel =
-                new ViewModelProvider(this).get(FishingViewModel.class);
+        databaseHelper = new SmartAnglerPhotoHelper(getActivity());
 
         binding = FragmentFishingBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textFishing;
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

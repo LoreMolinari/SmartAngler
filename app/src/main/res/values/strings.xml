@@ -44,4 +44,11 @@
 
 <!--Fish cards-->
     <string name="fish_picture">A picture of a fish</string>
+
+<!-- Photo DB -->
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="insert">Insert</string>
+    <string name="load">Load</string>
+    <string name="delete">Delete</string>
 </resources>
