@@ -92,6 +92,8 @@ class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
         } else if (item.getName().equals("Zander")) {
             holder.fishPictureImageView.setImageResource(R.drawable.zander);
             holder.fishPictureImageView.setContentDescription("A picture of a zander");
+        } else {
+            holder.fishPictureImageView.setImageResource(R.drawable.generic_fish);
         }
         holder.fishNameTextView.setText(item.getName());
         holder.fishDescriptionTextView.setText(item.getDescription());
