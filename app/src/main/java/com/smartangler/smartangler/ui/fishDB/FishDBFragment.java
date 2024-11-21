@@ -88,15 +88,44 @@ class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
         Fish item = fishList.get(position);
         if (item.getName().equals("Perch")) {
             holder.fishPictureImageView.setImageResource(R.drawable.perch);
+            holder.fishPictureImageView.setContentDescription("A picture of a perch");
         } else if (item.getName().equals("Zander")) {
             holder.fishPictureImageView.setImageResource(R.drawable.zander);
+            holder.fishPictureImageView.setContentDescription("A picture of a zander");
         }
         holder.fishNameTextView.setText(item.getName());
         holder.fishDescriptionTextView.setText(item.getDescription());
-        holder.fishTechniquesTextView.setText(String.valueOf(item.getTechniques()));
-        holder.fishBaitsAndLuresTextView.setText(String.valueOf(item.getBaitsAndLures()));
-        holder.fishSeasonsTextView.setText(String.valueOf(item.getSeasons()));
-        holder.fishTimesOfDayTextView.setText(String.valueOf(item.getTimesOfDay()));
+
+        String techniquesText = "Suggested techniques: ";
+        techniquesText = techniquesText.concat(String.join(", ", item.getTechniques()));
+        holder.fishTechniquesTextView.setText(techniquesText);
+
+        String baitsAndLuresText = "Suggested baits and lures: ";
+        baitsAndLuresText = baitsAndLuresText.concat(String.join(", ", item.getBaitsAndLures()));
+        holder.fishBaitsAndLuresTextView.setText(baitsAndLuresText);
+
+        // I don't love this at all
+        String seasonsText = "Active seasons: ";
+        List<String> seasonList = new ArrayList<>();
+        for (Fish.Season season : item.getSeasons()) {
+            String seasonString = season.toString();
+            seasonString = seasonString.substring(0, 1).toUpperCase() +
+                    seasonString.substring(1).toLowerCase();
+            seasonList.add(seasonString);
+        }
+        seasonsText = seasonsText.concat(String.join(", ", seasonList));
+        holder.fishSeasonsTextView.setText(seasonsText);
+
+        String timesOfDayText = "Active times of day: ";
+        List<String> timesOfDayList = new ArrayList<>();
+        for (Fish.TimeOfDay timeOfDay : item.getTimesOfDay()) {
+            String timeOfDayString = timeOfDay.toString();
+            timeOfDayString = timeOfDayString.substring(0, 1).toUpperCase() +
+                    timeOfDayString.substring(1).toLowerCase();
+            timesOfDayList.add(timeOfDayString);
+        }
+        timesOfDayText = timesOfDayText.concat(String.join(", ", timesOfDayList));
+        holder.fishTimesOfDayTextView.setText(timesOfDayText);
     }
 
     @Override
