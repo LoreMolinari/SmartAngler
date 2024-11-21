@@ -93,6 +93,10 @@ class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
         }
         holder.fishNameTextView.setText(item.getName());
         holder.fishDescriptionTextView.setText(item.getDescription());
+        holder.fishTechniquesTextView.setText(String.valueOf(item.getTechniques()));
+        holder.fishBaitsAndLuresTextView.setText(String.valueOf(item.getBaitsAndLures()));
+        holder.fishSeasonsTextView.setText(String.valueOf(item.getSeasons()));
+        holder.fishTimesOfDayTextView.setText(String.valueOf(item.getTimesOfDay()));
     }
 
     @Override
@@ -105,12 +109,20 @@ class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
         ImageView fishPictureImageView;
         TextView fishNameTextView;
         TextView fishDescriptionTextView;
+        TextView fishTechniquesTextView;
+        TextView fishBaitsAndLuresTextView;
+        TextView fishSeasonsTextView;
+        TextView fishTimesOfDayTextView;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             fishPictureImageView = itemView.findViewById(R.id.picture_fish);
             fishNameTextView = itemView.findViewById(R.id.text_fish_name);
             fishDescriptionTextView = itemView.findViewById(R.id.text_fish_description);
+            fishTechniquesTextView = itemView.findViewById(R.id.text_techniques);
+            fishBaitsAndLuresTextView = itemView.findViewById(R.id.text_baits_and_lures);
+            fishSeasonsTextView = itemView.findViewById(R.id.text_seasons);
+            fishTimesOfDayTextView = itemView.findViewById(R.id.text_times_of_day);
         }
     }
 }

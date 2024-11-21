@@ -49,34 +49,38 @@
                     android:textColor="?android:attr/textColorSecondary" />
 
                 <TextView
+                    android:id="@+id/text_techniques"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/perch_baits_and_lures"
+                    android:text="Techniques"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?android:attr/textColorSecondary" />
 
                 <TextView
+                    android:id="@+id/text_baits_and_lures"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/perch_techniques"
+                    android:text="Baits and lures"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?android:attr/textColorSecondary" />
 
                 <TextView
+                    android:id="@+id/text_seasons"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/perch_times_of_day"
+                    android:text="Seasons"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?android:attr/textColorSecondary" />
 
                 <TextView
+                    android:id="@+id/text_times_of_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/perch_seasons"
+                    android:text="Times of day"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?android:attr/textColorSecondary" />
 
