@@ -25,7 +25,7 @@ public class FishEntryAdapter extends RecyclerView.Adapter<FishEntryAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_photo_fish, parent, false); // Usa il layout della tua card
+                .inflate(R.layout.card_photo_fish, parent, false);
         return new ViewHolder(view);
     }
 

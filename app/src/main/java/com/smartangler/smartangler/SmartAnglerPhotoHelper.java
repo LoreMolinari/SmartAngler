@@ -7,18 +7,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
-
-public class SmartAnglerPhotoHelper extends SQLiteOpenHelper{
+public class SmartAnglerPhotoHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "photoGallery";
     public static final String PHOTO_TABLE_NAME = "photos";
     public static final String KEY_ID = "id";
     public static final String KEY_TITLE = "title";
     public static final String KEY_DESCRIPTION = "description";
-    public static final String KEY_IMAGE = "image"; // BLOB per salvare l'immagine
+    public static final String KEY_IMAGE = "image";
     public static final String KEY_DATE = "date";
     public static final String KEY_LOCATION = "location";
 
@@ -61,7 +60,7 @@ public class SmartAnglerPhotoHelper extends SQLiteOpenHelper{
     }
 
     public static List<Object[]> loadAllPhotos(Context context) {
-        List<Object[]> photos = new LinkedList<>();
+        List<Object[]> photos = new ArrayList<>();
         SmartAnglerPhotoHelper databaseHelper = new SmartAnglerPhotoHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
@@ -89,6 +88,7 @@ public class SmartAnglerPhotoHelper extends SQLiteOpenHelper{
                 String date = cursor.getString(dateIndex);
                 String location = cursor.getString(locationIndex);
 
+                photos.add(new Object[]{id, title, description, image, date, location});
             } while (cursor.moveToNext());
             cursor.close();
         }
