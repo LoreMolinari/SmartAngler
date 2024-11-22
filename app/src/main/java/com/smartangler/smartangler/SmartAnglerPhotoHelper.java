@@ -89,7 +89,6 @@ public class SmartAnglerPhotoHelper extends SQLiteOpenHelper{
                 String date = cursor.getString(dateIndex);
                 String location = cursor.getString(locationIndex);
 
-                // Usa i dati caricati
             } while (cursor.moveToNext());
             cursor.close();
         }
