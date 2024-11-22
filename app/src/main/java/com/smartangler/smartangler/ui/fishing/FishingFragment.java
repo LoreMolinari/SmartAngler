@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,10 @@ public class FishingFragment extends Fragment {
     private static final int CAMERA_REQUEST_CODE = 101;
     private List<FishEntry> fishEntries;
     private FishEntryAdapter adapter;
+    private long startTime = 0L;
+    private Handler timerHandler = new Handler();
+    private String currentSessionId;
+    private boolean isSessionActive = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,10 +54,53 @@ public class FishingFragment extends Fragment {
         binding.recyclerViewFish.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerViewFish.setAdapter(adapter);
 
-        loadFishEntries();
+        setupToggleButtonGroup();
 
         return binding.getRoot();
     }
+
+    private void setupToggleButtonGroup() {
+        binding.startButton.setOnClickListener(v -> startFishingSession());
+        binding.stopButton.setOnClickListener(v -> stopFishingSession());
+    }
+
+    private void startFishingSession() {
+        if (!isSessionActive) {
+            isSessionActive = true;
+            currentSessionId = generateSessionId();
+            startTime = System.currentTimeMillis();
+            timerHandler.postDelayed(updateTimerThread, 0);
+            fishEntries.clear();
+            adapter.notifyDataSetChanged();
+            Toast.makeText(requireContext(), "Fishing session started", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void stopFishingSession() {
+        if (isSessionActive) {
+            isSessionActive = false;
+            timerHandler.removeCallbacks(updateTimerThread);
+            binding.timerText.setText("00:00:00");
+            Toast.makeText(requireContext(), "Fishing session ended", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String generateSessionId() {
+        return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+    }
+
+    private Runnable updateTimerThread = new Runnable() {
+        public void run() {
+            long timeInMilliseconds = System.currentTimeMillis() - startTime;
+            int seconds = (int) (timeInMilliseconds / 1000);
+            int minutes = seconds / 60;
+            int hours = minutes / 60;
+            seconds = seconds % 60;
+            minutes = minutes % 60;
+            binding.timerText.setText(String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds));
+            timerHandler.postDelayed(this, 500);
+        }
+    };
 
     private void checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
@@ -75,8 +123,12 @@ public class FishingFragment extends Fragment {
     }
 
     private void openCamera() {
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+        if (isSessionActive) {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+        } else {
+            Toast.makeText(requireContext(), "Start a fishing session first", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -98,7 +150,7 @@ public class FishingFragment extends Fragment {
         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
 
-        SmartAnglerPhotoHelper.addPhoto(requireContext(), title, description, byteArray, currentDate, "Unknown");
+        SmartAnglerPhotoHelper.addPhoto(requireContext(), title, description, byteArray, currentDate, "Unknown", currentSessionId);
 
         FishEntry newEntry = new FishEntry(imageBitmap, title, description, currentDate);
         fishEntries.add(0, newEntry);
@@ -106,8 +158,9 @@ public class FishingFragment extends Fragment {
         binding.recyclerViewFish.scrollToPosition(0);
     }
 
-    private void loadFishEntries() {
-        List<Object[]> photos = SmartAnglerPhotoHelper.loadAllPhotos(requireContext());
+    private void loadFishEntries(String sessionId) {
+        List<Object[]> photos = SmartAnglerPhotoHelper.loadPhotosForSession(requireContext(), sessionId);
+        fishEntries.clear();
         for (Object[] photo : photos) {
             byte[] imageData = (byte[]) photo[3];
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);

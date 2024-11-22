@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SmartAnglerPhotoHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "photoGallery";
     public static final String PHOTO_TABLE_NAME = "photos";
     public static final String KEY_ID = "id";
@@ -20,6 +20,7 @@ public class SmartAnglerPhotoHelper extends SQLiteOpenHelper {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_DATE = "date";
     public static final String KEY_LOCATION = "location";
+    public static final String KEY_SESSION_ID = "session_id";
 
     public static final String CREATE_PHOTO_TABLE_SQL = "CREATE TABLE " + PHOTO_TABLE_NAME + " (" +
             KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -27,7 +28,8 @@ public class SmartAnglerPhotoHelper extends SQLiteOpenHelper {
             KEY_DESCRIPTION + " TEXT, " +
             KEY_IMAGE + " BLOB, " +
             KEY_DATE + " TEXT, " +
-            KEY_LOCATION + " TEXT);";
+            KEY_LOCATION + " TEXT, " +
+            KEY_SESSION_ID + " TEXT);";
 
     public SmartAnglerPhotoHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -40,11 +42,12 @@ public class SmartAnglerPhotoHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + PHOTO_TABLE_NAME);
-        onCreate(sqLiteDatabase);
+        if (oldVersion < 2) {
+            sqLiteDatabase.execSQL("ALTER TABLE " + PHOTO_TABLE_NAME + " ADD COLUMN " + KEY_SESSION_ID + " TEXT");
+        }
     }
 
-    public static void addPhoto(Context context, String title, String description, byte[] image, String date, String location) {
+    public static void addPhoto(Context context, String title, String description, byte[] image, String date, String location, String sessionId) {
         SmartAnglerPhotoHelper databaseHelper = new SmartAnglerPhotoHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
@@ -54,17 +57,20 @@ public class SmartAnglerPhotoHelper extends SQLiteOpenHelper {
         values.put(KEY_IMAGE, image);
         values.put(KEY_DATE, date);
         values.put(KEY_LOCATION, location);
+        values.put(KEY_SESSION_ID, sessionId);
 
         database.insert(PHOTO_TABLE_NAME, null, values);
         database.close();
     }
 
-    public static List<Object[]> loadAllPhotos(Context context) {
+    public static List<Object[]> loadPhotosForSession(Context context, String sessionId) {
         List<Object[]> photos = new ArrayList<>();
         SmartAnglerPhotoHelper databaseHelper = new SmartAnglerPhotoHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-        Cursor cursor = database.query(PHOTO_TABLE_NAME, null, null, null, null, null, KEY_DATE + " DESC");
+        String selection = KEY_SESSION_ID + " = ?";
+        String[] selectionArgs = {sessionId};
+        Cursor cursor = database.query(PHOTO_TABLE_NAME, null, selection, selectionArgs, null, null, KEY_DATE + " DESC");
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
