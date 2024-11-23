@@ -41,4 +41,7 @@
     <string name="perch_baits_and_lures">Creature bait,Shad,Spoon</string>
     <string name="perch_seasons">SUMMER,AUTUMN</string>
     <string name="perch_times_of_day">MORNING,AFTERNOON</string>
+
+<!--Fish cards-->
+    <string name="fish_picture">A picture of a fish</string>
 </resources>
