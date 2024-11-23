@@ -1,0 +1,44 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/session_id_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Session ID"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/date_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date"/>
+
+    <TextView
+        android:id="@+id/details_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Details"/>
+
+    <TextView
+        android:id="@+id/location_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Location"/>
+
+    <TextView
+        android:id="@+id/duration_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Duration"/>
+
+    <TextView
+        android:id="@+id/fishCaught_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fish Caught"/>
+</LinearLayout>

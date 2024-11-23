@@ -29,7 +29,6 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
     public static final String KEY_SESSION_LOCATION = "location";
     public static final String KEY_SESSION_DURATION = "duration";
     public static final String KEY_SESSION_FISH_CAUGHT = "fish_caught";
-    public static final String KEY_SESSION_NOTES = "notes";
 
     public static final String CREATE_PHOTO_TABLE_SQL = "CREATE TABLE " + PHOTO_TABLE_NAME + " (" +
             KEY_PHOTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -45,8 +44,7 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
             KEY_SESSION_DATE + " TEXT, " +
             KEY_SESSION_LOCATION + " TEXT, " +
             KEY_SESSION_DURATION + " INTEGER, " +
-            KEY_SESSION_FISH_CAUGHT + " INTEGER, " +
-            KEY_SESSION_NOTES + " TEXT);";
+            KEY_SESSION_FISH_CAUGHT + " INTEGER); ";
 
     public SmartAnglerSessionHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -126,7 +124,6 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
         values.put(KEY_SESSION_LOCATION, location);
         values.put(KEY_SESSION_DURATION, duration);
         values.put(KEY_SESSION_FISH_CAUGHT, fishCaught);
-        values.put(KEY_SESSION_NOTES, notes);
 
         database.insert(SESSION_TABLE_NAME, null, values);
         database.close();
@@ -146,18 +143,16 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
                 int locationIndex = cursor.getColumnIndex(KEY_SESSION_LOCATION);
                 int durationIndex = cursor.getColumnIndex(KEY_SESSION_DURATION);
                 int fishCaughtIndex = cursor.getColumnIndex(KEY_SESSION_FISH_CAUGHT);
-                int notesIndex = cursor.getColumnIndex(KEY_SESSION_NOTES);
 
                 if (idIndex != -1 && dateIndex != -1 && locationIndex != -1 &&
-                        durationIndex != -1 && fishCaughtIndex != -1 && notesIndex != -1) {
+                        durationIndex != -1 && fishCaughtIndex != -1) {
                     String id = cursor.getString(idIndex);
                     String date = cursor.getString(dateIndex);
                     String location = cursor.getString(locationIndex);
                     int duration = cursor.getInt(durationIndex);
                     int fishCaught = cursor.getInt(fishCaughtIndex);
-                    String notes = cursor.getString(notesIndex);
 
-                    sessions.add(new Object[]{id, date, location, duration, fishCaught, notes});
+                    sessions.add(new Object[]{id, date, location, duration, fishCaught});
                 }
             } while (cursor.moveToNext());
             cursor.close();

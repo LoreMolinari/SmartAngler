@@ -2,6 +2,7 @@ package com.smartangler.smartangler.ui.home;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -41,7 +42,6 @@ public class HomeFragment extends Fragment {
     private SensorManager sensorManager;
     private StepCounterListener sensorListener;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -67,7 +67,6 @@ public class HomeFragment extends Fragment {
         SmartAnglerOpenHelper databaseOpenHelper = new SmartAnglerOpenHelper(this.getContext());
         SQLiteDatabase database = databaseOpenHelper.getWritableDatabase();
 
-
         toggleButtonGroup = root.findViewById(R.id.toggleButtonGroup);
         toggleButtonGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             @Override
@@ -85,6 +84,12 @@ public class HomeFragment extends Fragment {
                     sensorManager.unregisterListener(sensorListener);
                     Toast.makeText(getContext(), R.string.stop_text, Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        root.findViewById(R.id.statistic_Button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
             }
         });
 
@@ -109,7 +114,6 @@ class StepCounterListener implements SensorEventListener {
     int stepThreshold = 6;
 
     TextView stepCountsView;
-
     CircularProgressIndicator progressBar;
     private final SQLiteDatabase database;
 
@@ -117,13 +121,11 @@ class StepCounterListener implements SensorEventListener {
     private String day;
     private String hour;
 
-
     public StepCounterListener(TextView stepCountsView, CircularProgressIndicator progressBar, SQLiteDatabase database) {
         this.stepCountsView = stepCountsView;
         this.database = database;
         this.progressBar = progressBar;
     }
-
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
@@ -136,11 +138,9 @@ class StepCounterListener implements SensorEventListener {
 
             long timeInMillis = currentTimeInMilliSecond + (sensorEvent.timestamp - SystemClock.elapsedRealtimeNanos()) / 1000000;
 
-            // Convert the timestamp to date
             SimpleDateFormat jdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
             jdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
             String sensorEventDate = jdf.format(timeInMillis);
-
 
             if ((currentTimeInMilliSecond - lastSensorUpdate) > 1000) {
                 lastSensorUpdate = currentTimeInMilliSecond;
@@ -148,39 +148,30 @@ class StepCounterListener implements SensorEventListener {
                 Log.d("Acc. Event", "last sensor update at " + sensorEventDate + sensorRawValues);
             }
 
-
             accMag = Math.sqrt(x * x + y * y + z * z);
-
 
             accSeries.add((int) accMag);
 
-            // Get the date, the day and the hour
             timestamp = sensorEventDate;
             day = sensorEventDate.substring(0, 10);
             hour = sensorEventDate.substring(11, 13);
 
             Log.d("SensorEventTimestampInMilliSecond", timestamp);
 
-
             timestampsSeries.add(timestamp);
             peakDetection();
         }
-
-
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-
     }
 
     private void peakDetection() {
 
         int windowSize = 20;
-        /* Peak detection algorithm derived from: A Step Counter Service for Java-Enabled Devices Using a Built-In Accelerometer Mladenov et al.
-         */
-        int currentSize = accSeries.size(); // get the length of the series
-        if (currentSize - lastAddedIndex < windowSize) { // if the segment is smaller than the processing window size skip it
+        int currentSize = accSeries.size();
+        if (currentSize - lastAddedIndex < windowSize) {
             return;
         }
 
@@ -205,10 +196,7 @@ class StepCounterListener implements SensorEventListener {
                 databaseEntry.put(SmartAnglerOpenHelper.KEY_HOUR, this.hour);
 
                 database.insert(SmartAnglerOpenHelper.TABLE_NAME, null, databaseEntry);
-
             }
         }
     }
-
-
 }

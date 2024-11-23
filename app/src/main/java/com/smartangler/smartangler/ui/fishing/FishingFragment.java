@@ -42,6 +42,7 @@ public class FishingFragment extends Fragment {
     private Handler timerHandler = new Handler();
     private String currentSessionId;
     private boolean isSessionActive = false;
+    private Integer fish_caught = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class FishingFragment extends Fragment {
     }
 
     private void startFishingSession() {
+
         if (!isSessionActive) {
             isSessionActive = true;
             currentSessionId = generateSessionId();
@@ -73,24 +75,23 @@ public class FishingFragment extends Fragment {
             fishEntries.clear();
             adapter.notifyDataSetChanged();
 
-            // Aggiungi una nuova sessione al database
-            String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
-            SmartAnglerSessionHelper.addSession(
-                    requireContext(),
-                    currentSessionId,
-                    currentDate,
-                    "Unknown Location", // Puoi gestire la posizione dinamicamente
-                    0,
-                    0,
-                    ""
-            );
-
             Toast.makeText(requireContext(), "Fishing session started", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void stopFishingSession() {
         if (isSessionActive) {
+            String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+            SmartAnglerSessionHelper.addSession(
+                    requireContext(),
+                    currentSessionId,
+                    currentDate,
+                    "Unknown Location",
+                    0,
+                    fish_caught,
+                    ""
+            );
+            fish_caught = 0;
             isSessionActive = false;
             timerHandler.removeCallbacks(updateTimerThread);
             binding.timerText.setText("00:00:00");
@@ -148,6 +149,7 @@ public class FishingFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+            fish_caught = fish_caught+1;
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             saveFishEntry(imageBitmap);
@@ -169,7 +171,7 @@ public class FishingFragment extends Fragment {
                 description,
                 byteArray,
                 currentDate,
-                "Unknown", // Puoi gestire la posizione dinamicamente
+                "Unknown",
                 currentSessionId
         );
 

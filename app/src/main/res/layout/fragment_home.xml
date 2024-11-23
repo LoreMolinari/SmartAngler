@@ -105,7 +105,18 @@
                     android:text="@string/menu_statistics"
                     app:icon="@drawable/statistics_graph_svg"
                     app:iconSize="24dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/analytics_button"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sessions"
+                    app:icon="@drawable/ic_menu_gallery"
+                app:iconSize="24dp"/>
             </com.google.android.material.button.MaterialButtonToggleGroup>
+
 
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/toggleButtonGroup"
