@@ -21,7 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.smartangler.smartangler.SmartAnglerPhotoHelper;
+import com.smartangler.smartangler.SmartAnglerSessionHelper;
 import com.smartangler.smartangler.databinding.FragmentFishingBinding;
 
 import java.io.ByteArrayOutputStream;
@@ -72,6 +72,19 @@ public class FishingFragment extends Fragment {
             timerHandler.postDelayed(updateTimerThread, 0);
             fishEntries.clear();
             adapter.notifyDataSetChanged();
+
+            // Aggiungi una nuova sessione al database
+            String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+            SmartAnglerSessionHelper.addSession(
+                    requireContext(),
+                    currentSessionId,
+                    currentDate,
+                    "Unknown Location", // Puoi gestire la posizione dinamicamente
+                    0,
+                    0,
+                    ""
+            );
+
             Toast.makeText(requireContext(), "Fishing session started", Toast.LENGTH_SHORT).show();
         }
     }
@@ -150,7 +163,15 @@ public class FishingFragment extends Fragment {
         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
 
-        SmartAnglerPhotoHelper.addPhoto(requireContext(), title, description, byteArray, currentDate, "Unknown", currentSessionId);
+        SmartAnglerSessionHelper.addPhoto(
+                requireContext(),
+                title,
+                description,
+                byteArray,
+                currentDate,
+                "Unknown", // Puoi gestire la posizione dinamicamente
+                currentSessionId
+        );
 
         FishEntry newEntry = new FishEntry(imageBitmap, title, description, currentDate);
         fishEntries.add(0, newEntry);
@@ -159,7 +180,7 @@ public class FishingFragment extends Fragment {
     }
 
     private void loadFishEntries(String sessionId) {
-        List<Object[]> photos = SmartAnglerPhotoHelper.loadPhotosForSession(requireContext(), sessionId);
+        List<Object[]> photos = SmartAnglerSessionHelper.loadPhotosForSession(requireContext(), sessionId);
         fishEntries.clear();
         for (Object[] photo : photos) {
             byte[] imageData = (byte[]) photo[3];
