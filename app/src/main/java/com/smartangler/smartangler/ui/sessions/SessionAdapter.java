@@ -32,7 +32,6 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
 
     @Override
     public void onBindViewHolder(@NonNull SessionViewHolder holder, int position) {
-        Log.d("DBSession", "onBindViewHolder called" + sessions.get(0));
         Object[] session = sessions.get(position);
 
         String sessionId = (String) session[0];
@@ -50,7 +49,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
         holder.stepsTextView.setText("Steps: " + steps);
 
         holder.itemView.setOnClickListener(v -> {
-            // eventually click for photos
+            // TODO eventually click for photos
         });
     }
 

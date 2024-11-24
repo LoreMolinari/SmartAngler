@@ -42,7 +42,6 @@ public class SessionFragment extends Fragment {
     private void loadStatistics() {
         List<Object[]> sessions = SmartAnglerSessionHelper.loadAllSessions(requireContext());
 
-        Log.d("DBSession", "loadStatistics called" + sessions);
         int totalFishCaught = 0;
         int totalDuration = 0;
         int totalStep =0;
@@ -61,7 +60,6 @@ public class SessionFragment extends Fragment {
         binding.totalSteps.setText("Total Steps: " + totalStep);
 
         sessionAdapter.setSessions(sessions);
-        Log.d("DBSession", "loadStatistics called" + sessions);
     }
 
     private String formatTime(int totalMinutes) {

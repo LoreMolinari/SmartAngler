@@ -57,9 +57,8 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
         try {
             sqLiteDatabase.execSQL(CREATE_PHOTO_TABLE_SQL);
             sqLiteDatabase.execSQL(CREATE_SESSION_TABLE_SQL);
-            Log.d("DBSession", "Tabelle create con successo");
         } catch (Exception e) {
-            Log.e("DBSession", "Errore nella creazione delle tabelle: " + e.getMessage());
+            Log.e("DBSession", "Error on creation: " + e.getMessage());
         }
     }
 
@@ -82,9 +81,9 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
         database.close();
 
         if (result != -1) {
-            Log.d("DBSession", "Foto aggiunta con successo: " + title);
+            Log.d("DBSession", "Photo added: " + title);
         } else {
-            Log.e("DBSession", "Errore nell'aggiunta della foto: " + title);
+            Log.e("DBSession", "Error on photo: " + title);
         }
     }
 
@@ -110,12 +109,12 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception e) {
-            Log.e("DBSession", "Errore nel caricamento delle foto: " + e.getMessage());
+            Log.e("DBSession", "Error on photo: " + e.getMessage());
         } finally {
             database.close();
         }
 
-        Log.d("DBSession", "Foto caricate: " + photos.size());
+        Log.d("DBSession", "Photo Loaded: " + photos.size());
         return photos;
     }
 
@@ -133,14 +132,13 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
         try {
             long result = database.insertOrThrow(SESSION_TABLE_NAME, null, values);
             if (result != -1) {
-                Log.d("DBSession", "Sessione aggiunta con successo: " + id);
                 return true;
             } else {
-                Log.e("DBSession", "Errore nell'aggiunta della sessione: " + id);
+                Log.e("DBSession", "Error on session: " + id);
                 return false;
             }
         } catch (SQLiteException e) {
-            Log.e("DBSession", "Errore SQLite nell'aggiunta della sessione: " + id + ". Errore: " + e.getMessage());
+            Log.e("DBSession", "Error SQLite: " + id + e.getMessage());
             return false;
         } finally {
             database.close();
@@ -169,17 +167,12 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception e) {
-            Log.e("DBSession", "Errore nel caricamento delle sessioni: " + e.getMessage());
+            Log.e("DBSession", "Error session load: " + e.getMessage());
         } finally {
             database.close();
         }
 
-        Log.d("DBSession", "Sessioni caricate: " + sessions.size());
-        if (!sessions.isEmpty()) {
-            Log.d("DBSession", "Prima sessione: " + Arrays.toString(sessions.get(0)));
-        } else {
-            Log.d("DBSession", "Nessuna sessione trovata");
-        }
+        Log.d("DBSession", "Session Loaded: " + sessions.size());
 
         return sessions;
     }
