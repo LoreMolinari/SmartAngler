@@ -59,6 +59,7 @@ public class FishingFragment extends Fragment {
     private CircularProgressIndicator progressBar;
     private MaterialButtonToggleGroup toggleButtonGroup;
     private Sensor stepDetector;
+    private Sensor accSensor;
     private SensorManager sensorManager;
     private StepCounterListener sensorListener;
 
@@ -90,6 +91,7 @@ public class FishingFragment extends Fragment {
             Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_LONG).show();
         }
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         return binding.getRoot();
     }
@@ -116,6 +118,14 @@ public class FishingFragment extends Fragment {
             if (stepDetector != null) {
                 sensorListener = new StepCounterListener(stepCountsView, progressBar, database);
                 sensorManager.registerListener(sensorListener, stepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+                Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_LONG).show();
+            }
+
+            if (accSensor != null) {
+                sensorListener = new StepCounterListener(stepCountsView, progressBar, database);
+                sensorManager.registerListener(sensorListener, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
                 Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_LONG).show();
