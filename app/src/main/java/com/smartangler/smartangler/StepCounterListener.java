@@ -42,37 +42,43 @@ public class StepCounterListener implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-            float x = sensorEvent.values[0];
-            float y = sensorEvent.values[1];
-            float z = sensorEvent.values[2];
+        switch (sensorEvent.sensor.getType())
+        {
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+                float x = sensorEvent.values[0];
+                float y = sensorEvent.values[1];
+                float z = sensorEvent.values[2];
 
-            long currentTimeInMilliSecond = System.currentTimeMillis();
+                long currentTimeInMilliSecond = System.currentTimeMillis();
 
-            long timeInMillis = currentTimeInMilliSecond + (sensorEvent.timestamp - SystemClock.elapsedRealtimeNanos()) / 1000000;
+                long timeInMillis = currentTimeInMilliSecond + (sensorEvent.timestamp - SystemClock.elapsedRealtimeNanos()) / 1000000;
 
-            SimpleDateFormat jdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-            jdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-            String sensorEventDate = jdf.format(timeInMillis);
+                SimpleDateFormat jdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+                jdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
+                String sensorEventDate = jdf.format(timeInMillis);
 
-            if ((currentTimeInMilliSecond - lastSensorUpdate) > 1000) {
-                lastSensorUpdate = currentTimeInMilliSecond;
-                String sensorRawValues = "  x = " + x + "  y = " + y + "  z = " + z;
-                Log.d("Acc. Event", "last sensor update at " + sensorEventDate + sensorRawValues);
-            }
+                if ((currentTimeInMilliSecond - lastSensorUpdate) > 1000) {
+                    lastSensorUpdate = currentTimeInMilliSecond;
+                    String sensorRawValues = "  x = " + x + "  y = " + y + "  z = " + z;
+                    Log.d("Acc. Event", "last sensor update at " + sensorEventDate + sensorRawValues);
+                }
 
-            accMag = Math.sqrt(x * x + y * y + z * z);
+                accMag = Math.sqrt(x * x + y * y + z * z);
 
-            accSeries.add((int) accMag);
+                accSeries.add((int) accMag);
 
-            timestamp = sensorEventDate;
-            day = sensorEventDate.substring(0, 10);
-            hour = sensorEventDate.substring(11, 13);
+                timestamp = sensorEventDate;
+                day = sensorEventDate.substring(0, 10);
+                hour = sensorEventDate.substring(11, 13);
 
-            Log.d("SensorEventTimestampInMilliSecond", timestamp);
+                Log.d("SensorEventTimestampInMilliSecond", timestamp);
 
-            timestampsSeries.add(timestamp);
-            peakDetection();
+                timestampsSeries.add(timestamp);
+                peakDetection();
+                break;
+
+            case Sensor.TYPE_STEP_DETECTOR:
+                break;
         }
     }
 
