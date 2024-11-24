@@ -40,6 +40,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
         Integer duration = (Integer) session[3];
         Integer fishCaught = (Integer) session[4];
         Integer steps = (Integer) session[5];
+        Integer casts = (Integer) session[6];
 
         holder.sessionIdTextView.setText("Session ID: " + sessionId);
         holder.dateTextView.setText("Date: " + date);
@@ -47,6 +48,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
         holder.durationTextView.setText("Duration: " + duration + " minutes");
         holder.fishCaughtTextView.setText("Fish Caught: " + fishCaught);
         holder.stepsTextView.setText("Steps: " + steps);
+        holder.castsTextView.setText("Casts: " + casts);
 
         holder.itemView.setOnClickListener(v -> {
             // TODO eventually click for photos
@@ -59,7 +61,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
     }
 
     static class SessionViewHolder extends RecyclerView.ViewHolder {
-        TextView sessionIdTextView, dateTextView, locationTextView, durationTextView, fishCaughtTextView, stepsTextView;
+        TextView sessionIdTextView, dateTextView, locationTextView, durationTextView, fishCaughtTextView, stepsTextView, castsTextView;
 
         public SessionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -69,6 +71,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
             durationTextView = itemView.findViewById(R.id.duration_text);
             fishCaughtTextView = itemView.findViewById(R.id.fishCaught_text);
             stepsTextView = itemView.findViewById(R.id.steps_text);
+            castsTextView = itemView.findViewById(R.id.casts_text);
         }
     }
 }

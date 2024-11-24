@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "smartAnglerDatabase";
 
     public static final String PHOTO_TABLE_NAME = "photos";
@@ -31,6 +31,7 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
     public static final String KEY_SESSION_DURATION = "duration";
     public static final String KEY_SESSION_FISH_CAUGHT = "fish_caught";
     public static final String KEY_SESSION_STEPS = "steps";
+    public static final String KEY_SESSION_CASTS = "casts";
 
     public static final String CREATE_PHOTO_TABLE_SQL = "CREATE TABLE " + PHOTO_TABLE_NAME + " (" +
             KEY_PHOTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -46,7 +47,8 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
             KEY_SESSION_LOCATION + " TEXT, " +
             KEY_SESSION_DURATION + " INTEGER, " +
             KEY_SESSION_STEPS + " INTEGER, " +
-            KEY_SESSION_FISH_CAUGHT + " INTEGER); ";
+            KEY_SESSION_FISH_CAUGHT + " INTEGER, " +
+            KEY_SESSION_CASTS + " INTEGER); ";
 
     public SmartAnglerSessionHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -66,6 +68,9 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
             sqLiteDatabase.execSQL("ALTER TABLE " + SESSION_TABLE_NAME + " ADD COLUMN " + KEY_SESSION_STEPS + " INTEGER");
+        }
+        if (oldVersion < 4) {
+            sqLiteDatabase.execSQL("ALTER TABLE " + SESSION_TABLE_NAME + " ADD COLUMN " + KEY_SESSION_CASTS + " INTEGER");
         }
     }
     public static void addPhoto(Context context, String title, byte[] image, String date, String location, String sessionId) {
@@ -118,7 +123,7 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
         return photos;
     }
 
-    public static boolean addSession(Context context, String id, String date, String location, int duration, int fishCaught, int steps) {
+    public static boolean addSession(Context context, String id, String date, String location, int duration, int fishCaught, int steps, int casts) {
         SmartAnglerSessionHelper databaseHelper = new SmartAnglerSessionHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -128,6 +133,7 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
         values.put(KEY_SESSION_DURATION, duration);
         values.put(KEY_SESSION_FISH_CAUGHT, fishCaught);
         values.put(KEY_SESSION_STEPS, steps);
+        values.put(KEY_SESSION_CASTS, casts);
 
         try {
             long result = database.insertOrThrow(SESSION_TABLE_NAME, null, values);
@@ -151,7 +157,13 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
         try {
-            String[] columns = {KEY_SESSION_ID, KEY_SESSION_DATE, KEY_SESSION_LOCATION, KEY_SESSION_DURATION, KEY_SESSION_FISH_CAUGHT, KEY_SESSION_STEPS};
+            String[] columns = {KEY_SESSION_ID,
+                    KEY_SESSION_DATE,
+                    KEY_SESSION_LOCATION,
+                    KEY_SESSION_DURATION,
+                    KEY_SESSION_FISH_CAUGHT,
+                    KEY_SESSION_STEPS,
+                    KEY_SESSION_CASTS};
             Cursor cursor = database.query(SESSION_TABLE_NAME, columns, null, null, null, null, KEY_SESSION_DATE + " DESC");
 
             if (cursor != null && cursor.moveToFirst()) {
@@ -162,7 +174,8 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
                     int duration = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SESSION_DURATION));
                     int fishCaught = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SESSION_FISH_CAUGHT));
                     int steps = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SESSION_STEPS));
-                    sessions.add(new Object[]{id, date, location, duration, fishCaught, steps});
+                    int casts = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SESSION_CASTS));
+                    sessions.add(new Object[]{id, date, location, duration, fishCaught, steps, casts});
                 } while (cursor.moveToNext());
                 cursor.close();
             }
