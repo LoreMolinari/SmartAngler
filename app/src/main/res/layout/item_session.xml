@@ -9,36 +9,30 @@
         android:id="@+id/session_id_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Session ID"
+        android:text="@string/session_id"
         android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/date_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Date"/>
-
-    <TextView
-        android:id="@+id/details_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Details"/>
+        android:text="@string/date"/>
 
     <TextView
         android:id="@+id/location_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Location"/>
+        android:text="@string/location"/>
 
     <TextView
         android:id="@+id/duration_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Duration"/>
+        android:text="@string/duration"/>
 
     <TextView
         android:id="@+id/fishCaught_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fish Caught"/>
+        android:text="@string/fish_caught"/>
 </LinearLayout>

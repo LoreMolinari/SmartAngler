@@ -43,6 +43,7 @@ public class FishingFragment extends Fragment {
     private String currentSessionId;
     private boolean isSessionActive = false;
     private Integer fish_caught = 0;
+    private int totalMinutes = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,7 +67,6 @@ public class FishingFragment extends Fragment {
     }
 
     private void startFishingSession() {
-
         if (!isSessionActive) {
             isSessionActive = true;
             currentSessionId = generateSessionId();
@@ -87,9 +87,8 @@ public class FishingFragment extends Fragment {
                     currentSessionId,
                     currentDate,
                     "Unknown Location",
-                    0,
-                    fish_caught,
-                    ""
+                    totalMinutes,
+                    fish_caught
             );
             fish_caught = 0;
             isSessionActive = false;
@@ -100,7 +99,7 @@ public class FishingFragment extends Fragment {
     }
 
     private String generateSessionId() {
-        return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        return new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
     }
 
     private Runnable updateTimerThread = new Runnable() {
@@ -111,6 +110,10 @@ public class FishingFragment extends Fragment {
             int hours = minutes / 60;
             seconds = seconds % 60;
             minutes = minutes % 60;
+
+            //Minutes for session DB
+            totalMinutes = (int) (timeInMilliseconds / (60 * 1000));
+
             binding.timerText.setText(String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds));
             timerHandler.postDelayed(this, 500);
         }
@@ -168,7 +171,6 @@ public class FishingFragment extends Fragment {
         SmartAnglerSessionHelper.addPhoto(
                 requireContext(),
                 title,
-                description,
                 byteArray,
                 currentDate,
                 "Unknown",

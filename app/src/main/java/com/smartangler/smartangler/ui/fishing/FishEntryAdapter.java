@@ -34,7 +34,6 @@ public class FishEntryAdapter extends RecyclerView.Adapter<FishEntryAdapter.View
         FishEntry entry = fishEntries.get(position);
         holder.picture.setImageBitmap(entry.getImage());
         holder.name.setText(entry.getName());
-        holder.description.setText(entry.getDescription());
         holder.date.setText(entry.getDate());
     }
 
@@ -45,13 +44,12 @@ public class FishEntryAdapter extends RecyclerView.Adapter<FishEntryAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView picture;
-        TextView name, description, date;
+        TextView name, date;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             picture = itemView.findViewById(R.id.picture_fish);
             name = itemView.findViewById(R.id.text_fish_name);
-            description = itemView.findViewById(R.id.text_fish_description);
             date = itemView.findViewById(R.id.text_times_of_day);
         }
     }

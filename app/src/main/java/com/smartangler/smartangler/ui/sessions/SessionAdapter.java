@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.WindowDecorActionBar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.smartangler.smartangler.R;
@@ -43,7 +42,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
         holder.sessionIdTextView.setText("Session ID: " + sessionId);
         holder.dateTextView.setText("Date: " + date);
         holder.locationTextView.setText("Location: " + location);
-        holder.durationTextView.setText("Duration: " + duration);
+        holder.durationTextView.setText("Duration: " + duration + " minutes");
         holder.fishCaughtTextView.setText("Fish Caught: " + fishCaught);
 
         holder.itemView.setOnClickListener(v -> {
@@ -56,21 +55,13 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
         return sessions.size();
     }
 
-    private String formatDuration(long millis) {
-        int seconds = (int) (millis / 1000) % 60;
-        int minutes = (int) ((millis / (1000 * 60)) % 60);
-        int hours = (int) ((millis / (1000 * 60 * 60)) % 24);
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-    }
-
     static class SessionViewHolder extends RecyclerView.ViewHolder {
-        TextView sessionIdTextView, dateTextView, detailsTextView, locationTextView, durationTextView, fishCaughtTextView;
+        TextView sessionIdTextView, dateTextView, locationTextView, durationTextView, fishCaughtTextView;
 
         public SessionViewHolder(@NonNull View itemView) {
             super(itemView);
             sessionIdTextView = itemView.findViewById(R.id.session_id_text);
             dateTextView = itemView.findViewById(R.id.date_text);
-            detailsTextView = itemView.findViewById(R.id.details_text);
             locationTextView = itemView.findViewById(R.id.location_text);
             durationTextView = itemView.findViewById(R.id.duration_text);
             fishCaughtTextView = itemView.findViewById(R.id.fishCaught_text);

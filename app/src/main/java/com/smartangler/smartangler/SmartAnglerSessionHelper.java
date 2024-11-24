@@ -17,7 +17,6 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
     public static final String PHOTO_TABLE_NAME = "photos";
     public static final String KEY_PHOTO_ID = "id";
     public static final String KEY_PHOTO_TITLE = "title";
-    public static final String KEY_PHOTO_DESCRIPTION = "description";
     public static final String KEY_PHOTO_IMAGE = "image";
     public static final String KEY_PHOTO_DATE = "date";
     public static final String KEY_PHOTO_LOCATION = "location";
@@ -33,7 +32,6 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
     public static final String CREATE_PHOTO_TABLE_SQL = "CREATE TABLE " + PHOTO_TABLE_NAME + " (" +
             KEY_PHOTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             KEY_PHOTO_TITLE + " TEXT, " +
-            KEY_PHOTO_DESCRIPTION + " TEXT, " +
             KEY_PHOTO_IMAGE + " BLOB, " +
             KEY_PHOTO_DATE + " TEXT, " +
             KEY_PHOTO_LOCATION + " TEXT, " +
@@ -61,13 +59,12 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
 
     }
 
-    public static void addPhoto(Context context, String title, String description, byte[] image, String date, String location, String sessionId) {
+    public static void addPhoto(Context context, String title, byte[] image, String date, String location, String sessionId) {
         SmartAnglerSessionHelper databaseHelper = new SmartAnglerSessionHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_PHOTO_TITLE, title);
-        values.put(KEY_PHOTO_DESCRIPTION, description);
         values.put(KEY_PHOTO_IMAGE, image);
         values.put(KEY_PHOTO_DATE, date);
         values.put(KEY_PHOTO_LOCATION, location);
@@ -90,21 +87,19 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
             do {
                 int idIndex = cursor.getColumnIndex(KEY_PHOTO_ID);
                 int titleIndex = cursor.getColumnIndex(KEY_PHOTO_TITLE);
-                int descIndex = cursor.getColumnIndex(KEY_PHOTO_DESCRIPTION);
                 int imageIndex = cursor.getColumnIndex(KEY_PHOTO_IMAGE);
                 int dateIndex = cursor.getColumnIndex(KEY_PHOTO_DATE);
                 int locationIndex = cursor.getColumnIndex(KEY_PHOTO_LOCATION);
 
-                if (idIndex != -1 && titleIndex != -1 && descIndex != -1 &&
+                if (idIndex != -1 && titleIndex != -1 &&
                         imageIndex != -1 && dateIndex != -1 && locationIndex != -1) {
                     int id = cursor.getInt(idIndex);
                     String title = cursor.getString(titleIndex);
-                    String description = cursor.getString(descIndex);
                     byte[] image = cursor.getBlob(imageIndex);
                     String date = cursor.getString(dateIndex);
                     String location = cursor.getString(locationIndex);
 
-                    photos.add(new Object[]{id, title, description, image, date, location});
+                    photos.add(new Object[]{id, title, image, date, location});
                 }
             } while (cursor.moveToNext());
             cursor.close();
@@ -114,7 +109,7 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
         return photos;
     }
 
-    public static void addSession(Context context, String id, String date, String location, int duration, int fishCaught, String notes) {
+    public static void addSession(Context context, String id, String date, String location, int duration, int fishCaught) {
         SmartAnglerSessionHelper databaseHelper = new SmartAnglerSessionHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
