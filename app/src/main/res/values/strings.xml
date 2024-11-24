@@ -33,6 +33,7 @@
     <string name="today">Today</string>
     <string name="get_all_steps">Get all steps</string>
     <string name="delete_all_steps">Delete all steps</string>
+    <string name="take_picture">Take picture</string>
 
 <!-- Fish data -->
     <string name="perch">Perch</string>
@@ -44,4 +45,21 @@
 
 <!--Fish cards-->
     <string name="fish_picture">A picture of a fish</string>
+
+<!-- Session DB -->
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="insert">Insert</string>
+    <string name="load">Load</string>
+    <string name="delete">Delete</string>
+    <string name="date">Date</string>
+    <string name="session">Session Database</string>
+    <string name="session_id">Session ID</string>
+    <string name="location">Location</string>
+    <string name="duration">Duration</string>
+    <string name="fish_caught">Fish Caught</string>
+    <string name="totalFish">Total Fish Caught: 0</string>
+    <string name="totalSessions">Total Sessions: 0</string>
+    <string name="totalDuration">Total Duration: 0 minutes</string>
+    <string name="timerZero">00:00</string>
 </resources>

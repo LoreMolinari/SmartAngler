@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".ui.sessions.SessionFragment"
+    android:id="@+id/sessions">
+
+    <TextView
+        android:id="@+id/total_sessions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/totalSessions"
+        android:textSize="18sp"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/total_fish_caught"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/totalFish"
+        android:textSize="18sp"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/total_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/totalDuration"
+        android:textSize="18sp"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/total_steps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total Steps: 0"
+        android:textSize="18sp"
+        android:padding="8dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_sessions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:scrollbars="vertical"/>
+</LinearLayout>
