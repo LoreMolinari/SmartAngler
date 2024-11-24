@@ -35,4 +35,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/fish_caught"/>
+
+    <TextView
+        android:id="@+id/steps_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Steps"/>
 </LinearLayout>

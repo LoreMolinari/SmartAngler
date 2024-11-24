@@ -4,14 +4,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "smartAnglerDatabase";
 
     public static final String PHOTO_TABLE_NAME = "photos";
@@ -28,6 +30,7 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
     public static final String KEY_SESSION_LOCATION = "location";
     public static final String KEY_SESSION_DURATION = "duration";
     public static final String KEY_SESSION_FISH_CAUGHT = "fish_caught";
+    public static final String KEY_SESSION_STEPS = "steps";
 
     public static final String CREATE_PHOTO_TABLE_SQL = "CREATE TABLE " + PHOTO_TABLE_NAME + " (" +
             KEY_PHOTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -42,6 +45,7 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
             KEY_SESSION_DATE + " TEXT, " +
             KEY_SESSION_LOCATION + " TEXT, " +
             KEY_SESSION_DURATION + " INTEGER, " +
+            KEY_SESSION_STEPS + " INTEGER, " +
             KEY_SESSION_FISH_CAUGHT + " INTEGER); ";
 
     public SmartAnglerSessionHelper(Context context) {
@@ -50,78 +54,97 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(CREATE_PHOTO_TABLE_SQL);
-        sqLiteDatabase.execSQL(CREATE_SESSION_TABLE_SQL);
+        try {
+            sqLiteDatabase.execSQL(CREATE_PHOTO_TABLE_SQL);
+            sqLiteDatabase.execSQL(CREATE_SESSION_TABLE_SQL);
+            Log.d("DBSession", "Tabelle create con successo");
+        } catch (Exception e) {
+            Log.e("DBSession", "Errore nella creazione delle tabelle: " + e.getMessage());
+        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-
+        if (oldVersion < 2) {
+            sqLiteDatabase.execSQL("ALTER TABLE " + SESSION_TABLE_NAME + " ADD COLUMN " + KEY_SESSION_STEPS + " INTEGER");
+        }
     }
-
     public static void addPhoto(Context context, String title, byte[] image, String date, String location, String sessionId) {
         SmartAnglerSessionHelper databaseHelper = new SmartAnglerSessionHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(KEY_PHOTO_TITLE, title);
         values.put(KEY_PHOTO_IMAGE, image);
         values.put(KEY_PHOTO_DATE, date);
         values.put(KEY_PHOTO_LOCATION, location);
         values.put(KEY_PHOTO_SESSION_ID, sessionId);
-
-        database.insert(PHOTO_TABLE_NAME, null, values);
+        long result = database.insert(PHOTO_TABLE_NAME, null, values);
         database.close();
+
+        if (result != -1) {
+            Log.d("DBSession", "Foto aggiunta con successo: " + title);
+        } else {
+            Log.e("DBSession", "Errore nell'aggiunta della foto: " + title);
+        }
     }
 
     public static List<Object[]> loadPhotosForSession(Context context, String sessionId) {
         List<Object[]> photos = new ArrayList<>();
         SmartAnglerSessionHelper databaseHelper = new SmartAnglerSessionHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
-
         String selection = KEY_PHOTO_SESSION_ID + " = ?";
         String[] selectionArgs = {sessionId};
-        Cursor cursor = database.query(PHOTO_TABLE_NAME, null, selection, selectionArgs, null, null, KEY_PHOTO_DATE + " DESC");
+        String[] columns = {KEY_PHOTO_ID, KEY_PHOTO_TITLE, KEY_PHOTO_IMAGE, KEY_PHOTO_DATE, KEY_PHOTO_LOCATION};
 
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int idIndex = cursor.getColumnIndex(KEY_PHOTO_ID);
-                int titleIndex = cursor.getColumnIndex(KEY_PHOTO_TITLE);
-                int imageIndex = cursor.getColumnIndex(KEY_PHOTO_IMAGE);
-                int dateIndex = cursor.getColumnIndex(KEY_PHOTO_DATE);
-                int locationIndex = cursor.getColumnIndex(KEY_PHOTO_LOCATION);
-
-                if (idIndex != -1 && titleIndex != -1 &&
-                        imageIndex != -1 && dateIndex != -1 && locationIndex != -1) {
-                    int id = cursor.getInt(idIndex);
-                    String title = cursor.getString(titleIndex);
-                    byte[] image = cursor.getBlob(imageIndex);
-                    String date = cursor.getString(dateIndex);
-                    String location = cursor.getString(locationIndex);
-
+        try {
+            Cursor cursor = database.query(PHOTO_TABLE_NAME, columns, selection, selectionArgs, null, null, KEY_PHOTO_DATE + " DESC");
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_PHOTO_ID));
+                    String title = cursor.getString(cursor.getColumnIndexOrThrow(KEY_PHOTO_TITLE));
+                    byte[] image = cursor.getBlob(cursor.getColumnIndexOrThrow(KEY_PHOTO_IMAGE));
+                    String date = cursor.getString(cursor.getColumnIndexOrThrow(KEY_PHOTO_DATE));
+                    String location = cursor.getString(cursor.getColumnIndexOrThrow(KEY_PHOTO_LOCATION));
                     photos.add(new Object[]{id, title, image, date, location});
-                }
-            } while (cursor.moveToNext());
-            cursor.close();
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Log.e("DBSession", "Errore nel caricamento delle foto: " + e.getMessage());
+        } finally {
+            database.close();
         }
 
-        database.close();
+        Log.d("DBSession", "Foto caricate: " + photos.size());
         return photos;
     }
 
-    public static void addSession(Context context, String id, String date, String location, int duration, int fishCaught) {
+    public static boolean addSession(Context context, String id, String date, String location, int duration, int fishCaught, int steps) {
         SmartAnglerSessionHelper databaseHelper = new SmartAnglerSessionHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(KEY_SESSION_ID, id);
         values.put(KEY_SESSION_DATE, date);
         values.put(KEY_SESSION_LOCATION, location);
         values.put(KEY_SESSION_DURATION, duration);
         values.put(KEY_SESSION_FISH_CAUGHT, fishCaught);
+        values.put(KEY_SESSION_STEPS, steps);
 
-        database.insert(SESSION_TABLE_NAME, null, values);
-        database.close();
+        try {
+            long result = database.insertOrThrow(SESSION_TABLE_NAME, null, values);
+            if (result != -1) {
+                Log.d("DBSession", "Sessione aggiunta con successo: " + id);
+                return true;
+            } else {
+                Log.e("DBSession", "Errore nell'aggiunta della sessione: " + id);
+                return false;
+            }
+        } catch (SQLiteException e) {
+            Log.e("DBSession", "Errore SQLite nell'aggiunta della sessione: " + id + ". Errore: " + e.getMessage());
+            return false;
+        } finally {
+            database.close();
+        }
     }
 
     public static List<Object[]> loadAllSessions(Context context) {
@@ -129,42 +152,44 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
         SmartAnglerSessionHelper databaseHelper = new SmartAnglerSessionHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-        Cursor cursor = database.query(SESSION_TABLE_NAME, null, null, null, null, null, KEY_SESSION_DATE + " DESC");
+        try {
+            String[] columns = {KEY_SESSION_ID, KEY_SESSION_DATE, KEY_SESSION_LOCATION, KEY_SESSION_DURATION, KEY_SESSION_FISH_CAUGHT, KEY_SESSION_STEPS};
+            Cursor cursor = database.query(SESSION_TABLE_NAME, columns, null, null, null, null, KEY_SESSION_DATE + " DESC");
 
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int idIndex = cursor.getColumnIndex(KEY_SESSION_ID);
-                int dateIndex = cursor.getColumnIndex(KEY_SESSION_DATE);
-                int locationIndex = cursor.getColumnIndex(KEY_SESSION_LOCATION);
-                int durationIndex = cursor.getColumnIndex(KEY_SESSION_DURATION);
-                int fishCaughtIndex = cursor.getColumnIndex(KEY_SESSION_FISH_CAUGHT);
-
-                if (idIndex != -1 && dateIndex != -1 && locationIndex != -1 &&
-                        durationIndex != -1 && fishCaughtIndex != -1) {
-                    String id = cursor.getString(idIndex);
-                    String date = cursor.getString(dateIndex);
-                    String location = cursor.getString(locationIndex);
-                    int duration = cursor.getInt(durationIndex);
-                    int fishCaught = cursor.getInt(fishCaughtIndex);
-
-                    sessions.add(new Object[]{id, date, location, duration, fishCaught});
-                }
-            } while (cursor.moveToNext());
-            cursor.close();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    String id = cursor.getString(cursor.getColumnIndexOrThrow(KEY_SESSION_ID));
+                    String date = cursor.getString(cursor.getColumnIndexOrThrow(KEY_SESSION_DATE));
+                    String location = cursor.getString(cursor.getColumnIndexOrThrow(KEY_SESSION_LOCATION));
+                    int duration = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SESSION_DURATION));
+                    int fishCaught = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SESSION_FISH_CAUGHT));
+                    int steps = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SESSION_STEPS));
+                    sessions.add(new Object[]{id, date, location, duration, fishCaught, steps});
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Log.e("DBSession", "Errore nel caricamento delle sessioni: " + e.getMessage());
+        } finally {
+            database.close();
         }
 
-        database.close();
+        Log.d("DBSession", "Sessioni caricate: " + sessions.size());
+        if (!sessions.isEmpty()) {
+            Log.d("DBSession", "Prima sessione: " + Arrays.toString(sessions.get(0)));
+        } else {
+            Log.d("DBSession", "Nessuna sessione trovata");
+        }
+
         return sessions;
     }
 
     public static void deleteAllData(Context context) {
         SmartAnglerSessionHelper databaseHelper = new SmartAnglerSessionHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
-
         int deletedPhotos = database.delete(PHOTO_TABLE_NAME, null, null);
         int deletedSessions = database.delete(SESSION_TABLE_NAME, null, null);
         database.close();
-
-        Log.d("SmartAngler", "Deleted " + deletedPhotos + " photos and " + deletedSessions + " sessions.");
+        Log.d("SmartAngler", "Eliminati " + deletedPhotos + " foto e " + deletedSessions + " sessioni.");
     }
 }

@@ -5,13 +5,11 @@ import android.graphics.Bitmap;
 public class FishEntry {
     private final Bitmap image;
     private final String name;
-    private final String description;
     private final String date;
 
-    public FishEntry(Bitmap image, String name, String description, String date) {
+    public FishEntry(Bitmap image, String name, String date) {
         this.image = image;
         this.name = name;
-        this.description = description;
         this.date = date;
     }
 
@@ -21,10 +19,6 @@ public class FishEntry {
 
     public String getName() {
         return name;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public String getDate() {

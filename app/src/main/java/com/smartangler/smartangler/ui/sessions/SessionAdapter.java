@@ -1,5 +1,6 @@
 package com.smartangler.smartangler.ui.sessions;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
 
     @Override
     public void onBindViewHolder(@NonNull SessionViewHolder holder, int position) {
+        Log.d("DBSession", "onBindViewHolder called" + sessions.get(0));
         Object[] session = sessions.get(position);
 
         String sessionId = (String) session[0];
@@ -38,12 +40,14 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
         String location = (String) session[2];
         Integer duration = (Integer) session[3];
         Integer fishCaught = (Integer) session[4];
+        Integer steps = (Integer) session[5];
 
         holder.sessionIdTextView.setText("Session ID: " + sessionId);
         holder.dateTextView.setText("Date: " + date);
         holder.locationTextView.setText("Location: " + location);
         holder.durationTextView.setText("Duration: " + duration + " minutes");
         holder.fishCaughtTextView.setText("Fish Caught: " + fishCaught);
+        holder.stepsTextView.setText("Steps: " + steps);
 
         holder.itemView.setOnClickListener(v -> {
             // eventually click for photos
@@ -56,7 +60,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
     }
 
     static class SessionViewHolder extends RecyclerView.ViewHolder {
-        TextView sessionIdTextView, dateTextView, locationTextView, durationTextView, fishCaughtTextView;
+        TextView sessionIdTextView, dateTextView, locationTextView, durationTextView, fishCaughtTextView, stepsTextView;
 
         public SessionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +69,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
             locationTextView = itemView.findViewById(R.id.location_text);
             durationTextView = itemView.findViewById(R.id.duration_text);
             fishCaughtTextView = itemView.findViewById(R.id.fishCaught_text);
+            stepsTextView = itemView.findViewById(R.id.steps_text);
         }
     }
 }

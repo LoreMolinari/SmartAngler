@@ -12,7 +12,7 @@
         android:id="@+id/timer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="00:00"
+        android:text="@string/timerZero"
         android:textSize="24sp"
         android:textColor="?attr/colorOnSurface"
         android:layout_marginTop="16dp"
@@ -97,7 +97,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Toggle Button Group -->
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/toggleButtonGroup"
         android:layout_width="match_parent"
@@ -129,7 +128,6 @@
             app:iconSize="24dp" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
-    <!-- Take Picture Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_take_picture"
         android:layout_width="wrap_content"

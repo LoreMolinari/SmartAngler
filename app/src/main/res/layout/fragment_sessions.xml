@@ -31,6 +31,14 @@
         android:textSize="18sp"
         android:padding="8dp"/>
 
+    <TextView
+        android:id="@+id/total_steps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total Steps: 0"
+        android:textSize="18sp"
+        android:padding="8dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_sessions"
         android:layout_width="match_parent"

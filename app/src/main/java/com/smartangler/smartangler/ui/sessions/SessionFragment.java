@@ -1,5 +1,6 @@
 package com.smartangler.smartangler.ui.sessions;
 
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.smartangler.smartangler.SmartAnglerSessionHelper;
 import com.smartangler.smartangler.databinding.FragmentSessionsBinding;
-import com.smartangler.smartangler.ui.sessions.SessionAdapter;
+import android.util.Log;
 
 import java.util.List;
 
@@ -41,21 +42,26 @@ public class SessionFragment extends Fragment {
     private void loadStatistics() {
         List<Object[]> sessions = SmartAnglerSessionHelper.loadAllSessions(requireContext());
 
+        Log.d("DBSession", "loadStatistics called" + sessions);
         int totalFishCaught = 0;
         int totalDuration = 0;
+        int totalStep =0;
 
         for (Object[] session : sessions) {
             if (session.length >= 5) {
                 totalFishCaught += (int) session[4];
                 totalDuration += (int) session[3];
+                totalStep += (int) session[5];
             }
         }
 
         binding.totalSessions.setText("Total Sessions: " + sessions.size());
         binding.totalFishCaught.setText("Total Fish Caught: " + totalFishCaught);
         binding.totalTime.setText("Total Duration: " + formatTime(totalDuration));
+        binding.totalSteps.setText("Total Steps: " + totalStep);
 
         sessionAdapter.setSessions(sessions);
+        Log.d("DBSession", "loadStatistics called" + sessions);
     }
 
     private String formatTime(int totalMinutes) {
