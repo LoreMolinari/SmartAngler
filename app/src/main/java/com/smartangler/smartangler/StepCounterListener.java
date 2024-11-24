@@ -25,6 +25,7 @@ public class StepCounterListener implements SensorEventListener {
     private double accMag = 0;
     private int lastAddedIndex = 1;
     int stepThreshold = 6;
+    private static final int castThreshold = 600;
 
     TextView stepCountsView;
     CircularProgressIndicator progressBar;
@@ -103,7 +104,11 @@ public class StepCounterListener implements SensorEventListener {
             int forwardSlope = valuesInWindow.get(i + 1) - valuesInWindow.get(i);
             int downwardSlope = valuesInWindow.get(i) - valuesInWindow.get(i - 1);
 
-            if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > stepThreshold) {
+            // Peak due to cast
+            if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > castThreshold) {
+                // TODO: Log cast
+                Log.d("Cast detection", "Cast detected");
+            } else if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > stepThreshold) { // Peak due to step
                 countStep(timePointList.get(i));
             }
         }
