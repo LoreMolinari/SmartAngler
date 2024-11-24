@@ -25,7 +25,7 @@ public class StepCounterListener implements SensorEventListener {
     private double accMag = 0;
     private int lastAddedIndex = 1;
     int stepThreshold = 6;
-    private static final int castThreshold = 600;
+    private static final int castThreshold = 10;
 
     TextView stepCountsView;
     CircularProgressIndicator progressBar;
