@@ -58,6 +58,7 @@
     <string name="location">Location</string>
     <string name="duration">Duration</string>
     <string name="fish_caught">Fish Caught</string>
+    <string name="casts">Casts</string>
     <string name="totalFish">Total Fish Caught: 0</string>
     <string name="totalSessions">Total Sessions: 0</string>
     <string name="totalDuration">Total Duration: 0 minutes</string>
