@@ -103,19 +103,23 @@ public class StepCounterListener implements SensorEventListener {
             int downwardSlope = valuesInWindow.get(i) - valuesInWindow.get(i - 1);
 
             if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > stepThreshold) {
-                accStepCounter += 1;
-                Log.d("ACC STEPS: ", String.valueOf(accStepCounter));
-                stepCountsView.setText(String.valueOf(accStepCounter));
-                progressBar.setProgress(accStepCounter);
-
-                ContentValues databaseEntry = new ContentValues();
-                databaseEntry.put(SmartAnglerOpenHelper.KEY_TIMESTAMP, timePointList.get(i));
-
-                databaseEntry.put(SmartAnglerOpenHelper.KEY_DAY, this.day);
-                databaseEntry.put(SmartAnglerOpenHelper.KEY_HOUR, this.hour);
-
-                database.insert(SmartAnglerOpenHelper.TABLE_NAME, null, databaseEntry);
+                countStep(timePointList.get(i));
             }
         }
+    }
+
+    private void countStep(String timestamp) {
+        accStepCounter += 1;
+        Log.d("ACC STEPS: ", String.valueOf(accStepCounter));
+        stepCountsView.setText(String.valueOf(accStepCounter));
+        progressBar.setProgress(accStepCounter);
+
+        ContentValues databaseEntry = new ContentValues();
+        databaseEntry.put(SmartAnglerOpenHelper.KEY_TIMESTAMP, timestamp);
+
+        databaseEntry.put(SmartAnglerOpenHelper.KEY_DAY, this.day);
+        databaseEntry.put(SmartAnglerOpenHelper.KEY_HOUR, this.hour);
+
+        database.insert(SmartAnglerOpenHelper.TABLE_NAME, null, databaseEntry);
     }
 }
