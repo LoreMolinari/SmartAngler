@@ -3,21 +3,18 @@ package com.smartangler.smartangler;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.os.SystemClock;
 import android.util.Log;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 public class CastDetectorListener implements SensorEventListener {
     private static final int CAST_THRESHOLD = 10;
 
-    private TextView castsView;
+    private final TextView castsView;
     public static int castsCounter = 0;
-    private ArrayList<Integer> accSeries = new ArrayList<>();
+    private final ArrayList<Integer> accSeries = new ArrayList<>();
     private int lastAddedIndex = 1;
     public CastDetectorListener(TextView castsView) {
         this.castsView = castsView;
@@ -48,7 +45,8 @@ public class CastDetectorListener implements SensorEventListener {
             // Peak due to cast
             if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > CAST_THRESHOLD) {
                 castsCounter += 1;
-                castsView.setText("Casts: " + String.valueOf(castsCounter));
+                String castsText = "Casts: " + castsCounter;
+                castsView.setText(castsText);
                 Log.d("Cast detection", "Cast detected");
             }
         }
