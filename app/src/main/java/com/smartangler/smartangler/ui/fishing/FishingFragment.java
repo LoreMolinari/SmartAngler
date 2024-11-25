@@ -147,7 +147,7 @@ public class FishingFragment extends Fragment {
                     totalMinutes,
                     fish_caught,
                     StepCounterListener.accStepCounter,
-                    0 // TODO: Placeholder value
+                    StepCounterListener.castsCounter // TODO: Placeholder value
             );
             fish_caught = 0;
             isSessionActive = false;
