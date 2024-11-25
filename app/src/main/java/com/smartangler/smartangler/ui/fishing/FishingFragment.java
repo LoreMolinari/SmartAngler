@@ -56,6 +56,7 @@ public class FishingFragment extends Fragment {
     private int totalMinutes = 0;
 
     private TextView stepCountsView;
+    private TextView castsView;
     private CircularProgressIndicator progressBar;
     private MaterialButtonToggleGroup toggleButtonGroup;
     private Sensor stepDetector;
@@ -84,6 +85,8 @@ public class FishingFragment extends Fragment {
         progressBar = root.findViewById(R.id.progressBar);
         progressBar.setMax(50);
         progressBar.setProgress(0);
+
+        castsView = root.findViewById(R.id.casts_text);
 
         try {
             sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -116,7 +119,7 @@ public class FishingFragment extends Fragment {
             SQLiteDatabase database = databaseOpenHelper.getWritableDatabase();
 
             if (stepDetector != null) {
-                sensorListener = new StepCounterListener(stepCountsView, progressBar, database);
+                sensorListener = new StepCounterListener(stepCountsView, progressBar, castsView, database);
                 sensorManager.registerListener(sensorListener, stepDetector, SensorManager.SENSOR_DELAY_NORMAL);
                 Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_LONG).show();
             } else {
@@ -124,7 +127,7 @@ public class FishingFragment extends Fragment {
             }
 
             if (accSensor != null) {
-                sensorListener = new StepCounterListener(stepCountsView, progressBar, database);
+                sensorListener = new StepCounterListener(stepCountsView, progressBar, castsView, database);
                 sensorManager.registerListener(sensorListener, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
                 Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_LONG).show();
             } else {

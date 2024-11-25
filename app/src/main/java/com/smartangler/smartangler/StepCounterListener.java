@@ -20,6 +20,7 @@ public class StepCounterListener implements SensorEventListener {
 
     private long lastSensorUpdate = 0;
     public static int accStepCounter = 0;
+    public static int castsCounter = 0;
     ArrayList<Integer> accSeries = new ArrayList<>();
     ArrayList<String> timestampsSeries = new ArrayList<>();
     private double accMag = 0;
@@ -28,6 +29,7 @@ public class StepCounterListener implements SensorEventListener {
     private static final int castThreshold = 10;
 
     TextView stepCountsView;
+    TextView castsView;
     CircularProgressIndicator progressBar;
     private final SQLiteDatabase database;
 
@@ -35,10 +37,11 @@ public class StepCounterListener implements SensorEventListener {
     private String day;
     private String hour;
 
-    public StepCounterListener(TextView stepCountsView, CircularProgressIndicator progressBar, SQLiteDatabase database) {
+    public StepCounterListener(TextView stepCountsView, CircularProgressIndicator progressBar, TextView castsView, SQLiteDatabase database) {
         this.stepCountsView = stepCountsView;
         this.database = database;
         this.progressBar = progressBar;
+        this.castsView = castsView;
     }
 
     @Override
@@ -107,6 +110,8 @@ public class StepCounterListener implements SensorEventListener {
             // Peak due to cast
             if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > castThreshold) {
                 // TODO: Log cast
+                castsCounter += 1;
+                castsView.setText("Casts: " + String.valueOf(castsCounter));
                 Log.d("Cast detection", "Cast detected");
             } else if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > stepThreshold) { // Peak due to step
                 //  TODO: Used step detector only to count steps
