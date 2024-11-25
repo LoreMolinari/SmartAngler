@@ -106,13 +106,8 @@ public class StepCounterListener implements SensorEventListener {
         for (int i = 1; i < valuesInWindow.size() - 1; i++) {
             int forwardSlope = valuesInWindow.get(i + 1) - valuesInWindow.get(i);
             int downwardSlope = valuesInWindow.get(i) - valuesInWindow.get(i - 1);
-
-            // Peak due to cast
-            if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > castThreshold) {
-                castsCounter += 1;
-                castsView.setText("Casts: " + String.valueOf(castsCounter));
-                Log.d("Cast detection", "Cast detected");
-            } else if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > stepThreshold) { // Peak due to step
+            
+            if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > stepThreshold) { // Peak due to step
                 //  TODO: Used step detector only to count steps
                 countStep(timePointList.get(i));
             }
