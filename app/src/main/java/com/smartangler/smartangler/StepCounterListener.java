@@ -109,7 +109,6 @@ public class StepCounterListener implements SensorEventListener {
 
             // Peak due to cast
             if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > castThreshold) {
-                // TODO: Log cast
                 castsCounter += 1;
                 castsView.setText("Casts: " + String.valueOf(castsCounter));
                 Log.d("Cast detection", "Cast detected");
