@@ -109,6 +109,7 @@ public class StepCounterListener implements SensorEventListener {
                 // TODO: Log cast
                 Log.d("Cast detection", "Cast detected");
             } else if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > stepThreshold) { // Peak due to step
+                //  TODO: Used step detector only to count steps
                 countStep(timePointList.get(i));
             }
         }
