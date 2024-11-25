@@ -20,13 +20,11 @@ public class StepCounterListener implements SensorEventListener {
 
     private long lastSensorUpdate = 0;
     public static int accStepCounter = 0;
-    public static int castsCounter = 0;
     ArrayList<Integer> accSeries = new ArrayList<>();
     ArrayList<String> timestampsSeries = new ArrayList<>();
     private double accMag = 0;
     private int lastAddedIndex = 1;
     int stepThreshold = 6;
-    private static final int castThreshold = 10;
 
     TextView stepCountsView;
     TextView castsView;
@@ -106,7 +104,7 @@ public class StepCounterListener implements SensorEventListener {
         for (int i = 1; i < valuesInWindow.size() - 1; i++) {
             int forwardSlope = valuesInWindow.get(i + 1) - valuesInWindow.get(i);
             int downwardSlope = valuesInWindow.get(i) - valuesInWindow.get(i - 1);
-            
+
             if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > stepThreshold) { // Peak due to step
                 //  TODO: Used step detector only to count steps
                 countStep(timePointList.get(i));
