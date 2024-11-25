@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.smartangler.smartangler.CastDetectorListener;
 import com.smartangler.smartangler.R;
 import com.smartangler.smartangler.SmartAnglerOpenHelper;
 import com.smartangler.smartangler.SmartAnglerSessionHelper;
@@ -63,6 +64,7 @@ public class FishingFragment extends Fragment {
     private Sensor accSensor;
     private SensorManager sensorManager;
     private StepCounterListener sensorListener;
+    private CastDetectorListener castDetectorListener;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -127,8 +129,8 @@ public class FishingFragment extends Fragment {
             }
 
             if (accSensor != null) {
-                sensorListener = new StepCounterListener(stepCountsView, progressBar, castsView, database);
-                sensorManager.registerListener(sensorListener, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                castDetectorListener = new CastDetectorListener(castsView);
+                sensorManager.registerListener(castDetectorListener, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
                 Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_LONG).show();
@@ -147,7 +149,7 @@ public class FishingFragment extends Fragment {
                     totalMinutes,
                     fish_caught,
                     StepCounterListener.accStepCounter,
-                    StepCounterListener.castsCounter
+                    CastDetectorListener.castsCounter
             );
             fish_caught = 0;
             isSessionActive = false;
