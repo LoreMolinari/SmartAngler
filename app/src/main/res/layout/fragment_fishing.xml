@@ -3,42 +3,31 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_fishing"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fishing.FishingFragment"
-    android:id="@+id/nav_fishing">
+    tools:context=".ui.fishing.FishingFragment">
 
     <TextView
         android:id="@+id/timer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="@string/timerZero"
-        android:textSize="24sp"
         android:textColor="?attr/colorOnSurface"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewFish"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintTop_toBottomOf="@id/toggleButtonGroup"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/progressCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardElevation="2dp"
+        android:layout_marginTop="16dp"
         app:cardBackgroundColor="?attr/colorSurfaceVariant"
-        app:layout_constraintBottom_toTopOf="@+id/toggleButtonGroup"
+        app:cardElevation="2dp"
         app:layout_constraintTop_toBottomOf="@id/timer_text">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,48 +40,48 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:indeterminate="false"
-                app:indicatorSize="120dp"
-                app:trackThickness="12dp"
                 app:indicatorColor="?attr/colorPrimary"
-                app:trackColor="?attr/colorSurface"
-                app:layout_constraintTop_toTopOf="parent"
+                app:indicatorSize="120dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:trackColor="?attr/colorSurface"
+                app:trackThickness="12dp" />
 
             <TextView
                 android:id="@+id/counter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/num_steps"
-                android:textSize="24sp"
                 android:textColor="?attr/colorOnSurface"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="@+id/progressBar"
                 app:layout_constraintBottom_toBottomOf="@+id/progressBar"
+                app:layout_constraintEnd_toEndOf="@+id/progressBar"
                 app:layout_constraintStart_toStartOf="@+id/progressBar"
-                app:layout_constraintEnd_toEndOf="@+id/progressBar" />
+                app:layout_constraintTop_toTopOf="@+id/progressBar" />
 
             <TextView
                 android:id="@+id/goal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:text="@string/goal"
                 android:textColor="?attr/colorOnSurface"
-                android:layout_marginStart="16dp"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/progressBar"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/steps_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="@string/steps"
                 android:textColor="?attr/colorOnSurface"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/goal"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/goal"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/goal" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -102,10 +91,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
-        app:singleSelection="true"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/progressCard"
         app:selectionRequired="false"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewFish">
+        app:singleSelection="true">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/start_button"
@@ -115,7 +104,7 @@
             android:text="@string/start_text"
             android:textColor="?attr/colorOnPrimary"
             app:icon="@drawable/baseline_play_circle_filled_24"
-            app:iconSize="24dp"/>
+            app:iconSize="24dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/stop_button"
@@ -128,6 +117,23 @@
             app:iconSize="24dp" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toggleButtonGroup">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewFish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+    </ScrollView>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_take_picture"
         android:layout_width="wrap_content"
@@ -135,7 +141,6 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/take_picture"
         android:src="@drawable/ic_menu_camera"
-        android:textColor="?attr/colorOnPrimary"
         android:tint="?attr/colorOnPrimary"
         app:backgroundTint="?attr/colorOnPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
