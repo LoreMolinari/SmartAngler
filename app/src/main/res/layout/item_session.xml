@@ -41,4 +41,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Steps"/>
+
+    <TextView
+        android:id="@+id/casts_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/casts"/>
 </LinearLayout>
