@@ -13,116 +13,64 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class StepCounterListener implements SensorEventListener {
 
-    private long lastSensorUpdate = 0;
-    public static int accStepCounter = 0;
-    ArrayList<Integer> accSeries = new ArrayList<>();
-    ArrayList<String> timestampsSeries = new ArrayList<>();
-    private double accMag = 0;
-    private int lastAddedIndex = 1;
-    int stepThreshold = 6;
+    private long initialStepCount = -1;
+    public static int stepCount = 0;
+    private TextView stepCountsView;
+    private TextView counterPB;
+    private CircularProgressIndicator progressBar;
+    private SQLiteDatabase database;
 
-    TextView stepCountsView;
-    TextView castsView;
-    CircularProgressIndicator progressBar;
-    private final SQLiteDatabase database;
-
-    private String timestamp;
-    private String day;
-    private String hour;
-
-    public StepCounterListener(TextView stepCountsView, CircularProgressIndicator progressBar, TextView castsView, SQLiteDatabase database) {
+    public StepCounterListener(TextView stepCountsView, TextView counterPB, CircularProgressIndicator progressBar, TextView castsView, SQLiteDatabase database) {
         this.stepCountsView = stepCountsView;
-        this.database = database;
+        this.counterPB = counterPB;
         this.progressBar = progressBar;
-        this.castsView = castsView;
+        this.database = database;
     }
 
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        long currentTimeInMilliSecond = System.currentTimeMillis();
+    public void onSensorChanged(SensorEvent event) {
+        Log.d("SensorSC", "Update +1");
+        if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+            if (initialStepCount < 0) {
+                initialStepCount = (long) event.values[0];
+            }
 
-        long timeInMillis = currentTimeInMilliSecond + (sensorEvent.timestamp - SystemClock.elapsedRealtimeNanos()) / 1000000;
+            long currentSteps = (long) event.values[0];
+            stepCount = (int) (currentSteps - initialStepCount);
 
-        SimpleDateFormat jdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-        jdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-        String sensorEventDate = jdf.format(timeInMillis);
-
-        switch (sensorEvent.sensor.getType()) {
-            case Sensor.TYPE_LINEAR_ACCELERATION:
-                float x = sensorEvent.values[0];
-                float y = sensorEvent.values[1];
-                float z = sensorEvent.values[2];
-
-                if ((currentTimeInMilliSecond - lastSensorUpdate) > 1000) {
-                    lastSensorUpdate = currentTimeInMilliSecond;
-                    String sensorRawValues = "  x = " + x + "  y = " + y + "  z = " + z;
-                    Log.d("Acc. Event", "last sensor update at " + sensorEventDate + sensorRawValues);
-                }
-
-                accMag = Math.sqrt(x * x + y * y + z * z);
-
-                accSeries.add((int) accMag);
-
-                timestamp = sensorEventDate;
-                day = sensorEventDate.substring(0, 10);
-                hour = sensorEventDate.substring(11, 13);
-
-                Log.d("SensorEventTimestampInMilliSecond", timestamp);
-
-                timestampsSeries.add(timestamp);
-                peakDetection();
-                break;
-
-            case Sensor.TYPE_STEP_DETECTOR:
-                countStep(sensorEventDate);
-                break;
+            updateUI();
+            saveStepData(event.timestamp);
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 
-    private void peakDetection() {
-
-        int windowSize = 20;
-        int currentSize = accSeries.size();
-        if (currentSize - lastAddedIndex < windowSize) {
-            return;
-        }
-
-        List<Integer> valuesInWindow = accSeries.subList(lastAddedIndex, currentSize);
-        List<String> timePointList = timestampsSeries.subList(lastAddedIndex, currentSize);
-        lastAddedIndex = currentSize;
-
-        for (int i = 1; i < valuesInWindow.size() - 1; i++) {
-            int forwardSlope = valuesInWindow.get(i + 1) - valuesInWindow.get(i);
-            int downwardSlope = valuesInWindow.get(i) - valuesInWindow.get(i - 1);
-
-            if (forwardSlope < 0 && downwardSlope > 0 && valuesInWindow.get(i) > stepThreshold) { // Peak due to step
-                //  TODO: Used step detector only to count steps
-                countStep(timePointList.get(i));
-            }
-        }
+    private void updateUI() {
+        stepCountsView.setText("Steps: " + stepCount);
+        counterPB.setText(String.valueOf(stepCount));
+        progressBar.setProgress(stepCount);
     }
 
-    private void countStep(String timestamp) {
-        accStepCounter += 1;
-        Log.d("ACC STEPS: ", String.valueOf(accStepCounter));
-        stepCountsView.setText(String.valueOf(accStepCounter));
-        progressBar.setProgress(accStepCounter);
+    private void saveStepData(long timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
+        String currentTime = sdf.format(new Date(System.currentTimeMillis()));
 
-        ContentValues databaseEntry = new ContentValues();
-        databaseEntry.put(SmartAnglerOpenHelper.KEY_TIMESTAMP, timestamp);
+        ContentValues values = new ContentValues();
+        values.put(SmartAnglerOpenHelper.KEY_TIMESTAMP, currentTime);
+        values.put(SmartAnglerOpenHelper.KEY_DAY, currentTime.substring(0, 10));
+        values.put(SmartAnglerOpenHelper.KEY_HOUR, currentTime.substring(11, 13));
 
-        databaseEntry.put(SmartAnglerOpenHelper.KEY_DAY, this.day);
-        databaseEntry.put(SmartAnglerOpenHelper.KEY_HOUR, this.hour);
-
-        database.insert(SmartAnglerOpenHelper.TABLE_NAME, null, databaseEntry);
+        database.insert(SmartAnglerOpenHelper.TABLE_NAME, null, values);
     }
 }
