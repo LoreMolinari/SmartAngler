@@ -16,20 +16,15 @@ import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian;
 import com.anychart.enums.HoverMode;
 import com.smartangler.smartangler.R;
-import com.anychart.core.cartesian.series.Column;
 import com.smartangler.smartangler.SmartAnglerSessionHelper;
 import com.smartangler.smartangler.databinding.FragmentStatisticsBinding;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class StatisticsFragment extends Fragment {
 
     private FragmentStatisticsBinding binding;
-    private Date cDate = new Date();
-    private String current_time = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
     private Cartesian cartesian;
 
     @Override
@@ -149,8 +144,8 @@ public class StatisticsFragment extends Fragment {
         cartesian.xAxis(0)
                 .title(xAxisTitle)
                 .labels()
-                .rotation(90);
-                //.padding(5d, 5d, 5d, 5d);
+                .rotation(90)
+                .padding(5d, 5d, 5d, 5d);
 
         cartesian.yAxis(0)
                 .title(yAxisTitle)
