@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="@string/totalSessions"
         android:textSize="18sp"
-        android:padding="8dp"/>
+        android:padding="8dp" />
 
     <TextView
         android:id="@+id/total_fish_caught"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:text="@string/totalFish"
         android:textSize="18sp"
-        android:padding="8dp"/>
+        android:padding="8dp" />
 
     <TextView
         android:id="@+id/total_time"
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:text="@string/totalDuration"
         android:textSize="18sp"
-        android:padding="8dp"/>
+        android:padding="8dp" />
 
     <TextView
         android:id="@+id/total_steps"
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:text="Total Steps: 0"
         android:textSize="18sp"
-        android:padding="8dp"/>
+        android:padding="8dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_sessions"
@@ -46,5 +46,5 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingTop="8dp"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 </LinearLayout>

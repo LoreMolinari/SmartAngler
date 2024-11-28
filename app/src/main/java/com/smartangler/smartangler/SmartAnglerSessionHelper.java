@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
@@ -73,6 +72,7 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL("ALTER TABLE " + SESSION_TABLE_NAME + " ADD COLUMN " + KEY_SESSION_CASTS + " INTEGER");
         }
     }
+
     public static void addPhoto(Context context, String title, byte[] image, String date, String location, String sessionId) {
         SmartAnglerSessionHelper databaseHelper = new SmartAnglerSessionHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();

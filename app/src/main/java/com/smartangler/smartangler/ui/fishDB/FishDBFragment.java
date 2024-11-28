@@ -1,21 +1,18 @@
 package com.smartangler.smartangler.ui.fishDB;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.smartangler.smartangler.Fish;
 import com.smartangler.smartangler.R;
@@ -69,7 +66,7 @@ public class FishDBFragment extends Fragment {
 
 }
 
-class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
+class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private List<Fish> fishList;
 
     public ItemAdapter(List<Fish> fishList) {

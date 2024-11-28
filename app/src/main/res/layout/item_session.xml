@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -10,41 +9,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/session_id"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/date_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/date"/>
+        android:text="@string/date" />
 
     <TextView
         android:id="@+id/location_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/location"/>
+        android:text="@string/location" />
 
     <TextView
         android:id="@+id/duration_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/duration"/>
+        android:text="@string/duration" />
 
     <TextView
         android:id="@+id/fishCaught_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/fish_caught"/>
+        android:text="@string/fish_caught" />
 
     <TextView
         android:id="@+id/steps_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Steps"/>
+        android:text="Steps" />
 
     <TextView
         android:id="@+id/casts_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/casts"/>
+        android:text="@string/casts" />
 </LinearLayout>

@@ -52,8 +52,7 @@ public class StepCounterListener implements SensorEventListener {
         jdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
         String sensorEventDate = jdf.format(timeInMillis);
 
-        switch (sensorEvent.sensor.getType())
-        {
+        switch (sensorEvent.sensor.getType()) {
             case Sensor.TYPE_LINEAR_ACCELERATION:
                 float x = sensorEvent.values[0];
                 float y = sensorEvent.values[1];

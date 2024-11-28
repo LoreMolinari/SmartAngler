@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.smartangler.smartangler.SmartAnglerSessionHelper;
 import com.smartangler.smartangler.databinding.FragmentSessionsBinding;
-import android.util.Log;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class SessionFragment extends Fragment {
 
         int totalFishCaught = 0;
         int totalDuration = 0;
-        int totalStep =0;
+        int totalStep = 0;
 
         for (Object[] session : sessions) {
             if (session.length >= 5) {

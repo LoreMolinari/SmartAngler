@@ -74,13 +74,12 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     };
     // Maybe these should all be ints referencing android strings?
 
-    public SmartAnglerOpenHelper(Context context)
-    {
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+    public SmartAnglerOpenHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     // Load all records in the database
-    public static void loadRecords(Context context){
+    public static void loadRecords(Context context) {
         List<String> dates = new LinkedList<String>();
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
@@ -165,7 +164,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
 
     @SuppressLint("Range")
-    public static List<Fish> loadAllFish(Context context){
+    public static List<Fish> loadAllFish(Context context) {
         Fish newFish;
         List<Fish> fish = new LinkedList<>();
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
@@ -177,11 +176,11 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 null,
                 null,
                 null,
-                null );
+                null);
 
         // iterate over returned elements
         cursor.moveToFirst();
-        for (int index=0; index < cursor.getCount(); index++){
+        for (int index = 0; index < cursor.getCount(); index++) {
             newFish = new Fish(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
 
             newFish.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));

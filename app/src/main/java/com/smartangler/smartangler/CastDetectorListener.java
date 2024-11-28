@@ -16,9 +16,11 @@ public class CastDetectorListener implements SensorEventListener {
     public static int castsCounter = 0;
     private final ArrayList<Integer> accSeries = new ArrayList<>();
     private int lastAddedIndex = 1;
+
     public CastDetectorListener(TextView castsView) {
         this.castsView = castsView;
     }
+
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         float x = sensorEvent.values[0];

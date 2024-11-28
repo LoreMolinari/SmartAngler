@@ -35,7 +35,7 @@
     <string name="delete_all_steps">Delete all steps</string>
     <string name="take_picture">Take picture</string>
 
-<!-- Fish data -->
+    <!-- Fish data -->
     <string name="perch">Perch</string>
     <string name="perch_description">You can make risotto with this</string>
     <string name="perch_techniques">Dropshot,Spinning</string>
@@ -43,10 +43,10 @@
     <string name="perch_seasons">SUMMER,AUTUMN</string>
     <string name="perch_times_of_day">MORNING,AFTERNOON</string>
 
-<!--Fish cards-->
+    <!--Fish cards-->
     <string name="fish_picture">A picture of a fish</string>
 
-<!-- Session DB -->
+    <!-- Session DB -->
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="insert">Insert</string>
