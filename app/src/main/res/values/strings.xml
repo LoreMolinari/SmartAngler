@@ -63,4 +63,8 @@
     <string name="totalSessions">Total Sessions: 0</string>
     <string name="totalDuration">Total Duration: 0 minutes</string>
     <string name="timerZero">00:00</string>
+
+    <!-- Analytics -->
+    <string name="casting">Casting</string>
+    <string name="statistics">Statistics</string>
 </resources>

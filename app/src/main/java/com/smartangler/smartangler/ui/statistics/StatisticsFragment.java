@@ -4,110 +4,172 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.anychart.AnyChart;
-import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian;
-import com.anychart.core.cartesian.series.Column;
-import com.anychart.enums.Anchor;
 import com.anychart.enums.HoverMode;
-import com.anychart.enums.Position;
-import com.anychart.enums.TooltipPositionMode;
 import com.smartangler.smartangler.R;
-import com.smartangler.smartangler.SmartAnglerOpenHelper;
+import com.smartangler.smartangler.SmartAnglerSessionHelper;
 import com.smartangler.smartangler.databinding.FragmentStatisticsBinding;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class StatisticsFragment extends Fragment {
 
-    public int todaySteps = 0;
-    TextView numStepsTextView;
-    AnyChartView anyChartView;
-
-    Date cDate = new Date();
-    String current_time = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
-
-    public Map<Integer, Integer> stepsByHour = null;
-
     private FragmentStatisticsBinding binding;
+    private Cartesian cartesian;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentStatisticsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        return binding.getRoot();
+    }
 
-        // Create column chart
-        anyChartView = root.findViewById(R.id.hourBarChart);
-        anyChartView.setProgressBar(root.findViewById(R.id.loadingBar));
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupChartToggleGroup();
+        setupInitialChart();
+    }
 
-        Cartesian cartesian = createColumnChart();
-        anyChartView.setBackgroundColor("#00000000");
-        anyChartView.setChart(cartesian);
+    private void setupChartToggleGroup() {
+        binding.chartToggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (isChecked) {
+                updateChart(checkedId);
+            }
+        });
+    }
+
+    private void setupInitialChart() {
+        binding.chartToggleGroup.check(R.id.stepsButton);
+        updateChart(R.id.stepsButton);
+    }
+
+    private void updateChart(int checkedId) {
+        binding.loadingBar.setVisibility(View.VISIBLE);
+        binding.anyChartView.setVisibility(View.GONE);
+
+        List<DataEntry> data;
+        String title, xAxisTitle, yAxisTitle;
+
+        if (checkedId == R.id.stepsButton) {
+            data = createStepsData();
+            title = "Steps";
+            xAxisTitle = "Session";
+            yAxisTitle = "Number of steps";
+        } else if (checkedId == R.id.fishCaughtButton) {
+            data = createFishCaughtData();
+            title = "Fish Caught";
+            xAxisTitle = "Session";
+            yAxisTitle = "Number of fish";
+        } else if (checkedId == R.id.castingButton) {
+            data = createCastingData();
+            title = "Castings";
+            xAxisTitle = "Session";
+            yAxisTitle = "Number of castings";
+        } else {
+            binding.loadingBar.setVisibility(View.GONE);
+            return;
+        }
+
+        if (cartesian == null) {
+            cartesian = AnyChart.column();
+            binding.anyChartView.setChart(cartesian);
+        }
+
+        updateColumnChart(data, title, xAxisTitle, yAxisTitle);
+
+        binding.anyChartView.setVisibility(View.VISIBLE);
+        binding.loadingBar.setVisibility(View.GONE);
+    }
+
+    private List<DataEntry> createStepsData() {
+        List<DataEntry> data = new ArrayList<>();
+        List<Object[]> sessions = SmartAnglerSessionHelper.loadAllSessions(requireContext());
+
+        for (int i = sessions.size() - 1; i >= 0; i--) {
+            Object[] session = sessions.get(i);
+            String sessionId = (String) session[0];
+            int steps = (int) session[5];
+            data.add(new ValueDataEntry(sessionId, steps));
+        }
+
+        return data;
+    }
+
+    private List<DataEntry> createFishCaughtData() {
+        List<DataEntry> data = new ArrayList<>();
+        List<Object[]> sessions = SmartAnglerSessionHelper.loadAllSessions(requireContext());
+
+        for (int i = sessions.size() - 1; i >= 0; i--) {
+            Object[] session = sessions.get(i);
+            String sessionId = (String) session[0];
+            int fishCaught = (int) session[4];
+            data.add(new ValueDataEntry(sessionId, fishCaught));
+        }
+
+        return data;
+    }
+
+    private List<DataEntry> createCastingData() {
+        List<DataEntry> data = new ArrayList<>();
+        List<Object[]> sessions = SmartAnglerSessionHelper.loadAllSessions(requireContext());
+
+        for (int i = sessions.size() - 1; i >= 0; i--) {
+            Object[] session = sessions.get(i);
+            String sessionId = (String) session[0];
+            int casts = (int) session[6];
+            data.add(new ValueDataEntry(sessionId, casts));
+        }
+
+        return data;
+    }
+
+    private void updateColumnChart(List<DataEntry> data, String title, String xAxisTitle, String yAxisTitle) {
+        cartesian.data(data);
+
+        cartesian.title()
+                .text(title)
+                .fontSize(18)
+                .fontWeight("500");
+
+        cartesian.xAxis(0)
+                .title(xAxisTitle)
+                .labels()
+                .rotation(90)
+                .padding(5d, 5d, 5d, 5d);
+
+        cartesian.yAxis(0)
+                .title(yAxisTitle)
+                .labels()
+                .format("{%Value}");
 
 
-        return root;
+        cartesian.animation(true);
+        cartesian.yScale().minimum(0);
+
+        cartesian.tooltip()
+                .titleFormat("{%X}")
+                .format("{%Value}")
+                .background()
+                .stroke(String.format("#%06X", (0xFFFFFF & ContextCompat.getColor(requireContext(), R.color.light_md_theme_background))));
+
+        cartesian.interactivity().hoverMode(HoverMode.BY_X);
+
+        cartesian.background().fill(String.format("#%06X", (0xFFFFFF & ContextCompat.getColor(requireContext(), R.color.light_md_theme_background))));
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    public Cartesian createColumnChart() {
-        stepsByHour = SmartAnglerOpenHelper.loadStepsByHour(getContext(), current_time);
-
-        Map<Integer, Integer> graph_map = new TreeMap<>();
-        for (int i = 0; i < 23; i++) {
-            graph_map.put(i, 0);
-        }
-        graph_map.putAll(stepsByHour);
-
-        Cartesian cartesian = AnyChart.column();
-
-        List<DataEntry> data = new ArrayList<>();
-
-        for (Map.Entry<Integer, Integer> entry : graph_map.entrySet())
-            data.add(new ValueDataEntry(entry.getKey(), entry.getValue()));
-
-        Column column = cartesian.column(data);
-
-        column.fill("#1EB980");
-        column.stroke("#1EB980");
-
-        column.tooltip()
-
-                .titleFormat("At hour: {%X}")
-                .format("{%Value} Steps")
-                .anchor(Anchor.RIGHT_BOTTOM);
-
-        column.tooltip()
-                .position(Position.RIGHT_TOP)
-                .offsetX(0d)
-                .offsetY(5);
-
-        cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
-        cartesian.interactivity().hoverMode(HoverMode.BY_X);
-        cartesian.yScale().minimum(0);
-
-        cartesian.yAxis(0).title("Number of steps");
-        cartesian.xAxis(0).title("Hour");
-        cartesian.background().fill("#00000000");
-        cartesian.animation(true);
-
-        return cartesian;
     }
 }
