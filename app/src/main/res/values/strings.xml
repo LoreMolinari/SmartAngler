@@ -66,4 +66,5 @@
 
     <!-- Analytics -->
     <string name="casting">Casting</string>
+    <string name="statistics">Statistics</string>
 </resources>

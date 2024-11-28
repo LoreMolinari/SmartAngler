@@ -15,9 +15,8 @@ import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian;
 import com.anychart.enums.HoverMode;
-import com.anychart.enums.TooltipPositionMode;
 import com.smartangler.smartangler.R;
-import com.smartangler.smartangler.SmartAnglerOpenHelper;
+import com.anychart.core.cartesian.series.Column;
 import com.smartangler.smartangler.SmartAnglerSessionHelper;
 import com.smartangler.smartangler.databinding.FragmentStatisticsBinding;
 
@@ -25,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class StatisticsFragment extends Fragment {
 
@@ -99,12 +97,14 @@ public class StatisticsFragment extends Fragment {
     }
 
     private List<DataEntry> createStepsData() {
-        Map<Integer, Integer> stepsByHour = SmartAnglerOpenHelper.loadStepsByHour(getContext(), current_time);
         List<DataEntry> data = new ArrayList<>();
+        List<Object[]> sessions = SmartAnglerSessionHelper.loadAllSessions(requireContext());
 
-        for (int i = 0; i < 24; i++) {
-            int steps = stepsByHour.containsKey(i) ? stepsByHour.get(i) : 0;
-            data.add(new ValueDataEntry(i, steps));
+        for (int i = sessions.size() - 1; i >= 0; i--) {
+            Object[] session = sessions.get(i);
+            String sessionId = (String) session[0];
+            int steps = (int) session[5];
+            data.add(new ValueDataEntry(sessionId, steps));
         }
 
         return data;
@@ -114,38 +114,59 @@ public class StatisticsFragment extends Fragment {
         List<DataEntry> data = new ArrayList<>();
         List<Object[]> sessions = SmartAnglerSessionHelper.loadAllSessions(requireContext());
 
-        int totalFishCaught = 0;
-        int i=0;
-
-        for (Object[] session : sessions) {
-            totalFishCaught = (int) session[4];
-            data.add(new ValueDataEntry(i, totalFishCaught));
-            i++;
+        for (int i = sessions.size() - 1; i >= 0; i--) {
+            Object[] session = sessions.get(i);
+            String sessionId = (String) session[0];
+            int fishCaught = (int) session[4];
+            data.add(new ValueDataEntry(sessionId, fishCaught));
         }
 
         return data;
     }
 
     private List<DataEntry> createCastingData() {
-        //TODO Now random import from new database
         List<DataEntry> data = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
-            data.add(new ValueDataEntry(i, (int) (Math.random() * 20)));
+        List<Object[]> sessions = SmartAnglerSessionHelper.loadAllSessions(requireContext());
+
+        for (int i = sessions.size() - 1; i >= 0; i--) {
+            Object[] session = sessions.get(i);
+            String sessionId = (String) session[0];
+            int casts = (int) session[6];
+            data.add(new ValueDataEntry(sessionId, casts));
         }
+
         return data;
     }
 
     private void updateColumnChart(List<DataEntry> data, String title, String xAxisTitle, String yAxisTitle) {
         cartesian.data(data);
-        cartesian.title(title);
-        cartesian.xAxis(0).title(xAxisTitle);
-        cartesian.yAxis(0).title(yAxisTitle);
+
+        cartesian.title()
+                .text(title)
+                .fontSize(18)
+                .fontWeight("500");
+
+        cartesian.xAxis(0)
+                .title(xAxisTitle)
+                .labels()
+                .rotation(90);
+                //.padding(5d, 5d, 5d, 5d);
+
+        cartesian.yAxis(0)
+                .title(yAxisTitle)
+                .labels()
+                .format("{%Value}");
+
 
         cartesian.animation(true);
         cartesian.yScale().minimum(0);
-        cartesian.yAxis(0).labels().format("{%Value}");
-        cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
-        cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
+
+        cartesian.tooltip()
+                .titleFormat("{%X}")
+                .format("{%Value}")
+                .background()
+                .stroke(String.format("#%06X", (0xFFFFFF & ContextCompat.getColor(requireContext(), R.color.light_md_theme_background))));
+
         cartesian.interactivity().hoverMode(HoverMode.BY_X);
 
         cartesian.background().fill(String.format("#%06X", (0xFFFFFF & ContextCompat.getColor(requireContext(), R.color.light_md_theme_background))));
