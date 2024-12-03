@@ -44,7 +44,6 @@ public class HomeFragment extends Fragment {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-
         return root;
     }
 
