@@ -3,6 +3,7 @@ package com.smartangler.smartangler.ui.home;
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,12 +23,14 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.smartangler.smartangler.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+    private FusedLocationProviderClient fusedLocationClient;
 
     private FragmentHomeBinding binding;
 
@@ -38,6 +41,9 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
 
         return root;
     }
@@ -55,6 +61,18 @@ public class HomeFragment extends Fragment {
             Log.d("Location service", "Location access granted");
         } else {
             Log.d("Location service", "Location access already granted");
+        }
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                Log.d("Location service", location.toString());
+                            }
+                        }
+                    });
         }
     }
 
