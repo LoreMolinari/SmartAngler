@@ -22,6 +22,7 @@
     <string name="start_text">Start</string>
     <string name="stop_text">Stop</string>
     <string name="acc_sensor_not_available">Acc. sensor not available</string>
+    <string name="sensor_not_available">Sensor not available</string>
     <string name="step_detector_sensor_not_available">STEP_DETECTOR sensor not available</string>
     <string name="step_permission_denied">Step permission is denied </string>
     <string name="favorite">Favourite</string>

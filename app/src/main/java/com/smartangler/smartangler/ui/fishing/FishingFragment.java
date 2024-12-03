@@ -57,18 +57,22 @@ public class FishingFragment extends Fragment {
     private int totalMinutes = 0;
 
     private TextView stepCountsView;
+    private TextView counterPB;
     private TextView castsView;
     private CircularProgressIndicator progressBar;
     private MaterialButtonToggleGroup toggleButtonGroup;
-    private Sensor stepDetector;
+    private Sensor stepCounter;
     private Sensor accSensor;
     private SensorManager sensorManager;
     private StepCounterListener sensorListener;
     private CastDetectorListener castDetectorListener;
+    private static final int PHYSICAL_ACTIVITY_PERMISSION_REQUEST_CODE = 1001;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFishingBinding.inflate(inflater, container, false);
+
+        checkAndRequestPhysicalActivityPermission();
 
         binding.buttonTakePicture.setOnClickListener(v -> checkCameraPermission());
 
@@ -81,7 +85,9 @@ public class FishingFragment extends Fragment {
 
         //Steps
         View root = binding.getRoot();
-        stepCountsView = root.findViewById(R.id.counter);
+        stepCountsView = root.findViewById(R.id.steps_text);
+
+        counterPB = root.findViewById(R.id.counter);
         stepCountsView.setText("0");
 
         progressBar = root.findViewById(R.id.progressBar);
@@ -95,7 +101,7 @@ public class FishingFragment extends Fragment {
         } catch (NullPointerException e) {
             Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_LONG).show();
         }
-        stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR); // How about step counter instead of detector?
+        stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER); // How about step counter instead of detector?
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         return binding.getRoot();
@@ -120,12 +126,12 @@ public class FishingFragment extends Fragment {
             SmartAnglerOpenHelper databaseOpenHelper = new SmartAnglerOpenHelper(this.getContext());
             SQLiteDatabase database = databaseOpenHelper.getWritableDatabase();
 
-            if (stepDetector != null) {
-                sensorListener = new StepCounterListener(stepCountsView, progressBar, castsView, database);
-                sensorManager.registerListener(sensorListener, stepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+            if (stepCounter != null) {
+                sensorListener = new StepCounterListener(stepCountsView, counterPB, progressBar, castsView, database);
+                sensorManager.registerListener(sensorListener, stepCounter, SensorManager.SENSOR_DELAY_NORMAL);
                 Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.sensor_not_available, Toast.LENGTH_LONG).show();
             }
 
             if (accSensor != null) {
@@ -139,6 +145,7 @@ public class FishingFragment extends Fragment {
     }
 
     private void stopFishingSession() {
+        int stepCount = StepCounterListener.stepCount;
         if (isSessionActive) {
             String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
             SmartAnglerSessionHelper.addSession(
@@ -148,7 +155,7 @@ public class FishingFragment extends Fragment {
                     "Unknown Location",
                     totalMinutes,
                     fish_caught,
-                    StepCounterListener.accStepCounter,
+                    stepCount,
                     CastDetectorListener.castsCounter
             );
             fish_caught = 0;
@@ -158,6 +165,10 @@ public class FishingFragment extends Fragment {
             Toast.makeText(requireContext(), "Fishing session ended", Toast.LENGTH_SHORT).show();
 
             sensorManager.unregisterListener(sensorListener);
+            progressBar.setProgress(0);
+            counterPB.setText("0");
+            castsView.setText("casts: "  + 0);
+            stepCountsView.setText("steps: " + 0);
             Toast.makeText(getContext(), R.string.stop_text, Toast.LENGTH_LONG).show();
         }
     }
@@ -183,6 +194,20 @@ public class FishingFragment extends Fragment {
         }
     };
 
+    private void checkAndRequestPhysicalActivityPermission() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACTIVITY_RECOGNITION
+        ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(
+                    new String[]{Manifest.permission.ACTIVITY_RECOGNITION},
+                    PHYSICAL_ACTIVITY_PERMISSION_REQUEST_CODE
+            );
+        }
+    }
+
+
     private void checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -198,7 +223,7 @@ public class FishingFragment extends Fragment {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera();
             } else {
-                Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -226,7 +251,6 @@ public class FishingFragment extends Fragment {
     private void saveFishEntry(Bitmap imageBitmap) {
         String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
         String title = "Fish " + (fishEntries.size() + 1);
-        String description = "Caught on " + currentDate;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
