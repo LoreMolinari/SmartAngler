@@ -55,6 +55,7 @@ public class HomeFragment extends Fragment {
         // Check location permission and request if not granted
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
+            Log.d("Location service", "Location access not granted, asking for permission");
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
@@ -70,6 +71,9 @@ public class HomeFragment extends Fragment {
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 Log.d("Location service", location.toString());
+                            } else {
+                                Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
+                                Log.d("Location service", "Location unavailable");
                             }
                         }
                     });
