@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.smartangler.smartangler.R;
 import com.smartangler.smartangler.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
@@ -27,6 +29,7 @@ public class HomeFragment extends Fragment {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private FusedLocationProviderClient fusedLocationClient;
 
+    private TextView locationText;
     private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,6 +41,9 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        locationText = root.findViewById(R.id.current_location_text);
+        locationText.setText(getString(R.string.current_location, "unknown"));
 
         return root;
     }
@@ -65,9 +71,11 @@ public class HomeFragment extends Fragment {
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 Log.d("Location service", location.toString());
+                                locationText.setText(getString(R.string.current_location, location.toString()));
                             } else {
                                 Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                                 Log.d("Location service", "Location unavailable");
+                                locationText.setText(getString(R.string.current_location, "unknown"));
                             }
                         }
                     });
