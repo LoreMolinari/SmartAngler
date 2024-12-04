@@ -37,7 +37,7 @@ public class HomeFragment extends Fragment {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private FusedLocationProviderClient fusedLocationClient;
 
-    private TextView locationText;
+    private TextView seasonText, timeOfDayText, locationText;
     private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -50,6 +50,12 @@ public class HomeFragment extends Fragment {
 
         RecyclerView recyclerView = root.findViewById(R.id.home_fish_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        seasonText = root.findViewById(R.id.current_season_text);
+        seasonText.setText(getString(R.string.current_season, Fish.getCurrentSeason()));
+
+        timeOfDayText = root.findViewById(R.id.current_time_of_day_text);
+        timeOfDayText.setText(getString(R.string.current_time_of_day, Fish.getCurrentTimeOfDay()));
 
         List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay());
         String fishString = new String();
