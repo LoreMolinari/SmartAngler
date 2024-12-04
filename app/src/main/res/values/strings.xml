@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xlliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">SmartAngler</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -64,6 +64,10 @@
     <string name="totalSessions">Total Sessions: 0</string>
     <string name="totalDuration">Total Duration: 0 minutes</string>
     <string name="timerZero">00:00</string>
+
+    <!-- Fishing fragment   -->
+    <string name="steps_counter">Steps: <xlliff:g id="steps_number">%d</xlliff:g></string>
+    <string name="casts_counter">Casts: <xlliff:g id="casts_number">%d</xlliff:g></string>
 
     <!-- Analytics -->
     <string name="casting">Casting</string>

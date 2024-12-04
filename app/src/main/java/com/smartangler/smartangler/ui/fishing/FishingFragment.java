@@ -86,15 +86,16 @@ public class FishingFragment extends Fragment {
         //Steps
         View root = binding.getRoot();
         stepCountsView = root.findViewById(R.id.steps_text);
+        stepCountsView.setText(getString(R.string.steps_counter, 0));
 
         counterPB = root.findViewById(R.id.counter);
-        stepCountsView.setText("0");
 
         progressBar = root.findViewById(R.id.progressBar);
         progressBar.setMax(50);
         progressBar.setProgress(0);
 
         castsView = root.findViewById(R.id.casts_text);
+        castsView.setText(getString(R.string.casts_counter, 0));
 
         try {
             sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -126,6 +127,11 @@ public class FishingFragment extends Fragment {
             SmartAnglerOpenHelper databaseOpenHelper = new SmartAnglerOpenHelper(this.getContext());
             SQLiteDatabase database = databaseOpenHelper.getWritableDatabase();
 
+            progressBar.setProgress(0);
+            counterPB.setText("0");
+            castsView.setText(getString(R.string.casts_counter, 0));
+            stepCountsView.setText(getString(R.string.steps_counter, 0));
+
             if (stepCounter != null) {
                 sensorListener = new StepCounterListener(stepCountsView, counterPB, progressBar, castsView, database);
                 sensorManager.registerListener(sensorListener, stepCounter, SensorManager.SENSOR_DELAY_NORMAL);
@@ -137,15 +143,11 @@ public class FishingFragment extends Fragment {
             if (accSensor != null) {
                 castDetectorListener = new CastDetectorListener(castsView);
                 sensorManager.registerListener(castDetectorListener, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                CastDetectorListener.resetCounter();
                 Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_LONG).show();
             }
-
-            progressBar.setProgress(0);
-            counterPB.setText("0");
-            castsView.setText("Casts: "  + 0);
-            stepCountsView.setText("Steps: " + 0);
         }
     }
 
@@ -170,11 +172,6 @@ public class FishingFragment extends Fragment {
             Toast.makeText(requireContext(), "Fishing session ended", Toast.LENGTH_SHORT).show();
 
             sensorManager.unregisterListener(sensorListener);
-            progressBar.setProgress(0);
-            counterPB.setText("0");
-            castsView.setText("Casts: "  + 0);
-            CastDetectorListener.resetCounter();
-            stepCountsView.setText("Steps: " + 0);
             Toast.makeText(getContext(), R.string.stop_text, Toast.LENGTH_LONG).show();
         }
     }
