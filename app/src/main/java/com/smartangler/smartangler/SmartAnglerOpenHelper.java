@@ -86,7 +86,6 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 null,
                 null);
 
-        // iterate over returned elements
         List<Fish> fish = getFishList(cursor);
         database.close();
 
@@ -119,7 +118,6 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 null,
                 null);
 
-        // iterate over returned elements
         List<Fish> fish = getFishList(cursor);
         database.close();
 
