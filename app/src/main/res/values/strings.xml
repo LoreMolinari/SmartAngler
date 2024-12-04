@@ -75,5 +75,6 @@
 
     <!-- Home fragment   -->
     <string name="home_title">Welcome to SmartAngler</string>
-    <string name="current_location">Current location: <xliff:g id="location">%s</xliff:g></string>
+    <string name="current_location">Current location: <xliff:g id="latitude">%f</xliff:g> <xliff:g id="longitude">%f</xliff:g></string>
+    <string name="current_location_unknown">Current location unknown</string>
 </resources>

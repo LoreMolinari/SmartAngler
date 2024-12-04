@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         locationText = root.findViewById(R.id.current_location_text);
-        locationText.setText(getString(R.string.current_location, "unknown"));
+        locationText.setText(getString(R.string.current_location_unknown));
 
         return root;
     }
@@ -70,11 +70,13 @@ public class HomeFragment extends Fragment {
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 Log.d("Location service", location.toString());
-                                locationText.setText(getString(R.string.current_location, location.toString()));
+                                locationText.setText(getString(R.string.current_location,
+                                        location.getLatitude(),
+                                        location.getLongitude()));
                             } else {
                                 Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                                 Log.d("Location service", "Location unavailable");
-                                locationText.setText(getString(R.string.current_location, "unknown"));
+                                locationText.setText(getString(R.string.current_location_unknown));
                             }
                         }
                     });
