@@ -16,12 +16,20 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.smartangler.smartangler.Fish;
+import com.smartangler.smartangler.ItemAdapter;
 import com.smartangler.smartangler.R;
+import com.smartangler.smartangler.SmartAnglerOpenHelper;
 import com.smartangler.smartangler.databinding.FragmentHomeBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -38,6 +46,19 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        RecyclerView recyclerView = root.findViewById(R.id.home_fish_recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        List<Fish> fishList = SmartAnglerOpenHelper.loadAllFish(this.getContext());
+        String fishString = new String();
+
+        for (Fish fish : fishList) {
+            fishString = fishString.concat(fish.toString());
+        }
+
+        ItemAdapter adapter = new ItemAdapter(fishList);
+        recyclerView.setAdapter(adapter);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
