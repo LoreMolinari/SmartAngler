@@ -100,7 +100,7 @@ public class FishingFragment extends Fragment {
         try {
             sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         } catch (NullPointerException e) {
-            Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_SHORT).show();
         }
         stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER); // How about step counter instead of detector?
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
@@ -135,18 +135,18 @@ public class FishingFragment extends Fragment {
             if (stepCounter != null) {
                 sensorListener = new StepCounterListener(stepCountsView, counterPB, progressBar, castsView, database);
                 sensorManager.registerListener(sensorListener, stepCounter, SensorManager.SENSOR_DELAY_NORMAL);
-                Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), R.string.sensor_not_available, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.sensor_not_available, Toast.LENGTH_SHORT).show();
             }
 
             if (accSensor != null) {
                 castDetectorListener = new CastDetectorListener(castsView);
                 sensorManager.registerListener(castDetectorListener, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
                 CastDetectorListener.resetCounter();
-                Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -172,7 +172,7 @@ public class FishingFragment extends Fragment {
             Toast.makeText(requireContext(), "Fishing session ended", Toast.LENGTH_SHORT).show();
 
             sensorManager.unregisterListener(sensorListener);
-            Toast.makeText(getContext(), R.string.stop_text, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.stop_text, Toast.LENGTH_SHORT).show();
         }
     }
 
