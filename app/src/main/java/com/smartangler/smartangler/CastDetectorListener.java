@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CastDetectorListener implements SensorEventListener {
-    private static final int CAST_THRESHOLD = 10;
+    private static final int CAST_THRESHOLD = 30;
 
     private final TextView castsView;
     public static int castsCounter = 0;
@@ -49,7 +49,7 @@ public class CastDetectorListener implements SensorEventListener {
                 castsCounter += 1;
                 String castsText = "Casts: " + castsCounter;
                 castsView.setText(castsText);
-                Log.d("Cast detection", "Cast detected");
+                Log.d("Cast detection", "Cast detected with peak at " + valuesInWindow.get(i));
             }
         }
     }
