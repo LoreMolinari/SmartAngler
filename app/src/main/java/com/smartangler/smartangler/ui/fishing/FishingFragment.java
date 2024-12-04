@@ -141,6 +141,11 @@ public class FishingFragment extends Fragment {
             } else {
                 Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_LONG).show();
             }
+
+            progressBar.setProgress(0);
+            counterPB.setText("0");
+            castsView.setText("Casts: "  + 0);
+            stepCountsView.setText("Steps: " + 0);
         }
     }
 
