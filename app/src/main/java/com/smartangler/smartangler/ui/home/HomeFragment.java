@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment {
 
         List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay());
 
-        if (fishList.size() == 0) {
+        if (fishList.isEmpty()) {
             noFishLikelyText = root.findViewById(R.id.no_fish_likely_text);
             noFishLikelyText.setVisibility(View.VISIBLE);
         }
