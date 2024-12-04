@@ -50,7 +50,7 @@ public class HomeFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.home_fish_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        List<Fish> fishList = SmartAnglerOpenHelper.loadAllFish(this.getContext());
+        List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.Season.AUTUMN, Fish.TimeOfDay.AFTERNOON);
         String fishString = new String();
 
         for (Fish fish : fishList) {

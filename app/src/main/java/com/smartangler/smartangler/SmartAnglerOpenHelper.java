@@ -226,6 +226,82 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         return fish;
     }
 
+    @SuppressLint("Range")
+    public static List<Fish> getFishByConditions(Context context, Fish.Season season, Fish.TimeOfDay timeOfDay) {
+        Fish newFish;
+        List<Fish> fish = new LinkedList<>();
+        SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
+        SQLiteDatabase database = databaseHelper.getReadableDatabase();
+
+        String selection = String.format("%s like ? AND %s like ?",
+                KEY_SEASONS,
+                KEY_TIMES_OF_DAY
+                ); // TODO: Add lat and long
+        String[] selectionArgs = new String[] {
+                "%" + season.toString() + "%",
+                "%" + timeOfDay.toString() + "%"
+        };
+
+        Log.d("Query: ", selection);
+        Log.d("Query: ", selectionArgs[0]);
+        Log.d("Query: ", selectionArgs[1]);
+
+        Cursor cursor = database.query(SmartAnglerOpenHelper.FISH_TABLE_NAME,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null);
+
+        // iterate over returned elements
+        cursor.moveToFirst();
+        for (int index = 0; index < cursor.getCount(); index++) {
+            newFish = new Fish(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
+
+            newFish.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
+
+            String techniquesString = cursor.getString(cursor.getColumnIndex(KEY_TECHNIQUES));
+            if (techniquesString != null) {
+                List<String> techniquesList = Arrays.asList(techniquesString.split(","));
+                for (String technique : techniquesList) {
+                    newFish.addTechnique(technique);
+                }
+            }
+
+            String baitsAndLuresString = cursor.getString(cursor.getColumnIndex(KEY_BAITS_AND_LURES));
+            if (baitsAndLuresString != null) {
+                List<String> baitsAndLuresList = Arrays.asList(baitsAndLuresString.split(","));
+                for (String baitOrLure : baitsAndLuresList) {
+                    newFish.addBaitOrLure(baitOrLure);
+                }
+            }
+
+            String seasonsString = cursor.getString(cursor.getColumnIndex(KEY_SEASONS));
+            if (seasonsString != null) {
+                List<String> seasonsList = Arrays.asList(seasonsString.split(","));
+                for (String fishSeason : seasonsList) {
+                    newFish.addSeason(Fish.Season.valueOf(fishSeason));
+                }
+            }
+
+            String timesOfDayString = cursor.getString(cursor.getColumnIndex(KEY_TIMES_OF_DAY));
+            if (timesOfDayString != null) {
+                List<String> timesOfDayList = Arrays.asList(timesOfDayString.split(","));
+                for (String fishTimeOfDay : timesOfDayList) {
+                    newFish.addTimeOfDay(Fish.TimeOfDay.valueOf(fishTimeOfDay));
+                }
+            }
+
+            fish.add(newFish);
+            cursor.moveToNext();
+        }
+        database.close();
+
+        Log.d("Fetched fish: ", String.valueOf(fish.size()));
+        return  fish;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_TABLE_SQL);
