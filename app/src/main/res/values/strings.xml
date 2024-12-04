@@ -79,4 +79,5 @@
     <string name="current_time_of_day">Current time of day: <xliff:g id="time_of_day">%s</xliff:g></string>
     <string name="current_location">Current location: <xliff:g id="latitude">%f</xliff:g> <xliff:g id="longitude">%f</xliff:g></string>
     <string name="current_location_unknown">Current location unknown</string>
+    <string name="no_fish_likely">Sorry, it looks like you aren\'t likely to find any fish in these conditions</string>
 </resources>
