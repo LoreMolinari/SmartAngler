@@ -58,11 +58,6 @@ public class HomeFragment extends Fragment {
         timeOfDayText.setText(getString(R.string.current_time_of_day, Fish.getCurrentTimeOfDay()));
 
         List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay());
-        String fishString = new String();
-
-        for (Fish fish : fishList) {
-            fishString = fishString.concat(fish.toString());
-        }
 
         ItemAdapter adapter = new ItemAdapter(fishList);
         recyclerView.setAdapter(adapter);

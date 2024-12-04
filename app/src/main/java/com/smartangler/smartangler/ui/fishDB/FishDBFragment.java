@@ -42,11 +42,6 @@ public class FishDBFragment extends Fragment {
 
         fishList = new ArrayList<>();
         fishList = SmartAnglerOpenHelper.loadAllFish(this.getContext());
-        String fishString = new String();
-
-        for (Fish fish : fishList) {
-            fishString = fishString.concat(fish.toString());
-        }
 
         ItemAdapter adapter = new ItemAdapter(fishList);
         recyclerView.setAdapter(adapter);
