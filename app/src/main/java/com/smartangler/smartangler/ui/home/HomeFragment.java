@@ -29,6 +29,7 @@ import com.smartangler.smartangler.SmartAnglerOpenHelper;
 import com.smartangler.smartangler.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -50,7 +51,7 @@ public class HomeFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.home_fish_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.Season.AUTUMN, Fish.TimeOfDay.AFTERNOON);
+        List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay());
         String fishString = new String();
 
         for (Fish fish : fishList) {
