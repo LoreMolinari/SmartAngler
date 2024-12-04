@@ -168,6 +168,7 @@ public class FishingFragment extends Fragment {
             progressBar.setProgress(0);
             counterPB.setText("0");
             castsView.setText("casts: "  + 0);
+            CastDetectorListener.resetCounter();
             stepCountsView.setText("steps: " + 0);
             Toast.makeText(getContext(), R.string.stop_text, Toast.LENGTH_LONG).show();
         }

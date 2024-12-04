@@ -58,4 +58,8 @@ public class CastDetectorListener implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    public static void resetCounter() {
+        castsCounter = 0;
+    }
 }
