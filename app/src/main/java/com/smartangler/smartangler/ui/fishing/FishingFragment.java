@@ -60,7 +60,6 @@ public class FishingFragment extends Fragment {
     private TextView counterPB;
     private TextView castsView;
     private CircularProgressIndicator progressBar;
-    private MaterialButtonToggleGroup toggleButtonGroup;
     private Sensor stepCounter;
     private Sensor accSensor;
     private SensorManager sensorManager;
