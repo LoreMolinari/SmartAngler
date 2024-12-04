@@ -57,6 +57,11 @@ public class HomeFragment extends Fragment {
         timeOfDayText = root.findViewById(R.id.current_time_of_day_text);
         timeOfDayText.setText(getString(R.string.current_time_of_day, Fish.getCurrentTimeOfDay()));
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        locationText = root.findViewById(R.id.current_location_text);
+        locationText.setText(getString(R.string.current_location_unknown));
+
         List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay());
 
         if (fishList.isEmpty()) {
@@ -66,11 +71,6 @@ public class HomeFragment extends Fragment {
 
         ItemAdapter adapter = new ItemAdapter(fishList);
         recyclerView.setAdapter(adapter);
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-        locationText = root.findViewById(R.id.current_location_text);
-        locationText.setText(getString(R.string.current_location_unknown));
 
         return root;
     }
