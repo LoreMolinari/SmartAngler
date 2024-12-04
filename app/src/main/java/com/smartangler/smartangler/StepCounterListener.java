@@ -46,7 +46,6 @@ public class StepCounterListener implements SensorEventListener {
             stepCount = (int) (currentSteps - initialStepCount);
 
             updateUI();
-            saveStepData(event.timestamp);
         }
     }
 
@@ -59,18 +58,5 @@ public class StepCounterListener implements SensorEventListener {
         stepCountsView.setText("Steps: " + stepCount);
         counterPB.setText(String.valueOf(stepCount));
         progressBar.setProgress(stepCount);
-    }
-
-    private void saveStepData(long timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS", Locale.getDefault());
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-        String currentTime = sdf.format(new Date(System.currentTimeMillis()));
-
-        ContentValues values = new ContentValues();
-        values.put(SmartAnglerOpenHelper.KEY_TIMESTAMP, currentTime);
-        values.put(SmartAnglerOpenHelper.KEY_DAY, currentTime.substring(0, 10));
-        values.put(SmartAnglerOpenHelper.KEY_HOUR, currentTime.substring(11, 13));
-
-        database.insert(SmartAnglerOpenHelper.TABLE_NAME, null, values);
     }
 }
