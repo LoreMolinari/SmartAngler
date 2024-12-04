@@ -38,6 +38,7 @@ public class HomeFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
 
     private TextView seasonText, timeOfDayText, locationText, noFishLikelyText;
+    private RecyclerView recyclerView;
     private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -48,7 +49,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        RecyclerView recyclerView = root.findViewById(R.id.home_fish_recycler);
+        recyclerView = root.findViewById(R.id.home_fish_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         seasonText = root.findViewById(R.id.current_season_text);
@@ -73,6 +74,40 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         return root;
+    }
+
+    private void refreshConditions() {
+        seasonText.setText(getString(R.string.current_season, Fish.getCurrentSeason()));
+        timeOfDayText.setText(getString(R.string.current_time_of_day, Fish.getCurrentTimeOfDay()));
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                Log.d("Location service", location.toString());
+                                locationText.setText(getString(R.string.current_location,
+                                        location.getLatitude(),
+                                        location.getLongitude()));
+                            } else {
+                                Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
+                                Log.d("Location service", "Location unavailable");
+                                locationText.setText(getString(R.string.current_location_unknown));
+                            }
+                        }
+                    });
+        }
+
+
+        List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay());
+
+        if (fishList.isEmpty()) {
+            noFishLikelyText.setVisibility(View.VISIBLE);
+        }
+
+        ItemAdapter adapter = new ItemAdapter(fishList);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
