@@ -41,8 +41,6 @@ public class FishDBFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        SmartAnglerOpenHelper databaseOpenHelper = new SmartAnglerOpenHelper(this.getContext());
-
         fishList = new ArrayList<>();
         fishList = SmartAnglerOpenHelper.loadAllFish(this.getContext());
         String fishString = new String();
