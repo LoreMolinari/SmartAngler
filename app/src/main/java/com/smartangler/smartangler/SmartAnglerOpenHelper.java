@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,10 +74,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    @SuppressLint("Range")
     public static List<Fish> loadAllFish(Context context) {
-        Fish newFish;
-        List<Fish> fish = new LinkedList<>();
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
@@ -89,57 +87,14 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 null);
 
         // iterate over returned elements
-        cursor.moveToFirst();
-        for (int index = 0; index < cursor.getCount(); index++) {
-            newFish = new Fish(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
-
-            newFish.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
-
-            String techniquesString = cursor.getString(cursor.getColumnIndex(KEY_TECHNIQUES));
-            if (techniquesString != null) {
-                List<String> techniquesList = Arrays.asList(techniquesString.split(","));
-                for (String technique : techniquesList) {
-                    newFish.addTechnique(technique);
-                }
-            }
-
-            String baitsAndLuresString = cursor.getString(cursor.getColumnIndex(KEY_BAITS_AND_LURES));
-            if (baitsAndLuresString != null) {
-                List<String> baitsAndLuresList = Arrays.asList(baitsAndLuresString.split(","));
-                for (String baitOrLure : baitsAndLuresList) {
-                    newFish.addBaitOrLure(baitOrLure);
-                }
-            }
-
-            String seasonsString = cursor.getString(cursor.getColumnIndex(KEY_SEASONS));
-            if (seasonsString != null) {
-                List<String> seasonsList = Arrays.asList(seasonsString.split(","));
-                for (String season : seasonsList) {
-                    newFish.addSeason(Fish.Season.valueOf(season));
-                }
-            }
-
-            String timesOfDayString = cursor.getString(cursor.getColumnIndex(KEY_TIMES_OF_DAY));
-            if (timesOfDayString != null) {
-                List<String> timesOfDayList = Arrays.asList(timesOfDayString.split(","));
-                for (String timeOfDay : timesOfDayList) {
-                    newFish.addTimeOfDay(Fish.TimeOfDay.valueOf(timeOfDay));
-                }
-            }
-
-            fish.add(newFish);
-            cursor.moveToNext();
-        }
+        List<Fish> fish = getFishList(cursor);
         database.close();
 
         Log.d("Fetched fish: ", String.valueOf(fish.size()));
         return fish;
     }
 
-    @SuppressLint("Range")
     public static List<Fish> getFishByConditions(Context context, Fish.Season season, Fish.TimeOfDay timeOfDay) {
-        Fish newFish;
-        List<Fish> fish = new LinkedList<>();
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
@@ -165,6 +120,18 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 null);
 
         // iterate over returned elements
+        List<Fish> fish = getFishList(cursor);
+        database.close();
+
+        Log.d("Fetched fish: ", String.valueOf(fish.size()));
+        return  fish;
+    }
+
+    @SuppressLint("Range")
+    private static List<Fish> getFishList(Cursor cursor) {
+        Fish newFish;
+        List<Fish> fish = new LinkedList<>();
+
         cursor.moveToFirst();
         for (int index = 0; index < cursor.getCount(); index++) {
             newFish = new Fish(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
@@ -206,10 +173,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             fish.add(newFish);
             cursor.moveToNext();
         }
-        database.close();
-
-        Log.d("Fetched fish: ", String.valueOf(fish.size()));
-        return  fish;
+        return fish;
     }
 
     @Override
