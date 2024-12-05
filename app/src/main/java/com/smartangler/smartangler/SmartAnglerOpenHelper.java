@@ -305,7 +305,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
     @SuppressLint("Range")
     private static FishingLocation getFishingLocation(Context context, Integer fishingLocationID) {
-        Log.d("Location queries", "Getting location with ID " + fishingLocationID);
+        Log.d("Fish DB", "Getting location with ID " + fishingLocationID);
 
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
@@ -370,6 +370,45 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             Log.d("Fish DB", String.format("Got location with name %s", locationName));
         }
         return newFishingLocation;
+    }
+
+    @SuppressLint("Range")
+    public static FishingLocation getCurrentFishingLocation(Context context, Vertex currentPosition) {
+        Log.d("Fish DB", "Getting current location");
+        SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
+        SQLiteDatabase database = databaseHelper.getReadableDatabase();
+
+        Cursor cursor = database.query(LOCATIONS_TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        FishingLocation newFishingLocation;
+        List<FishingLocation> fishingLocations = new ArrayList<>();
+
+        cursor.moveToFirst();
+        for (int index = 0; index < cursor.getCount(); index++) {
+            String fishingLocationID = cursor.getString(cursor.getColumnIndex(KEY_LOCATION_ID));
+            if (fishingLocationID != null) {
+                newFishingLocation = getFishingLocation(context, Integer.valueOf(fishingLocationID));
+                fishingLocations.add(newFishingLocation);
+            }
+            cursor.moveToNext();
+        }
+        database.close();
+
+        Log.d("Fish DB", "Fetched fishing locations: " + String.valueOf(fishingLocations.size()));
+
+        for (FishingLocation fishingLocation : fishingLocations) {
+            if (fishingLocation.isPointInsideLocation(currentPosition)) {
+                return fishingLocation;
+            }
+        }
+
+        return null;
     }
 
     @Override

@@ -43,7 +43,7 @@ public class HomeFragment extends Fragment {
     private Vertex currentLocation;
 
     private Button refreshButton;
-    private TextView seasonText, timeOfDayText, locationText, noFishLikelyText;
+    private TextView seasonText, timeOfDayText, locationText, locationNameText, noFishLikelyText;
     private RecyclerView recyclerView;
     private FragmentHomeBinding binding;
 
@@ -71,6 +71,9 @@ public class HomeFragment extends Fragment {
 
         locationText = root.findViewById(R.id.current_location_text);
         locationText.setText(getString(R.string.current_location_unknown));
+
+        locationNameText = root.findViewById(R.id.location_name_text);
+        locationNameText.setText(getString(R.string.location_name_unknown));
 
         noFishLikelyText = root.findViewById(R.id.no_fish_likely_text);
 
@@ -101,6 +104,8 @@ public class HomeFragment extends Fragment {
                         locationText.setText(getString(R.string.current_location,
                                 currentLocation.getLatitude(),
                                 currentLocation.getLongitude()));
+                        locationNameText.setText(getString(R.string.location_name,
+                                SmartAnglerOpenHelper.getCurrentFishingLocation(getContext(), currentLocation).getName()));
                     } else {
                         Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                         Log.d("Location service", "Location unavailable");
