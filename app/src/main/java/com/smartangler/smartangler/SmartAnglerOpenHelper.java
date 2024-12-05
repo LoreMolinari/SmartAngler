@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
     private static final String DATABASE_NAME = "smartAngler";
 
     // Fish DB
@@ -176,6 +176,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     }
 
     public static List<Fish> loadAllFish(Context context) {
+        Log.d("Fish DB", "Getting all fish");
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
@@ -190,7 +191,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         List<Fish> fish = getFishList(context, cursor);
         database.close();
 
-        Log.d("Fetched fish: ", String.valueOf(fish.size()));
+        Log.d("Fish DB", "Fetched fish: " + String.valueOf(fish.size()));
         return fish;
     }
 
@@ -383,22 +384,22 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        if (i < 6) {
-            sqLiteDatabase.execSQL("DROP TABLE num_steps");
+        if (i < 8) {
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS num_steps");
 
-            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", FISH_TABLE_NAME));
+            sqLiteDatabase.execSQL(String.format("DROP TABLE IF EXISTS %s", FISH_TABLE_NAME));
             sqLiteDatabase.execSQL(CREATE_FISH_TABLE_SQL);
             for (String sql : DEFAULT_FISH_DATA) {
                 sqLiteDatabase.execSQL(sql);
             }
 
-            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", LOCATIONS_TABLE_NAME));
+            sqLiteDatabase.execSQL(String.format("DROP TABLE IF EXISTS %s", LOCATIONS_TABLE_NAME));
             sqLiteDatabase.execSQL(CREATE_LOCATIONS_TABLES_SQL);
             for (String sql : DEFAULT_LOCATIONS_DATA) {
                 sqLiteDatabase.execSQL(sql);
             }
 
-            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", VERTICES_TABLE_NAME));
+            sqLiteDatabase.execSQL(String.format("DROP TABLE IF EXISTS %s", VERTICES_TABLE_NAME));
             sqLiteDatabase.execSQL(CREATE_VERTICES_TABLE_SQL);
             for (String sql : DEFAULT_VERTICES_DATA) {
                 sqLiteDatabase.execSQL(sql);
