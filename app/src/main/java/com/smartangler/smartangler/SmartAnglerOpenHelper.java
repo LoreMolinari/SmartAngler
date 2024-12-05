@@ -47,6 +47,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             KEY_TIMES_OF_DAY + " TEXT, " +
             KEY_LOCATION_ID + " TEXT, " +
             "FOREIGN KEY (" + KEY_LOCATION_ID + ")  REFERENCES " + LOCATIONS_TABLE_NAME + "(" + KEY_LOCATION_ID + ") );";
+
     public static final String[] DEFAULT_FISH_DATA = {
             "INSERT INTO " + FISH_TABLE_NAME + " (" +
                     KEY_NAME + ", " +
