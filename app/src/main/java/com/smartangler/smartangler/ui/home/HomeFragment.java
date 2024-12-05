@@ -118,6 +118,8 @@ public class HomeFragment extends Fragment {
 
         if (fishList == null || fishList.isEmpty()) {
             noFishLikelyText.setVisibility(View.VISIBLE);
+        } else {
+            noFishLikelyText.setVisibility(View.GONE);
         }
 
         ItemAdapter adapter = new ItemAdapter(fishList);
