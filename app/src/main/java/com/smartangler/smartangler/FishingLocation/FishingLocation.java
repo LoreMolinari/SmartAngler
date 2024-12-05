@@ -8,11 +8,16 @@ import java.util.List;
 public class FishingLocation {
     private String name;
     private List<Vertex> vertices;
+
     public FishingLocation(String name) {
         if (name != null) {
             this.name = name;
         }
         vertices = new ArrayList<>();
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void addVertex(Vertex vertex) {

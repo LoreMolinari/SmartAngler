@@ -316,13 +316,14 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 //        WHERE vs.Name = 'Polygon Set 1';
 
         String selection = String.format(
-                "SELECT v.%s, v.%s, v.%s " +
+                "SELECT v.%s, v.%s, v.%s, lc.%s " +
                         "FROM %s v " +
-                        "JOIN %s vs ON v.%s = vs.%s " +
-                        "WHERE vs.%s = ?;",
+                        "JOIN %s lc ON v.%s = lc.%s " +
+                        "WHERE lc.%s = ?;",
                 KEY_ID,
                 KEY_LATITUDE,
                 KEY_LONGITUDE,
+                KEY_NAME,
                 VERTICES_TABLE_NAME,
                 LOCATIONS_TABLE_NAME,
                 KEY_LOCATION_ID,
@@ -336,11 +337,14 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         Cursor cursor = database.rawQuery(selection, selectionArgs);
 
         FishingLocation newFishingLocation = new FishingLocation(null);
+        String locationName = new String();
 
         cursor.moveToFirst();
         for (int index = 0; index < cursor.getCount(); index++) {
             double latitude = 0;
             double longitude = 0;
+
+            locationName = cursor.getString(cursor.getColumnIndex(KEY_NAME));
 
             String latitudeString = cursor.getString(cursor.getColumnIndex(KEY_LATITUDE));
             if (latitudeString != null) {
@@ -361,6 +365,10 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             cursor.moveToNext();
         }
 
+        if (locationName != null) {
+            newFishingLocation.setName(locationName);
+            Log.d("Fish DB", String.format("Got location with name %s", locationName));
+        }
         return newFishingLocation;
     }
 
