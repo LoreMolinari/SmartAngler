@@ -310,11 +310,6 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-//        SELECT v.VertexID, v.Latitude, v.Longitude
-//        FROM Vertices v
-//        JOIN VertexSets vs ON v.SetID = vs.SetID
-//        WHERE vs.Name = 'Polygon Set 1';
-
         String selection = String.format(
                 "SELECT v.%s, v.%s, v.%s, lc.%s " +
                         "FROM %s v " +
