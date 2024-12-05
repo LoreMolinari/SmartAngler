@@ -106,8 +106,12 @@ public class HomeFragment extends Fragment {
                                 currentVertex.getLongitude()));
 
                         currentFishingLocation =  SmartAnglerOpenHelper.getCurrentFishingLocation(getContext(), currentVertex);
-                        locationNameText.setText(getString(R.string.location_name,
-                                currentFishingLocation.getName()));
+                        if (currentFishingLocation != null) {
+                            locationNameText.setText(getString(R.string.location_name,
+                                    currentFishingLocation.getName()));
+                        } else {
+                            locationNameText.setText(getString(R.string.location_name_unknown));
+                        }
                     } else {
                         Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                         Log.d("Location service", "Location unavailable");
@@ -166,8 +170,12 @@ public class HomeFragment extends Fragment {
                                         currentVertex.getLongitude()));
 
                                 currentFishingLocation =  SmartAnglerOpenHelper.getCurrentFishingLocation(getContext(), currentVertex);
-                                locationNameText.setText(getString(R.string.location_name,
-                                        currentFishingLocation.getName()));
+                                if (currentFishingLocation != null) {
+                                    locationNameText.setText(getString(R.string.location_name,
+                                            currentFishingLocation.getName()));
+                                } else {
+                                    locationNameText.setText(getString(R.string.location_name_unknown));
+                                }
                             } else {
                                 Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                                 Log.d("Location service", "Location unavailable");
