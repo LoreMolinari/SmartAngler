@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
     private static final String DATABASE_NAME = "smartAngler";
 
     // Fish DB
@@ -82,6 +82,22 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                     "'" + "Creature bait,Shad" + "', " +
                     "'" + "AUTUMN,WINTER" + "', " +
                     "'" + "EVENING,NIGHT" + "', " +
+                    "'" + "0" + "');"
+            "INSERT INTO " + FISH_TABLE_NAME + " (" +
+                    KEY_NAME + ", " +
+                    KEY_DESCRIPTION + ", " +
+                    KEY_TECHNIQUES + ", " +
+                    KEY_BAITS_AND_LURES + ", " +
+                    KEY_SEASONS + ", " +
+                    KEY_TIMES_OF_DAY + ", " +
+                    KEY_LOCATION_ID + ") " +
+                    "VALUES (" +
+                    "'" + "Magical Fish" + "', " +
+                    "'" + "Magical fish of the days of yonder" + "', " +
+                    "'" + "Dropshot,Spinning" + "', " +
+                    "'" + "Creature bait,Shad" + "', " +
+                    "'" + "AUTUMN,WINTER,SPRING,SUMMER" + "', " +
+                    "'" + "MORNING,AFTERNOON,EVENING,NIGHT" + "', " +
                     "'" + "0" + "');"
     };
 
@@ -367,40 +383,24 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        if (i < 2) {
+        if (i < 6) {
             sqLiteDatabase.execSQL("DROP TABLE num_steps");
-            sqLiteDatabase.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s DOUBLE", FISH_TABLE_NAME, KEY_LATITUTE_TYPO));
-            sqLiteDatabase.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s DOUBLE", FISH_TABLE_NAME, KEY_LONGITUDE));
-        }
-        if (i < 3) {
+
             sqLiteDatabase.execSQL(String.format("DROP TABLE %s", FISH_TABLE_NAME));
             sqLiteDatabase.execSQL(CREATE_FISH_TABLE_SQL);
             for (String sql : DEFAULT_FISH_DATA) {
                 sqLiteDatabase.execSQL(sql);
             }
-        }
-        if (i < 3) {
-            sqLiteDatabase.execSQL(CREATE_LOCATIONS_TABLES_SQL);
-            sqLiteDatabase.execSQL(CREATE_VERTICES_TABLE_SQL);
-        }
-        if (i < 4) {
-            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", LOCATIONS_TABLE_NAME));
-            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", VERTICES_TABLE_NAME));
 
+            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", LOCATIONS_TABLE_NAME));
             sqLiteDatabase.execSQL(CREATE_LOCATIONS_TABLES_SQL);
             for (String sql : DEFAULT_LOCATIONS_DATA) {
                 sqLiteDatabase.execSQL(sql);
             }
 
+            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", VERTICES_TABLE_NAME));
             sqLiteDatabase.execSQL(CREATE_VERTICES_TABLE_SQL);
             for (String sql : DEFAULT_VERTICES_DATA) {
-                sqLiteDatabase.execSQL(sql);
-            }
-        }
-        if (i < 5) {
-            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", FISH_TABLE_NAME));
-            sqLiteDatabase.execSQL(CREATE_FISH_TABLE_SQL);
-            for (String sql : DEFAULT_FISH_DATA) {
                 sqLiteDatabase.execSQL(sql);
             }
         }
