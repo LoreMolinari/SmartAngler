@@ -84,11 +84,11 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     };
 
     public static final String CREATE_LOCATIONS_TABLES_SQL = "CREATE TABLE " + LOCATIONS_TABLE_NAME + " (" +
-            KEY_LOCATION_ID + " INT PRIMARY KEY AUTOINCREMENT, " +
+            KEY_LOCATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             KEY_NAME + " TEXT);";
 
     public static final String CREATE_VERTICES_TABLE_SQL = "CREATE TABLE " + VERTICES_TABLE_NAME + " (" +
-            KEY_ID + " INT PRIMARY KEY AUTOINCREMENT, " +
+            KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             KEY_LOCATION_ID + " INTEGER, " +
             KEY_LATITUDE + " DOUBLE, " +
             KEY_LONGITUDE + " DOUBLE, " +
@@ -287,16 +287,18 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s DOUBLE", FISH_TABLE_NAME, KEY_LONGITUDE));
         }
         if (i < 3) {
-            sqLiteDatabase.execSQL(String.format("ALTER TABLE %s DROP COLUMN %s", FISH_TABLE_NAME, KEY_LATITUTE));
-            sqLiteDatabase.execSQL(String.format("ALTER TABLE %s DROP COLUMN %s", FISH_TABLE_NAME, KEY_LONGITUDE));
-            sqLiteDatabase.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s TEXT", FISH_TABLE_NAME, KEY_LOCATIONS));
+            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", FISH_TABLE_NAME));
+            sqLiteDatabase.execSQL(CREATE_FISH_TABLE_SQL);
+            for (String sql : DEFAULT_FISH_DATA) {
+                sqLiteDatabase.execSQL(sql);
+            }
         }
         if (i < 3) {
             sqLiteDatabase.execSQL(CREATE_LOCATIONS_TABLES_SQL);
             sqLiteDatabase.execSQL(CREATE_VERTICES_TABLE_SQL);
         }
         if (i < 4) {
-            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", CREATE_LOCATIONS_TABLES_SQL));
+            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", LOCATIONS_TABLE_NAME));
             sqLiteDatabase.execSQL(String.format("DROP TABLE %s", VERTICES_TABLE_NAME));
 
             sqLiteDatabase.execSQL(CREATE_LOCATIONS_TABLES_SQL);
