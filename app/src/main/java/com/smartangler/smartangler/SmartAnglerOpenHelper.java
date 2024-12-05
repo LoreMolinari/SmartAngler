@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_NAME = "smartAngler";
 
     // Fish DB
@@ -31,6 +31,13 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     public static final String KEY_LONGITUDE = "longitude";
     public static final String KEY_LOCATIONS = "locations";
 
+    // FishingLocation DB
+    public static final String LOCATIONS_TABLE_NAME = "fishing_location";
+    public static final String VERTICES_TABLE_NAME = "vertices";
+    public static final String KEY_LOCATION_ID = "location_id";
+    public static final String KEY_ID = "id";
+    public static final String KEY_LATITUDE = "latitude";
+
     public static final String CREATE_FISH_TABLE_SQL = "CREATE TABLE " + FISH_TABLE_NAME + " (" +
             KEY_NAME + " TEXT PRIMARY KEY, " +
             KEY_DESCRIPTION + " TEXT, " +
@@ -38,7 +45,8 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             KEY_BAITS_AND_LURES + " TEXT, " +
             KEY_SEASONS + " TEXT, " +
             KEY_TIMES_OF_DAY + " TEXT, " +
-            KEY_LOCATIONS + " TEXT);";
+            KEY_LOCATION_ID + " TEXT, " +
+            "FOREIGN KEY (" + KEY_LOCATION_ID + ")  REFERENCES " + LOCATIONS_TABLE_NAME + "(" + KEY_LOCATION_ID + ") );";
     public static final String[] DEFAULT_FISH_DATA = {
             "INSERT INTO " + FISH_TABLE_NAME + " (" +
                     KEY_NAME + ", " +
@@ -46,37 +54,33 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                     KEY_TECHNIQUES + ", " +
                     KEY_BAITS_AND_LURES + ", " +
                     KEY_SEASONS + ", " +
-                    KEY_TIMES_OF_DAY + ") " +
+                    KEY_TIMES_OF_DAY + ", " +
+                    KEY_LOCATION_ID + ") " +
                     "VALUES (" +
                     "'" + "Perch" + "', " +
                     "'" + "You can make risotto with this" + "', " +
                     "'" + "Dropshot,Spinning" + "', " +
                     "'" + "Creature bait,Shad,Spoon" + "', " +
                     "'" + "SUMMER,AUTUMN" + "', " +
-                    "'" + "MORNING,AFTERNOON" + "');",
+                    "'" + "MORNING,AFTERNOON" + "', " +
+                    "'" + "0" + "');",
             "INSERT INTO " + FISH_TABLE_NAME + " (" +
                     KEY_NAME + ", " +
                     KEY_DESCRIPTION + ", " +
                     KEY_TECHNIQUES + ", " +
                     KEY_BAITS_AND_LURES + ", " +
                     KEY_SEASONS + ", " +
-                    KEY_TIMES_OF_DAY + ") " +
+                    KEY_TIMES_OF_DAY + ", " +
+                    KEY_LOCATION_ID + ") " +
                     "VALUES (" +
                     "'" + "Zander" + "', " +
                     "'" + "Big" + "', " +
                     "'" + "Dropshot,Spinning" + "', " +
                     "'" + "Creature bait,Shad" + "', " +
                     "'" + "AUTUMN,WINTER" + "', " +
-                    "'" + "EVENING,NIGHT" + "');"
+                    "'" + "EVENING,NIGHT" + "', " +
+                    "'" + "0" + "');"
     };
-    // Maybe these should all be ints referencing android strings?
-
-    // FishingLocation DB
-    public static final String LOCATIONS_TABLE_NAME = "fishing_location";
-    public static final String VERTICES_TABLE_NAME = "vertices";
-    public static final String KEY_LOCATION_ID = "location_id";
-    public static final String KEY_ID = "id";
-    public static final String KEY_LATITUDE = "latitude";
 
     public static final String CREATE_LOCATIONS_TABLES_SQL = "CREATE TABLE " + LOCATIONS_TABLE_NAME + " (" +
             KEY_LOCATION_ID + " INT PRIMARY KEY AUTOINCREMENT, " +
@@ -301,6 +305,13 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
             sqLiteDatabase.execSQL(CREATE_VERTICES_TABLE_SQL);
             for (String sql : DEFAULT_VERTICES_DATA) {
+                sqLiteDatabase.execSQL(sql);
+            }
+        }
+        if (i < 5) {
+            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", FISH_TABLE_NAME));
+            sqLiteDatabase.execSQL(CREATE_FISH_TABLE_SQL);
+            for (String sql : DEFAULT_FISH_DATA) {
                 sqLiteDatabase.execSQL(sql);
             }
         }
