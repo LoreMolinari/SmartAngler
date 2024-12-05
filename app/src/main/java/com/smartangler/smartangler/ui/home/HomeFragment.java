@@ -124,6 +124,8 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
+
+        makeFishCards();
     }
 
     private void makeFishCards() {
