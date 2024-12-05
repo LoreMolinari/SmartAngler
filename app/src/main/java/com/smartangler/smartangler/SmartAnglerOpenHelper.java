@@ -209,7 +209,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         String selection = String.format("%s like ? AND %s like ?",
                 KEY_SEASONS,
                 KEY_TIMES_OF_DAY
-                ); // TODO: Add lat and long
+                );
         String[] selectionArgs = new String[] {
                 "%" + season.toString() + "%",
                 "%" + timeOfDay.toString() + "%"
