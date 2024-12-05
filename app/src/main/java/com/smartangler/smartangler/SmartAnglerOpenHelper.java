@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.smartangler.smartangler.FishingLocation.Vertex;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4; // On 5 add test locations
     private static final String DATABASE_NAME = "smartAngler";
 
     // Fish DB
@@ -28,7 +27,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     public static final String KEY_BAITS_AND_LURES = "baits_and_lures";
     public static final String KEY_SEASONS = "seasons";
     public static final String KEY_TIMES_OF_DAY = "times_of_day";
-    public static final String KEY_LATITUDE = "latitute";
+    public static final String KEY_LATITUTE = "latitute";
     public static final String KEY_LONGITUDE = "longitude";
     public static final String KEY_LOCATIONS = "locations";
 
@@ -71,6 +70,24 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                     "'" + "EVENING,NIGHT" + "');"
     };
     // Maybe these should all be ints referencing android strings?
+
+    // FishingLocation DB
+    public static final String LOCATIONS_TABLE_NAME = "fishing_location";
+    public static final String VERTICES_TABLE_NAME = "vertices";
+    public static final String KEY_LOCATION_ID = "location_id";
+    public static final String KEY_ID = "id";
+
+    public static final String CREATE_LOCATIONS_TABLES_SQL = "CREATE TABLE " + LOCATIONS_TABLE_NAME + " (" +
+            KEY_LOCATION_ID + " INT PRIMARY KEY AUTOINCREMENT, " +
+            KEY_NAME + " TEXT);";
+
+    public static final String CREATE_VERTICES_TABLE_SQL = "CREATE TABLE " + VERTICES_TABLE_NAME + " (" +
+            KEY_ID + " INT PRIMARY KEY AUTOINCREMENT, " +
+            KEY_LOCATION_ID + " INTEGER, " +
+            KEY_LATITUTE + " DOUBLE, " +
+            KEY_LONGITUDE + " DOUBLE, " +
+            "FOREIGN KEY (" + KEY_LOCATION_ID + ")  REFERENCES " + LOCATIONS_TABLE_NAME + "(" + KEY_LOCATION_ID + ") ON DELETE CASCADE);";
+
 
     public SmartAnglerOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -187,19 +204,26 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         for (String sql : DEFAULT_FISH_DATA) {
             sqLiteDatabase.execSQL(sql);
         }
+
+        sqLiteDatabase.execSQL(CREATE_LOCATIONS_TABLES_SQL);
+        sqLiteDatabase.execSQL(CREATE_VERTICES_TABLE_SQL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         if (i < 2) {
             sqLiteDatabase.execSQL("DROP TABLE num_steps");
-            sqLiteDatabase.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s DOUBLE", FISH_TABLE_NAME, KEY_LATITUDE));
+            sqLiteDatabase.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s DOUBLE", FISH_TABLE_NAME, KEY_LATITUTE));
             sqLiteDatabase.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s DOUBLE", FISH_TABLE_NAME, KEY_LONGITUDE));
         }
         if (i < 3) {
-            sqLiteDatabase.execSQL(String.format("ALTER TABLE %s DROP COLUMN %s", FISH_TABLE_NAME, KEY_LATITUDE));
+            sqLiteDatabase.execSQL(String.format("ALTER TABLE %s DROP COLUMN %s", FISH_TABLE_NAME, KEY_LATITUTE));
             sqLiteDatabase.execSQL(String.format("ALTER TABLE %s DROP COLUMN %s", FISH_TABLE_NAME, KEY_LONGITUDE));
             sqLiteDatabase.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s TEXT", FISH_TABLE_NAME, KEY_LOCATIONS));
+        }
+        if (i < 3) {
+            sqLiteDatabase.execSQL(CREATE_LOCATIONS_TABLES_SQL);
+            sqLiteDatabase.execSQL(CREATE_VERTICES_TABLE_SQL);
         }
     }
 }
