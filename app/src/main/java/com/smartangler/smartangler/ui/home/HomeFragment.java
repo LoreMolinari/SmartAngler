@@ -77,8 +77,6 @@ public class HomeFragment extends Fragment {
 
         noFishLikelyText = root.findViewById(R.id.no_fish_likely_text);
 
-        makeFishCards();
-
         return root;
     }
 
