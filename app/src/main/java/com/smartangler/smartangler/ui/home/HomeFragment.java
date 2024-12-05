@@ -112,6 +112,7 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                         Log.d("Location service", "Location unavailable");
                         locationText.setText(getString(R.string.current_location_unknown));
+                        currentFishingLocation = null;
                         locationNameText.setText(getString(R.string.location_name_unknown));
                     }
                 }
@@ -171,6 +172,7 @@ public class HomeFragment extends Fragment {
                                 Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                                 Log.d("Location service", "Location unavailable");
                                 locationText.setText(getString(R.string.current_location_unknown));
+                                currentFishingLocation = null;
                                 locationNameText.setText(getString(R.string.location_name_unknown));
                             }
                         }
