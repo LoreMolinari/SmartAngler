@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.smartangler.smartangler.FishingLocation.FishingLocation;
 import com.smartangler.smartangler.FishingLocation.Vertex;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -205,8 +207,17 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 null,
                 null);
 
-        List<Fish> fish = getFishList(cursor);
+        List<Fish> fish_tmp = getFishList(cursor);
         database.close();
+
+        List<Fish> fish = new ArrayList<>();
+        for (Fish currentFish : fish_tmp) {
+            for (FishingLocation fishingLocation : currentFish.getFishingLocations()) {
+                if (fishingLocation.isPointInsideLocation(currentLocation)) {
+                    fish.add(currentFish);
+                }
+            }
+        }
 
         Log.d("Fetched fish: ", String.valueOf(fish.size()));
         return  fish;
@@ -255,10 +266,16 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 }
             }
 
+            FishingLocation fishingLocation = getFishingLocation(cursor.getColumnIndex(KEY_LOCATION_ID));
+
             fish.add(newFish);
             cursor.moveToNext();
         }
         return fish;
+    }
+
+    private static FishingLocation getFishingLocation(Integer fishingLocationID) {
+        return null;
     }
 
     @Override
