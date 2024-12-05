@@ -355,7 +355,10 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             if (latitudeString != null && longitudeString != null) {
                 Vertex newVertex = new Vertex(latitude, longitude);
                 newFishingLocation.addVertex(newVertex);
+                Log.d("Fish DB", String.format("Added vertex %s to location %d", newVertex, fishingLocationID));
             }
+
+            cursor.moveToNext();
         }
 
         return newFishingLocation;
