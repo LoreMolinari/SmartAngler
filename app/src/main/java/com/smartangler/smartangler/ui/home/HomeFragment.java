@@ -25,14 +25,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.smartangler.smartangler.Fish;
+import com.smartangler.smartangler.FishingLocation.FishingLocation;
 import com.smartangler.smartangler.FishingLocation.Vertex;
 import com.smartangler.smartangler.ItemAdapter;
 import com.smartangler.smartangler.R;
 import com.smartangler.smartangler.SmartAnglerOpenHelper;
 import com.smartangler.smartangler.databinding.FragmentHomeBinding;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -40,7 +39,8 @@ public class HomeFragment extends Fragment {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private FusedLocationProviderClient fusedLocationClient;
 
-    private Vertex currentLocation;
+    private Vertex currentVertex;
+    private FishingLocation currentFishingLocation;
 
     private Button refreshButton;
     private TextView seasonText, timeOfDayText, locationText, locationNameText, noFishLikelyText;
@@ -99,17 +99,20 @@ public class HomeFragment extends Fragment {
                     if (location != null) {
                         Log.d("Location service", location.toString());
 
-                        currentLocation = new Vertex(location.getLatitude(), location.getLongitude());
+                        currentVertex = new Vertex(location.getLatitude(), location.getLongitude());
 
                         locationText.setText(getString(R.string.current_location,
-                                currentLocation.getLatitude(),
-                                currentLocation.getLongitude()));
+                                currentVertex.getLatitude(),
+                                currentVertex.getLongitude()));
+
+                        currentFishingLocation =  SmartAnglerOpenHelper.getCurrentFishingLocation(getContext(), currentVertex);
                         locationNameText.setText(getString(R.string.location_name,
-                                SmartAnglerOpenHelper.getCurrentFishingLocation(getContext(), currentLocation).getName()));
+                                currentFishingLocation.getName()));
                     } else {
                         Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                         Log.d("Location service", "Location unavailable");
                         locationText.setText(getString(R.string.current_location_unknown));
+                        locationNameText.setText(getString(R.string.location_name_unknown));
                     }
                 }
             });
@@ -119,7 +122,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void makeFishCards() {
-        List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay(), currentLocation);
+        List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay(), currentVertex);
 
         if (fishList == null || fishList.isEmpty()) {
             noFishLikelyText.setVisibility(View.VISIBLE);
@@ -155,15 +158,20 @@ public class HomeFragment extends Fragment {
                             if (location != null) {
                                 Log.d("Location service", location.toString());
 
-                                currentLocation = new Vertex(location.getLatitude(), location.getLongitude());
+                                currentVertex = new Vertex(location.getLatitude(), location.getLongitude());
 
                                 locationText.setText(getString(R.string.current_location,
-                                        currentLocation.getLatitude(),
-                                        currentLocation.getLongitude()));
+                                        currentVertex.getLatitude(),
+                                        currentVertex.getLongitude()));
+
+                                currentFishingLocation =  SmartAnglerOpenHelper.getCurrentFishingLocation(getContext(), currentVertex);
+                                locationNameText.setText(getString(R.string.location_name,
+                                        currentFishingLocation.getName()));
                             } else {
                                 Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                                 Log.d("Location service", "Location unavailable");
                                 locationText.setText(getString(R.string.current_location_unknown));
+                                locationNameText.setText(getString(R.string.location_name_unknown));
                             }
                         }
                     });
