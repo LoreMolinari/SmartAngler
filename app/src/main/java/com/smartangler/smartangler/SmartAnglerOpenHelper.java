@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
     private static final String DATABASE_NAME = "smartAngler";
 
     // Fish DB
@@ -135,8 +135,8 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                     KEY_LONGITUDE + ") " +
                     "VALUES (" +
                     "'" + "0" + "', " +
-                    "'" + "45.9766" + "', " +
-                    "'" + "8.8361" + "');",
+                    "'" + "46.0215" + "', " +
+                    "'" + "8.8224" + "');",
             "INSERT INTO " + VERTICES_TABLE_NAME + " (" +
                     KEY_LOCATION_ID + ", " +
                     KEY_LATITUDE + ", " +
@@ -384,7 +384,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        if (i < 8) {
+        if (i < 9) {
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS num_steps");
 
             sqLiteDatabase.execSQL(String.format("DROP TABLE IF EXISTS %s", FISH_TABLE_NAME));
