@@ -69,15 +69,7 @@ public class HomeFragment extends Fragment {
         locationText = root.findViewById(R.id.current_location_text);
         locationText.setText(getString(R.string.current_location_unknown));
 
-        List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay());
-
-        if (fishList.isEmpty()) {
-            noFishLikelyText = root.findViewById(R.id.no_fish_likely_text);
-            noFishLikelyText.setVisibility(View.VISIBLE);
-        }
-
-        ItemAdapter adapter = new ItemAdapter(fishList);
-        recyclerView.setAdapter(adapter);
+        makeFishCards();
 
         return root;
     }
@@ -110,6 +102,10 @@ public class HomeFragment extends Fragment {
             });
         }
 
+        makeFishCards();
+    }
+
+    private void makeFishCards() {
         List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay());
 
         if (fishList.isEmpty()) {
@@ -118,6 +114,7 @@ public class HomeFragment extends Fragment {
 
         ItemAdapter adapter = new ItemAdapter(fishList);
         recyclerView.setAdapter(adapter);
+
     }
 
     @Override
