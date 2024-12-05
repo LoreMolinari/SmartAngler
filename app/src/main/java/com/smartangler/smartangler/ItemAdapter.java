@@ -75,7 +75,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return fishList.size();
+        if (fishList == null) {
+            return 0;
+        } else {
+            return fishList.size();
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
