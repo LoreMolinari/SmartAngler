@@ -1,5 +1,7 @@
 package com.smartangler.smartangler.FishingLocation;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +24,12 @@ public class FishingLocation {
         int n = vertices.size();
         double x = p.getLongitude();
         double y = p.getLatitude();
+        Log.d("Fishing Location", String.format("Checking point %s", p));
 
         for (int i = 0; i < n; i++) {
             Vertex vertex1 = vertices.get(i);
             Vertex vertex2 = vertices.get((i + 1) % n);
+            Log.d("Fishing Location", String.format("Checking vertices %s and %s", vertex1, vertex2));
 
             // Check if the point is between the y-coordinates of the edge
             if ((vertex1.getLatitude() > y && vertex2.getLatitude() <= y) || (vertex2.getLatitude() > y && vertex1.getLatitude()<= y)) {
