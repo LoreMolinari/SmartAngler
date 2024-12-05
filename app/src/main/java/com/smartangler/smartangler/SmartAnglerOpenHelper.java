@@ -196,7 +196,9 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     }
 
     public static List<Fish> getFishByConditions(Context context, Fish.Season season, Fish.TimeOfDay timeOfDay, Vertex currentLocation) {
+        Log.d("Fish DB", "Getting fish based on condition");
         if (currentLocation == null) {
+            Log.d("Fish DB", "Current location was null");
             return null;
         }
 
@@ -225,6 +227,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 null);
 
         List<Fish> fish_tmp = getFishList(context, cursor);
+        Log.d("Fish DB", "Fetched tmp_fish: " + fish_tmp.size());
         database.close();
 
         List<Fish> fish = new ArrayList<>();
@@ -236,7 +239,8 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             }
         }
 
-        Log.d("Fetched fish: ", String.valueOf(fish.size()));
+
+        Log.d("Fish DB", "Fetched fish: " + fish.size());
         return  fish;
     }
 
