@@ -127,6 +127,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void makeFishCards() {
+        Log.d("Home cards", "Making home cards");
         List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay(), currentVertex);
 
         if (fishList == null || fishList.isEmpty()) {
