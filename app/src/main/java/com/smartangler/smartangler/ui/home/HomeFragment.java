@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class HomeFragment extends Fragment {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private FusedLocationProviderClient fusedLocationClient;
 
+    private Button refreshButton;
     private TextView seasonText, timeOfDayText, locationText, noFishLikelyText;
     private RecyclerView recyclerView;
     private FragmentHomeBinding binding;
@@ -51,6 +53,9 @@ public class HomeFragment extends Fragment {
 
         recyclerView = root.findViewById(R.id.home_fish_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        refreshButton = root.findViewById(R.id.refresh_button);
+        refreshButton.setOnClickListener(v -> refreshConditions());
 
         seasonText = root.findViewById(R.id.current_season_text);
         seasonText.setText(getString(R.string.current_season, Fish.getCurrentSeason()));
@@ -77,6 +82,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void refreshConditions() {
+        Log.d("Conditions refresh", "Conditions refreshed");
+
         seasonText.setText(getString(R.string.current_season, Fish.getCurrentSeason()));
         timeOfDayText.setText(getString(R.string.current_time_of_day, Fish.getCurrentTimeOfDay()));
 
