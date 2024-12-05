@@ -266,7 +266,13 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 }
             }
 
-            FishingLocation fishingLocation = getFishingLocation(cursor.getColumnIndex(KEY_LOCATION_ID));
+            String fishingLocationsString = cursor.getString(cursor.getColumnIndex(KEY_LOCATION_ID));
+            if (fishingLocationsString != null) {
+                List<String> fishingLocationsIDStringList = Arrays.asList(fishingLocationsString.split(","));
+                for (String fishLocationIdString : fishingLocationsIDStringList) {
+                    newFish.addFishingLocation(getFishingLocation(Integer.valueOf(fishLocationIdString)));
+                }
+            }
 
             fish.add(newFish);
             cursor.moveToNext();
