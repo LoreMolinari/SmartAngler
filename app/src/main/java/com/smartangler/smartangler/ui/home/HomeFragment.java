@@ -69,6 +69,8 @@ public class HomeFragment extends Fragment {
         locationText = root.findViewById(R.id.current_location_text);
         locationText.setText(getString(R.string.current_location_unknown));
 
+        noFishLikelyText = root.findViewById(R.id.no_fish_likely_text);
+
         makeFishCards();
 
         return root;
@@ -101,8 +103,6 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
-
-        makeFishCards();
     }
 
     private void makeFishCards() {
@@ -114,7 +114,6 @@ public class HomeFragment extends Fragment {
 
         ItemAdapter adapter = new ItemAdapter(fishList);
         recyclerView.setAdapter(adapter);
-
     }
 
     @Override
