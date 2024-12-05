@@ -333,14 +333,6 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 fishingLocationID.toString(),
         };
 
-//        Cursor cursor = database.query(SmartAnglerOpenHelper.VERTICES_TABLE_NAME,
-//                null,
-//                selection,
-//                selectionArgs,
-//                null,
-//                null,
-//                null);
-
         Cursor cursor = database.rawQuery(selection, selectionArgs);
 
         FishingLocation newFishingLocation = new FishingLocation(null);
