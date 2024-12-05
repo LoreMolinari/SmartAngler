@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.smartangler.smartangler.Fish;
 import com.smartangler.smartangler.ItemAdapter;
@@ -88,24 +89,26 @@ public class HomeFragment extends Fragment {
         timeOfDayText.setText(getString(R.string.current_time_of_day, Fish.getCurrentTimeOfDay()));
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                Log.d("Location service", location.toString());
-                                locationText.setText(getString(R.string.current_location,
-                                        location.getLatitude(),
-                                        location.getLongitude()));
-                            } else {
-                                Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
-                                Log.d("Location service", "Location unavailable");
-                                locationText.setText(getString(R.string.current_location_unknown));
-                            }
-                        }
-                    });
-        }
 
+            fusedLocationClient.getCurrentLocation(
+                    Priority.PRIORITY_HIGH_ACCURACY,
+                    null
+            ).addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        Log.d("Location service", location.toString());
+                        locationText.setText(getString(R.string.current_location,
+                                location.getLatitude(),
+                                location.getLongitude()));
+                    } else {
+                        Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
+                        Log.d("Location service", "Location unavailable");
+                        locationText.setText(getString(R.string.current_location_unknown));
+                    }
+                }
+            });
+        }
 
         List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay());
 
