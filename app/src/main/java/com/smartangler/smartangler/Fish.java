@@ -1,5 +1,7 @@
 package com.smartangler.smartangler;
 
+import com.smartangler.smartangler.FishingLocation.FishingLocation;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -15,6 +17,7 @@ public class Fish {
     private List<String> baitsAndLures;
     private List<Season> seasons;
     private List<TimeOfDay> timesOfDay;
+    private List<FishingLocation> fishingLocations;
 
     public Fish(String name) {
         this.name = name;
@@ -23,6 +26,7 @@ public class Fish {
         this.baitsAndLures = new ArrayList<>();
         this.seasons = new ArrayList<>();
         this.timesOfDay = new ArrayList<>();
+        this.fishingLocations = new ArrayList<>();
     }
 
     public String getName() {
@@ -73,6 +77,10 @@ public class Fish {
         timesOfDay.add(timeOfDay);
     }
 
+    public List<FishingLocation> getFishingLocations() {
+        return fishingLocations;
+    }
+
     @Override
     public String toString() {
         return "Fish{" +
@@ -82,6 +90,7 @@ public class Fish {
                 ", baitsAndLures=" + baitsAndLures +
                 ", seasons=" + seasons +
                 ", timesOfDay=" + timesOfDay +
+                ", fishingLocations=" + fishingLocations +
                 '}';
     }
 
