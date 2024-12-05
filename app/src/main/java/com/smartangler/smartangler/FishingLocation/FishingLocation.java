@@ -1,12 +1,20 @@
 package com.smartangler.smartangler.FishingLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FishingLocation {
     private String name;
     private List<Vertex> vertices;
     public FishingLocation(String name) {
-        this.name = name;
+        if (name != null) {
+            this.name = name;
+        }
+        vertices = new ArrayList<>();
+    }
+
+    public void addVertex(Vertex vertex) {
+        vertices.add(vertex);
     }
 
     public boolean isPointInsideLocation(Vertex p) {

@@ -29,7 +29,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     public static final String KEY_BAITS_AND_LURES = "baits_and_lures";
     public static final String KEY_SEASONS = "seasons";
     public static final String KEY_TIMES_OF_DAY = "times_of_day";
-    public static final String KEY_LATITUTE = "latitute";
+    public static final String KEY_LATITUTE_TYPO = "latitute";
     public static final String KEY_LONGITUDE = "longitude";
     public static final String KEY_LOCATIONS = "locations";
 
@@ -171,7 +171,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 null,
                 null);
 
-        List<Fish> fish = getFishList(cursor);
+        List<Fish> fish = getFishList(context, cursor);
         database.close();
 
         Log.d("Fetched fish: ", String.valueOf(fish.size()));
@@ -207,7 +207,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 null,
                 null);
 
-        List<Fish> fish_tmp = getFishList(cursor);
+        List<Fish> fish_tmp = getFishList(context, cursor);
         database.close();
 
         List<Fish> fish = new ArrayList<>();
@@ -224,7 +224,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     }
 
     @SuppressLint("Range")
-    private static List<Fish> getFishList(Cursor cursor) {
+    private static List<Fish> getFishList(Context context, Cursor cursor) {
         Fish newFish;
         List<Fish> fish = new LinkedList<>();
 
@@ -268,9 +268,10 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
             String fishingLocationsString = cursor.getString(cursor.getColumnIndex(KEY_LOCATION_ID));
             if (fishingLocationsString != null) {
+                Log.d("Location queries", "Location found");
                 List<String> fishingLocationsIDStringList = Arrays.asList(fishingLocationsString.split(","));
                 for (String fishLocationIdString : fishingLocationsIDStringList) {
-                    newFish.addFishingLocation(getFishingLocation(Integer.valueOf(fishLocationIdString)));
+                    newFish.addFishingLocation(getFishingLocation(context, Integer.valueOf(fishLocationIdString)));
                 }
             }
 
@@ -280,8 +281,70 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         return fish;
     }
 
-    private static FishingLocation getFishingLocation(Integer fishingLocationID) {
-        return null;
+    @SuppressLint("Range")
+    private static FishingLocation getFishingLocation(Context context, Integer fishingLocationID) {
+        Log.d("Location queries", "Getting location with ID " + fishingLocationID);
+
+        SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
+        SQLiteDatabase database = databaseHelper.getReadableDatabase();
+
+//        SELECT v.VertexID, v.Latitude, v.Longitude
+//        FROM Vertices v
+//        JOIN VertexSets vs ON v.SetID = vs.SetID
+//        WHERE vs.Name = 'Polygon Set 1';
+
+        String selection = String.format(
+                "SELECT v.%s, v.%s, v.%s " +
+                        "FROM %s v " +
+                        "JOIN %s vs ON v.%s = vs.%s " +
+                        "WHERE vs.%s = ?;",
+                KEY_ID,
+                KEY_LATITUDE,
+                KEY_LONGITUDE,
+                VERTICES_TABLE_NAME,
+                LOCATIONS_TABLE_NAME,
+                KEY_LOCATION_ID,
+                KEY_LOCATION_ID,
+                KEY_LOCATION_ID
+        );
+        String[] selectionArgs = new String[] {
+                fishingLocationID.toString(),
+        };
+
+//        Cursor cursor = database.query(SmartAnglerOpenHelper.VERTICES_TABLE_NAME,
+//                null,
+//                selection,
+//                selectionArgs,
+//                null,
+//                null,
+//                null);
+
+        Cursor cursor = database.rawQuery(selection, selectionArgs);
+
+        FishingLocation newFishingLocation = new FishingLocation(null);
+
+        cursor.moveToFirst();
+        for (int index = 0; index < cursor.getCount(); index++) {
+            double latitude = 0;
+            double longitude = 0;
+
+            String latitudeString = cursor.getString(cursor.getColumnIndex(KEY_LATITUDE));
+            if (latitudeString != null) {
+                latitude = Double.valueOf(latitudeString);
+            }
+
+            String longitudeString = cursor.getString(cursor.getColumnIndex(KEY_LONGITUDE));
+            if (longitudeString != null) {
+                longitude = Double.valueOf(longitudeString);
+            }
+
+            if (latitudeString != null && longitudeString != null) {
+                Vertex newVertex = new Vertex(latitude, longitude);
+                newFishingLocation.addVertex(newVertex);
+            }
+        }
+
+        return newFishingLocation;
     }
 
     @Override
@@ -306,7 +369,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         if (i < 2) {
             sqLiteDatabase.execSQL("DROP TABLE num_steps");
-            sqLiteDatabase.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s DOUBLE", FISH_TABLE_NAME, KEY_LATITUTE));
+            sqLiteDatabase.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s DOUBLE", FISH_TABLE_NAME, KEY_LATITUTE_TYPO));
             sqLiteDatabase.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s DOUBLE", FISH_TABLE_NAME, KEY_LONGITUDE));
         }
         if (i < 3) {
