@@ -112,6 +112,8 @@ public class HomeFragment extends Fragment {
                         } else {
                             locationNameText.setText(getString(R.string.location_name_unknown));
                         }
+
+                        makeFishCards();
                     } else {
                         Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                         Log.d("Location service", "Location unavailable");
@@ -122,8 +124,6 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
-
-        makeFishCards();
     }
 
     private void makeFishCards() {
@@ -177,6 +177,8 @@ public class HomeFragment extends Fragment {
                                 } else {
                                     locationNameText.setText(getString(R.string.location_name_unknown));
                                 }
+
+                                makeFishCards();
                             } else {
                                 Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                                 Log.d("Location service", "Location unavailable");
@@ -187,8 +189,6 @@ public class HomeFragment extends Fragment {
                         }
                     });
         }
-
-        makeFishCards();
     }
 
     @Override
