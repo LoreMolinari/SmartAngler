@@ -201,6 +201,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             Log.d("Fish DB", "Current location was null");
             return null;
         }
+        Log.d("Fish DB", "Current location: " + currentLocation);
 
         SmartAnglerOpenHelper databaseHelper = new SmartAnglerOpenHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
