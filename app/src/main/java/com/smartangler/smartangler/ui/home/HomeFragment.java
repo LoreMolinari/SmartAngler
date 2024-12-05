@@ -25,6 +25,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.smartangler.smartangler.Fish;
+import com.smartangler.smartangler.FishingLocation.Vertex;
 import com.smartangler.smartangler.ItemAdapter;
 import com.smartangler.smartangler.R;
 import com.smartangler.smartangler.SmartAnglerOpenHelper;
@@ -38,6 +39,8 @@ public class HomeFragment extends Fragment {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private FusedLocationProviderClient fusedLocationClient;
+
+    private Vertex currentLocation;
 
     private Button refreshButton;
     private TextView seasonText, timeOfDayText, locationText, noFishLikelyText;
@@ -92,9 +95,12 @@ public class HomeFragment extends Fragment {
                 public void onSuccess(Location location) {
                     if (location != null) {
                         Log.d("Location service", location.toString());
+
+                        currentLocation = new Vertex(location.getLatitude(), location.getLongitude());
+
                         locationText.setText(getString(R.string.current_location,
-                                location.getLatitude(),
-                                location.getLongitude()));
+                                currentLocation.getLatitude(),
+                                currentLocation.getLongitude()));
                     } else {
                         Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                         Log.d("Location service", "Location unavailable");
@@ -108,9 +114,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void makeFishCards() {
-        List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay());
+        List<Fish> fishList = SmartAnglerOpenHelper.getFishByConditions(this.getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay(), currentLocation);
 
-        if (fishList.isEmpty()) {
+        if (fishList == null || fishList.isEmpty()) {
             noFishLikelyText.setVisibility(View.VISIBLE);
         }
 
@@ -141,9 +147,12 @@ public class HomeFragment extends Fragment {
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 Log.d("Location service", location.toString());
+
+                                currentLocation = new Vertex(location.getLatitude(), location.getLongitude());
+
                                 locationText.setText(getString(R.string.current_location,
-                                        location.getLatitude(),
-                                        location.getLongitude()));
+                                        currentLocation.getLatitude(),
+                                        currentLocation.getLongitude()));
                             } else {
                                 Toast.makeText(getContext(), "Location unavailable", Toast.LENGTH_SHORT).show();
                                 Log.d("Location service", "Location unavailable");
@@ -152,6 +161,8 @@ public class HomeFragment extends Fragment {
                         }
                     });
         }
+
+        makeFishCards();
     }
 
     @Override
