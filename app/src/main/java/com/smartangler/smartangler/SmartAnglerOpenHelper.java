@@ -82,7 +82,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                     "'" + "Creature bait,Shad" + "', " +
                     "'" + "AUTUMN,WINTER" + "', " +
                     "'" + "EVENING,NIGHT" + "', " +
-                    "'" + "0" + "');"
+                    "'" + "0" + "');",
             "INSERT INTO " + FISH_TABLE_NAME + " (" +
                     KEY_NAME + ", " +
                     KEY_DESCRIPTION + ", " +
