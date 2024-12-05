@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 4; // On 5 add test locations
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "smartAngler";
 
     // Fish DB
@@ -76,6 +76,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     public static final String VERTICES_TABLE_NAME = "vertices";
     public static final String KEY_LOCATION_ID = "location_id";
     public static final String KEY_ID = "id";
+    public static final String KEY_LATITUDE = "latitude";
 
     public static final String CREATE_LOCATIONS_TABLES_SQL = "CREATE TABLE " + LOCATIONS_TABLE_NAME + " (" +
             KEY_LOCATION_ID + " INT PRIMARY KEY AUTOINCREMENT, " +
@@ -84,10 +85,68 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     public static final String CREATE_VERTICES_TABLE_SQL = "CREATE TABLE " + VERTICES_TABLE_NAME + " (" +
             KEY_ID + " INT PRIMARY KEY AUTOINCREMENT, " +
             KEY_LOCATION_ID + " INTEGER, " +
-            KEY_LATITUTE + " DOUBLE, " +
+            KEY_LATITUDE + " DOUBLE, " +
             KEY_LONGITUDE + " DOUBLE, " +
             "FOREIGN KEY (" + KEY_LOCATION_ID + ")  REFERENCES " + LOCATIONS_TABLE_NAME + "(" + KEY_LOCATION_ID + ") ON DELETE CASCADE);";
 
+    private static final String[] DEFAULT_LOCATIONS_DATA = {
+            "INSERT INTO " + LOCATIONS_TABLE_NAME + " (" +
+                    KEY_LOCATION_ID + ", " +
+                    KEY_NAME + ") " +
+                    "VALUES (" +
+                    "'" + "0" + "', " +
+                    "'" + "Lake Lugano" + "');"
+    };
+    private static final String[] DEFAULT_VERTICES_DATA = {
+            "INSERT INTO " + VERTICES_TABLE_NAME + " (" +
+                    KEY_LOCATION_ID + ", " +
+                    KEY_LATITUDE + ", " +
+                    KEY_LONGITUDE + ") " +
+                    "VALUES (" +
+                    "'" + "0" + "', " +
+                    "'" + "46.04482" + "', " +
+                    "'" + "9.11917" + "');",
+            "INSERT INTO " + VERTICES_TABLE_NAME + " (" +
+                    KEY_LOCATION_ID + ", " +
+                    KEY_LATITUDE + ", " +
+                    KEY_LONGITUDE + ") " +
+                    "VALUES (" +
+                    "'" + "0" + "', " +
+                    "'" + "45.9766" + "', " +
+                    "'" + "8.8361" + "');",
+            "INSERT INTO " + VERTICES_TABLE_NAME + " (" +
+                    KEY_LOCATION_ID + ", " +
+                    KEY_LATITUDE + ", " +
+                    KEY_LONGITUDE + ") " +
+                    "VALUES (" +
+                    "'" + "0" + "', " +
+                    "'" + "45.8906" + "', " +
+                    "'" + "8.8821" + "');",
+            "INSERT INTO " + VERTICES_TABLE_NAME + " (" +
+                    KEY_LOCATION_ID + ", " +
+                    KEY_LATITUDE + ", " +
+                    KEY_LONGITUDE + ") " +
+                    "VALUES (" +
+                    "'" + "0" + "', " +
+                    "'" + "45.8876" + "', " +
+                    "'" + "8.9923" + "');",
+            "INSERT INTO " + VERTICES_TABLE_NAME + " (" +
+                    KEY_LOCATION_ID + ", " +
+                    KEY_LATITUDE + ", " +
+                    KEY_LONGITUDE + ") " +
+                    "VALUES (" +
+                    "'" + "0" + "', " +
+                    "'" + "45.9767" + "', " +
+                    "'" + "9.0050" + "');",
+            "INSERT INTO " + VERTICES_TABLE_NAME + " (" +
+                    KEY_LOCATION_ID + ", " +
+                    KEY_LATITUDE + ", " +
+                    KEY_LONGITUDE + ") " +
+                    "VALUES (" +
+                    "'" + "0" + "', " +
+                    "'" + "46.0215" + "', " +
+                    "'" + "9.1468" + "');",
+    };
 
     public SmartAnglerOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -200,13 +259,19 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_FISH_TABLE_SQL);
-
         for (String sql : DEFAULT_FISH_DATA) {
             sqLiteDatabase.execSQL(sql);
         }
 
         sqLiteDatabase.execSQL(CREATE_LOCATIONS_TABLES_SQL);
+        for (String sql : DEFAULT_LOCATIONS_DATA) {
+            sqLiteDatabase.execSQL(sql);
+        }
+
         sqLiteDatabase.execSQL(CREATE_VERTICES_TABLE_SQL);
+        for (String sql : DEFAULT_VERTICES_DATA) {
+            sqLiteDatabase.execSQL(sql);
+        }
     }
 
     @Override
@@ -224,6 +289,20 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         if (i < 3) {
             sqLiteDatabase.execSQL(CREATE_LOCATIONS_TABLES_SQL);
             sqLiteDatabase.execSQL(CREATE_VERTICES_TABLE_SQL);
+        }
+        if (i < 4) {
+            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", CREATE_LOCATIONS_TABLES_SQL));
+            sqLiteDatabase.execSQL(String.format("DROP TABLE %s", VERTICES_TABLE_NAME));
+
+            sqLiteDatabase.execSQL(CREATE_LOCATIONS_TABLES_SQL);
+            for (String sql : DEFAULT_LOCATIONS_DATA) {
+                sqLiteDatabase.execSQL(sql);
+            }
+
+            sqLiteDatabase.execSQL(CREATE_VERTICES_TABLE_SQL);
+            for (String sql : DEFAULT_VERTICES_DATA) {
+                sqLiteDatabase.execSQL(sql);
+            }
         }
     }
 }
