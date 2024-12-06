@@ -1,4 +1,4 @@
-<resources xmlns:xlliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">SmartAngler</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -66,10 +66,21 @@
     <string name="timerZero">00:00</string>
 
     <!-- Fishing fragment   -->
-    <string name="steps_counter">Steps: <xlliff:g id="steps_number">%d</xlliff:g></string>
-    <string name="casts_counter">Casts: <xlliff:g id="casts_number">%d</xlliff:g></string>
+    <string name="steps_counter">Steps: <xliff:g id="steps_number">%d</xliff:g></string>
+    <string name="casts_counter">Casts: <xliff:g id="casts_number">%d</xliff:g></string>
 
     <!-- Analytics -->
     <string name="casting">Casting</string>
     <string name="statistics">Statistics</string>
+
+    <!-- Home fragment   -->
+    <string name="home_title">Welcome to SmartAngler</string>
+    <string name="refresh_button_desc">Refresh</string>
+    <string name="current_season">Current season: <xliff:g id="season">%s</xliff:g></string>
+    <string name="current_time_of_day">Current time of day: <xliff:g id="time_of_day">%s</xliff:g></string>
+    <string name="current_location">Current location: <xliff:g id="latitude">%f</xliff:g> <xliff:g id="longitude">%f</xliff:g></string>
+    <string name="current_location_unknown">Current location unknown</string>
+    <string name="location_name">Location name: <xliff:g id="location">%s</xliff:g></string>
+    <string name="location_name_unknown">Location name unknown</string>
+    <string name="no_fish_likely">Sorry, it looks like you aren\'t likely to find any fish in these conditions</string>
 </resources>

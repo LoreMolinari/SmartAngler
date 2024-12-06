@@ -101,7 +101,7 @@ public class FishingFragment extends Fragment {
         } catch (NullPointerException e) {
             Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_SHORT).show();
         }
-        stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER); // How about step counter instead of detector?
+        stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         return binding.getRoot();
