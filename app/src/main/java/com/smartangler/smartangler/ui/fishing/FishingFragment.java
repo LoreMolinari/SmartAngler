@@ -259,6 +259,8 @@ public class FishingFragment extends Fragment {
     }
 
     private void openCamera() {
+        getCurrentLocation();
+        updateMap();
         if (isSessionActive) {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
@@ -290,28 +292,64 @@ public class FishingFragment extends Fragment {
                 title,
                 byteArray,
                 currentDate,
-                "Unknown",
+                String.valueOf(currentLocation),
                 currentSessionId
         );
 
-        FishEntry newEntry = new FishEntry(imageBitmap, title, currentDate);
-        fishEntries.add(0, newEntry);
-        adapter.notifyItemInserted(0);
-        binding.recyclerViewFish.scrollToPosition(0);
 
         if (currentLocation != null) {
             Marker fishMarker = new Marker(map);
             fishMarker.setPosition(currentLocation);
             fishMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            fishMarker.setTextIcon(title);
 
             Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.bait);
+
             int markerSize = 100;
             Bitmap fishIcon = getResizedBitmap(drawable, markerSize, markerSize);
 
             fishMarker.setIcon(new BitmapDrawable(requireContext().getResources(), fishIcon));
-            fishMarker.setTitle(title);
+            fishMarker.setTitle(title + "\n" + currentDate);
+
             map.getOverlays().add(fishMarker);
+
+            FishEntry newEntry = new FishEntry(imageBitmap, title, currentDate);
+            fishEntries.add(0, newEntry);
+            binding.recyclerViewFish.scrollToPosition(0);
+
+            fishMarker.setOnMarkerClickListener((marker, mapView) -> {
+                String markerTitle = marker.getTitle();
+                String markerTitleOnly = markerTitle.split("\n")[0];
+                Log.d("FishingFragment", "Marker clicked: " + markerTitleOnly);
+                int index = findFishEntryIndex(markerTitleOnly);
+                if (index != -1) {
+                    Log.d("FishingFragment", "Found index: " + index);
+                    showSelectedFishEntry(index);
+                } else {
+                    Log.e("FishingFragment", "Marker title not found: " + markerTitleOnly);
+                }
+                return true; // Consuma il click
+            });
+
             updateMap();
+        }
+    }
+
+    // Metodo per trovare l'indice della FishEntry corrispondente
+    private int findFishEntryIndex(String title) {
+        for (int i = 0; i < fishEntries.size(); i++) {
+            if (fishEntries.get(i).getName().equals(title)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // Metodo per mostrare la foto corrispondente nella RecyclerView
+    private void showSelectedFishEntry(int index) {
+        if (index >= 0 && index < fishEntries.size()) {
+            adapter.setSelectedIndex(index);
+            binding.recyclerViewFish.scrollToPosition(0);
         }
     }
 
