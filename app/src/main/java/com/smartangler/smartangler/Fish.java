@@ -80,6 +80,7 @@ public class Fish {
     public List<FishingLocation> getFishingLocations() {
         return fishingLocations;
     }
+
     public void addFishingLocation(FishingLocation fishingLocation) {
         fishingLocations.add(fishingLocation);
     }

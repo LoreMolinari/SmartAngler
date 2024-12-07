@@ -103,7 +103,7 @@ public class HomeFragment extends Fragment {
                                 currentVertex.getLatitude(),
                                 currentVertex.getLongitude()));
 
-                        currentFishingLocation =  SmartAnglerOpenHelper.getCurrentFishingLocation(getContext(), currentVertex);
+                        currentFishingLocation = SmartAnglerOpenHelper.getCurrentFishingLocation(getContext(), currentVertex);
                         if (currentFishingLocation != null) {
                             locationNameText.setText(getString(R.string.location_name,
                                     currentFishingLocation.getName()));
@@ -170,7 +170,7 @@ public class HomeFragment extends Fragment {
                                         currentVertex.getLatitude(),
                                         currentVertex.getLongitude()));
 
-                                currentFishingLocation =  SmartAnglerOpenHelper.getCurrentFishingLocation(getContext(), currentVertex);
+                                currentFishingLocation = SmartAnglerOpenHelper.getCurrentFishingLocation(getContext(), currentVertex);
                                 if (currentFishingLocation != null) {
                                     locationNameText.setText(getString(R.string.location_name,
                                             currentFishingLocation.getName()));

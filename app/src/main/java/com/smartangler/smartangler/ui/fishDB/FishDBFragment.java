@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.smartangler.smartangler.Fish;
+import com.smartangler.smartangler.ItemAdapter;
 import com.smartangler.smartangler.R;
 import com.smartangler.smartangler.SmartAnglerOpenHelper;
 import com.smartangler.smartangler.databinding.FragmentFishDbBinding;
-import com.smartangler.smartangler.ItemAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

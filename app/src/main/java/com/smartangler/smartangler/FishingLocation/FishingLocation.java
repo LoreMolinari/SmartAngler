@@ -41,7 +41,7 @@ public class FishingLocation {
             Log.d("Fishing Location", String.format("Checking vertices %s and %s", vertex1, vertex2));
 
             // Check if the point is between the y-coordinates of the edge
-            if ((vertex1.getLatitude() > y && vertex2.getLatitude() <= y) || (vertex2.getLatitude() > y && vertex1.getLatitude()<= y)) {
+            if ((vertex1.getLatitude() > y && vertex2.getLatitude() <= y) || (vertex2.getLatitude() > y && vertex1.getLatitude() <= y)) {
                 // Calculate the x-coordinate of the intersection with the ray
                 double slope = (vertex2.getLongitude() - vertex1.getLongitude()) / (vertex2.getLatitude() - vertex1.getLatitude());
                 double interceptX = vertex1.getLongitude() + slope * (y - vertex1.getLatitude());

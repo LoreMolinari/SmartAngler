@@ -209,8 +209,8 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         String selection = String.format("%s like ? AND %s like ?",
                 KEY_SEASONS,
                 KEY_TIMES_OF_DAY
-                );
-        String[] selectionArgs = new String[] {
+        );
+        String[] selectionArgs = new String[]{
                 "%" + season.toString() + "%",
                 "%" + timeOfDay.toString() + "%"
         };
@@ -242,7 +242,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
 
         Log.d("Fish DB", "Fetched fish: " + fish.size());
-        return  fish;
+        return fish;
     }
 
     @SuppressLint("Range")
@@ -325,7 +325,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
                 KEY_LOCATION_ID,
                 KEY_LOCATION_ID
         );
-        String[] selectionArgs = new String[] {
+        String[] selectionArgs = new String[]{
                 fishingLocationID.toString(),
         };
 

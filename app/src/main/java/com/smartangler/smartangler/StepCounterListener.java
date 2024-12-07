@@ -1,22 +1,13 @@
 package com.smartangler.smartangler;
 
-import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.os.SystemClock;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class StepCounterListener implements SensorEventListener {
 
