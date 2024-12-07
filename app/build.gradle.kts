@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation("com.github.AnyChart:AnyChart-Android:1.1.5")
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
     implementation(libs.legacy.support.v4)
     implementation(libs.camera.core)
     implementation(libs.play.services.location)
