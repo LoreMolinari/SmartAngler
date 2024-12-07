@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.anychart.AnyChart;
@@ -82,6 +81,7 @@ public class StatisticsFragment extends Fragment {
 
         if (cartesian == null) {
             cartesian = AnyChart.column();
+            cartesian.background().fill("transparent");
             binding.anyChartView.setChart(cartesian);
         }
 
@@ -159,12 +159,12 @@ public class StatisticsFragment extends Fragment {
         cartesian.tooltip()
                 .titleFormat("{%X}")
                 .format("{%Value}")
-                .background()
-                .stroke(String.format("#%06X", (0xFFFFFF & ContextCompat.getColor(requireContext(), R.color.light_md_theme_background))));
+                .background().fill("rgba(0,0,0,0)");
 
         cartesian.interactivity().hoverMode(HoverMode.BY_X);
 
-        cartesian.background().fill(String.format("#%06X", (0xFFFFFF & ContextCompat.getColor(requireContext(), R.color.light_md_theme_background))));
+        cartesian.background().fill("rgba(0,0,0,0)");
+
     }
 
     @Override

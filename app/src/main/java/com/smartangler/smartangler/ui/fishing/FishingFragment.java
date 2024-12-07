@@ -182,7 +182,7 @@ public class FishingFragment extends Fragment {
                     requireContext(),
                     currentSessionId,
                     currentDate,
-                    "Unknown Location",
+                    String.valueOf(currentLocation),
                     totalMinutes,
                     fish_caught,
                     stepCount,
@@ -326,14 +326,13 @@ public class FishingFragment extends Fragment {
                 } else {
                     Log.e("FishingFragment", "Marker title not found: " + markerTitleOnly);
                 }
-                return true; // Consuma il click
+                return true;
             });
 
             updateMap();
         }
     }
 
-    // Metodo per trovare l'indice della FishEntry corrispondente
     private int findFishEntryIndex(String title) {
         for (int i = 0; i < fishEntries.size(); i++) {
             if (fishEntries.get(i).getName().equals(title)) {
@@ -343,24 +342,11 @@ public class FishingFragment extends Fragment {
         return -1;
     }
 
-    // Metodo per mostrare la foto corrispondente nella RecyclerView
     private void showSelectedFishEntry(int index) {
         if (index >= 0 && index < fishEntries.size()) {
             adapter.setSelectedIndex(index);
             binding.recyclerViewFish.scrollToPosition(0);
         }
-    }
-
-    private void loadFishEntries(String sessionId) {
-        List<Object[]> photos = SmartAnglerSessionHelper.loadPhotosForSession(requireContext(), sessionId);
-        fishEntries.clear();
-        for (Object[] photo : photos) {
-            byte[] imageData = (byte[]) photo[3];
-            Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-            FishEntry entry = new FishEntry(bitmap, (String) photo[1], (String) photo[2]);
-            fishEntries.add(entry);
-        }
-        adapter.notifyDataSetChanged();
     }
 
     private void updateMap() {
