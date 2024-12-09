@@ -291,4 +291,9 @@
     <color name="dark_md_theme_surfaceContainer_highContrast">#1B2023</color>
     <color name="dark_md_theme_surfaceContainerHigh_highContrast">#262B2E</color>
     <color name="dark_md_theme_surfaceContainerHighest_highContrast">#303539</color>
+
+    <!-- Buttons -->
+    <color name="enabled_button">#004D66</color>
+    <color name="disabled_button">#364954</color>
+
 </resources>

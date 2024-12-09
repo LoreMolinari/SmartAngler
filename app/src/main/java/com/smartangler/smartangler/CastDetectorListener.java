@@ -6,6 +6,10 @@ import android.hardware.SensorEventListener;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +20,13 @@ public class CastDetectorListener implements SensorEventListener {
     public static int castsCounter = 0;
     private final ArrayList<Integer> accSeries = new ArrayList<>();
     private int lastAddedIndex = 1;
+    private TextView counterPB;
+    private CircularProgressIndicator progressBar;
 
-    public CastDetectorListener(TextView castsView) {
+    public CastDetectorListener(TextView castsView, TextView counterPB, CircularProgressIndicator pb) {
         this.castsView = castsView;
+        this.counterPB = counterPB;
+        this.progressBar = pb;
     }
 
     @Override
@@ -49,6 +57,8 @@ public class CastDetectorListener implements SensorEventListener {
                 castsCounter += 1;
                 String castsText = "Casts: " + castsCounter;
                 castsView.setText(castsText);
+                counterPB.setText(String.format("%d", castsCounter));
+                progressBar.setProgress(castsCounter);
                 Log.d("Cast detection", "Cast detected with peak at " + valuesInWindow.get(i));
             }
         }

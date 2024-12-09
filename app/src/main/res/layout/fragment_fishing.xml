@@ -12,7 +12,7 @@
         android:id="@+id/timer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/timerZero"
         style="@style/TextAppearance.Material3.HeadlineMedium"
@@ -40,125 +40,115 @@
             <!-- Circular Progress Indicator -->
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/progressBar"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 style="@style/Widget.Material3.CircularProgressIndicator"
-                app:indicatorSize="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:indicatorSize="50dp"
+                android:layout_marginTop="25dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Steps Counter -->
+            <!-- Casts Counter -->
             <TextView
                 android:id="@+id/counter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/num_steps"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/progressBar"
                 app:layout_constraintEnd_toEndOf="@id/progressBar"
                 app:layout_constraintStart_toStartOf="@id/progressBar"
                 app:layout_constraintTop_toTopOf="@id/progressBar" />
 
-            <!-- Goal Text -->
+            <!-- Casts Text -->
             <TextView
-                android:id="@+id/goal"
-                android:layout_width="0dp"
+                android:id="@+id/casts_text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/goal"
-                android:textColor="?attr/colorOnSurface"
-                style="@style/TextAppearance.Material3.BodyLarge"
+                android:layout_marginTop="4dp"
+                android:text="@string/casts"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/progressBar"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/progressBar" />
 
             <!-- Steps Text -->
             <TextView
                 android:id="@+id/steps_text"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="@string/steps"
-                android:textColor="?attr/colorOnSurface"
-                style="@style/TextAppearance.Material3.BodySmall"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/goal"
-                app:layout_constraintTop_toBottomOf="@id/goal" />
-
-            <!-- Casts Text -->
-            <TextView
-                android:id="@+id/casts_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/casts"
-                android:textColor="?attr/colorOnSurface"
-                style="@style/TextAppearance.Material3.BodySmall"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/steps_text"
-                app:layout_constraintTop_toBottomOf="@id/steps_text" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/casts_text" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Toggle Buttons -->
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/toggleButtonGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/progressCard"
-        app:selectionRequired="false"
-        app:singleSelection="true">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/start_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/start_text"
-            android:textColor="?attr/colorOnPrimary"
-            app:icon="@drawable/baseline_play_circle_filled_24"
-            app:iconSize="24dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/stop_button"
-            android:layout_width="0dp"
+    <!-- Buttons -->
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/stop_text"
-            android:textColor="?attr/colorOnPrimary"
-            app:icon="@drawable/baseline_stop_circle_24"
-            app:iconSize="24dp" />
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+            android:orientation="horizontal"
+            android:layout_marginTop="25dp"
+            app:layout_constraintTop_toBottomOf="@id/progressCard"
+            android:layout_marginHorizontal="16dp">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/start_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/start_text"
+                android:textColor="?attr/colorOnPrimary"
+                app:icon="@drawable/baseline_play_circle_filled_24"
+                android:layout_marginEnd="8dp"
+                app:iconSize="24dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/stop_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="@string/stop_text"
+                android:textColor="?attr/colorOnPrimary"
+                app:icon="@drawable/baseline_stop_circle_24"
+                app:iconSize="24dp" />
+        </LinearLayout>
+
+
 
     <!-- ScrollView for Map and RecyclerView -->
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toggleButtonGroup">
-
+        app:layout_constraintTop_toBottomOf="@id/buttons">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <!-- MapView -->
-            <org.osmdroid.views.MapView
-                android:id="@+id/map"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:layout_margin="8dp" />
-
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+                <org.osmdroid.views.MapView
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.google.android.material.card.MaterialCardView>
             <!-- RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewFish"
@@ -166,9 +156,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:padding="8dp" />
-
         </LinearLayout>
     </ScrollView>
+
 
 
     <!-- Floating Action Button -->

@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -105,7 +106,7 @@ public class FishingFragment extends Fragment {
         binding.recyclerViewFish.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerViewFish.setAdapter(adapter);
 
-        setupToggleButtonGroup();
+        setupButtons();
 
         View root = binding.getRoot();
         stepCountsView = root.findViewById(R.id.steps_text);
@@ -116,6 +117,7 @@ public class FishingFragment extends Fragment {
         progressBar.setProgress(0);
         castsView = root.findViewById(R.id.casts_text);
         castsView.setText(getString(R.string.casts_counter, 0));
+        binding.progressBar.setMax(10);
 
         try {
             sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -132,14 +134,27 @@ public class FishingFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void setupToggleButtonGroup() {
+    private void setupButtons() {
+        binding.stopButton.setEnabled(false);
         binding.startButton.setOnClickListener(v -> startFishingSession());
         binding.stopButton.setOnClickListener(v -> stopFishingSession());
     }
 
+    private void updateButtonStates() {
+        if (isSessionActive) {
+            binding.startButton.setEnabled(false);
+            binding.stopButton.setEnabled(true);
+        } else {
+            binding.startButton.setEnabled(true);
+            binding.stopButton.setEnabled(false);
+        }
+    }
+
+
     private void startFishingSession() {
         if (!isSessionActive) {
             isSessionActive = true;
+            updateButtonStates();
             currentSessionId = generateSessionId();
             startTime = System.currentTimeMillis();
             timerHandler.postDelayed(updateTimerThread, 0);
@@ -164,7 +179,7 @@ public class FishingFragment extends Fragment {
             }
 
             if (accSensor != null) {
-                castDetectorListener = new CastDetectorListener(castsView);
+                castDetectorListener = new CastDetectorListener(castsView, binding.counter, binding.progressBar);
                 sensorManager.registerListener(castDetectorListener, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
                 CastDetectorListener.resetCounter();
                 Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_SHORT).show();
@@ -203,8 +218,11 @@ public class FishingFragment extends Fragment {
 
             fish_caught = 0;
             isSessionActive = false;
+            updateButtonStates();
             timerHandler.removeCallbacks(updateTimerThread);
             binding.timerText.setText("00:00:00");
+            binding.counter.setText("0");
+            binding.progressBar.setProgress(0);
             Toast.makeText(requireContext(), "Fishing session ended", Toast.LENGTH_SHORT).show();
             sensorManager.unregisterListener(sensorListener);
             Toast.makeText(getContext(), R.string.stop_text, Toast.LENGTH_SHORT).show();
