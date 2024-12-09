@@ -3,6 +3,7 @@ package com.smartangler.smartangler.ui.fishing;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,6 +23,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -169,6 +172,15 @@ public class FishingFragment extends Fragment {
                 Toast.makeText(getContext(), R.string.acc_sensor_not_available, Toast.LENGTH_SHORT).show();
             }
 
+            // Keep screen on
+            Activity activity = getActivity();
+            if (activity != null) {
+                Window window = activity.getWindow();
+                if (window != null) {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
+            }
+
             getCurrentLocation();
             map.invalidate();
         }
@@ -196,6 +208,15 @@ public class FishingFragment extends Fragment {
             Toast.makeText(requireContext(), "Fishing session ended", Toast.LENGTH_SHORT).show();
             sensorManager.unregisterListener(sensorListener);
             Toast.makeText(getContext(), R.string.stop_text, Toast.LENGTH_SHORT).show();
+
+            // Don't keep screen on
+            Activity activity = getActivity();
+            if (activity != null) {
+                Window window = activity.getWindow();
+                if (window != null && (window.getAttributes().flags & WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) != 0) {
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
+            }
 
             isStartMarkerAdded = false;
             map.getOverlays().clear();
@@ -399,6 +420,15 @@ public class FishingFragment extends Fragment {
     public void onPause() {
         super.onPause();
         map.onPause();
+
+        // Don't keep screen on
+        Activity activity = getActivity();
+        if (activity != null) {
+            Window window = activity.getWindow();
+            if (window != null && (window.getAttributes().flags & WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) != 0) {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        }
     }
 
     private Bitmap getResizedBitmap(Drawable drawable, int width, int height) {
