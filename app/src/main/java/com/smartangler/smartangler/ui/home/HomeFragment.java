@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -46,6 +47,8 @@ public class HomeFragment extends Fragment {
     private TextView seasonText, timeOfDayText, locationText, locationNameText, noFishLikelyText;
     private RecyclerView recyclerView;
     private FragmentHomeBinding binding;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +79,14 @@ public class HomeFragment extends Fragment {
         locationNameText.setText(getString(R.string.location_name_unknown));
 
         noFishLikelyText = root.findViewById(R.id.no_fish_likely_text);
+
+        swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshConditions();
+            }
+        });
 
         return root;
     }
@@ -125,6 +136,7 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void makeFishCards() {
@@ -189,6 +201,7 @@ public class HomeFragment extends Fragment {
                     });
         }
     }
+
 
     @Override
     public void onDestroyView() {
