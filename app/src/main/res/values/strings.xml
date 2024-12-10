@@ -63,6 +63,8 @@
     <string name="totalFish">Total Fish Caught: 0</string>
     <string name="totalSessions">Total Sessions: 0</string>
     <string name="totalDuration">Total Duration: 0 minutes</string>
+    <string name="totalSteps">Total Steps: 0</string>
+    <string name="totalCasts">Total Casts: 0</string>
     <string name="timerZero">00:00</string>
 
     <!-- Fishing fragment   -->
