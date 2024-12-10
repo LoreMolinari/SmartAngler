@@ -1,24 +1,19 @@
 package com.smartangler.smartangler;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.google.android.material.progressindicator.CircularProgressIndicator;
-
 public class StepCounterListener implements SensorEventListener {
 
     private long initialStepCount = -1;
     public static int stepCount = 0;
     private TextView stepCountsView;
-    private SQLiteDatabase database;
 
-    public StepCounterListener(TextView stepCountsView, TextView castsView, SQLiteDatabase database) {
+    public StepCounterListener(TextView stepCountsView) {
         this.stepCountsView = stepCountsView;
-        this.database = database;
     }
 
     @Override

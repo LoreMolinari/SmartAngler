@@ -171,7 +171,7 @@ public class FishingFragment extends Fragment {
             stepCountsView.setText(getString(R.string.steps_counter, 0));
 
             if (stepCounter != null) {
-                sensorListener = new StepCounterListener(stepCountsView, castsView, database);
+                sensorListener = new StepCounterListener(stepCountsView);
                 sensorManager.registerListener(sensorListener, stepCounter, SensorManager.SENSOR_DELAY_NORMAL);
                 Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_SHORT).show();
             } else {
