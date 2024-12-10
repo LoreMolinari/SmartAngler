@@ -1,10 +1,12 @@
 package com.smartangler.smartangler.ui.statistics;
 
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -37,6 +39,14 @@ public class StatisticsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupChartToggleGroup();
         setupInitialChart();
+        updateChart(R.id.stepsButton);
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                updateChartBackground();
+            }
+        });
     }
 
     private void setupChartToggleGroup() {
@@ -49,7 +59,9 @@ public class StatisticsFragment extends Fragment {
 
     private void setupInitialChart() {
         binding.chartToggleGroup.check(R.id.stepsButton);
-        updateChart(R.id.stepsButton);
+        cartesian = AnyChart.column();
+        cartesian.background().fill(getBackgroundColor());
+        binding.anyChartView.setChart(cartesian);
     }
 
     private void updateChart(int checkedId) {
@@ -81,11 +93,12 @@ public class StatisticsFragment extends Fragment {
 
         if (cartesian == null) {
             cartesian = AnyChart.column();
-            cartesian.background().fill("transparent");
+            cartesian.background().fill(getBackgroundColor());
             binding.anyChartView.setChart(cartesian);
         }
 
         updateColumnChart(data, title, xAxisTitle, yAxisTitle);
+        updateChartBackground();
 
         binding.anyChartView.setVisibility(View.VISIBLE);
         binding.loadingBar.setVisibility(View.GONE);
@@ -152,7 +165,6 @@ public class StatisticsFragment extends Fragment {
                 .labels()
                 .format("{%Value}");
 
-
         cartesian.animation(true);
         cartesian.yScale().minimum(0);
 
@@ -162,9 +174,18 @@ public class StatisticsFragment extends Fragment {
                 .background().fill("rgba(0,0,0,0)");
 
         cartesian.interactivity().hoverMode(HoverMode.BY_X);
+    }
 
-        cartesian.background().fill("rgba(0,0,0,0)");
+    private String getBackgroundColor() {
+        TypedValue typedValue = new TypedValue();
+        requireContext().getTheme().resolveAttribute(android.R.attr.colorBackground, typedValue, true);
+        return String.format("#%06X", (0xFFFFFF & typedValue.data));
+    }
 
+    private void updateChartBackground() {
+        if (cartesian != null) {
+            cartesian.background().fill(getBackgroundColor());
+        }
     }
 
     @Override
