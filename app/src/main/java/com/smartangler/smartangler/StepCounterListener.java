@@ -14,14 +14,10 @@ public class StepCounterListener implements SensorEventListener {
     private long initialStepCount = -1;
     public static int stepCount = 0;
     private TextView stepCountsView;
-    private TextView counterPB;
-    private CircularProgressIndicator progressBar;
     private SQLiteDatabase database;
 
-    public StepCounterListener(TextView stepCountsView, TextView counterPB, CircularProgressIndicator progressBar, TextView castsView, SQLiteDatabase database) {
+    public StepCounterListener(TextView stepCountsView, TextView castsView, SQLiteDatabase database) {
         this.stepCountsView = stepCountsView;
-        this.counterPB = counterPB;
-        this.progressBar = progressBar;
         this.database = database;
     }
 
@@ -47,7 +43,5 @@ public class StepCounterListener implements SensorEventListener {
 
     private void updateUI() {
         stepCountsView.setText("Steps: " + stepCount);
-        counterPB.setText(String.valueOf(stepCount));
-        progressBar.setProgress(stepCount);
     }
 }
