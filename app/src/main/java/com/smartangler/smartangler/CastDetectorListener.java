@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
