@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -88,7 +90,9 @@ public class FishingFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFishingBinding.inflate(inflater, container, false);
-        checkAndRequestPhysicalActivityPermission();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            checkAndRequestPhysicalActivityPermission();
+        }
 
         Configuration.getInstance().setUserAgentValue(requireContext().getPackageName());
 
@@ -260,6 +264,7 @@ public class FishingFragment extends Fragment {
         }
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private void checkAndRequestPhysicalActivityPermission() {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -295,7 +300,11 @@ public class FishingFragment extends Fragment {
 
     private void openCamera() {
         getCurrentLocation();
-        updateMap();
+        if (map != null) {
+            updateMap();
+        } else {
+            Log.e("FishingFragment", "MapView is null during map update");
+        }
         if (isSessionActive) {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
@@ -366,7 +375,11 @@ public class FishingFragment extends Fragment {
                 return true;
             });
 
-            updateMap();
+            if (map != null) {
+                updateMap();
+            } else {
+                Log.e("FishingFragment", "MapView is null during map update");
+            }
         }
     }
 
@@ -419,7 +432,11 @@ public class FishingFragment extends Fragment {
                             if (location != null) {
                                 currentLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
                                 Log.d("PositionOSM", String.valueOf(currentLocation));
-                                updateMap();
+                                if (map != null) {
+                                    updateMap();
+                                } else {
+                                    Log.e("FishingFragment", "MapView is null during map update");
+                                }
                             }
                         }
                     });
@@ -429,13 +446,21 @@ public class FishingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        map.onResume();
+        if (map != null) {
+            map.onResume();
+        }else {
+            Log.e("FishingFragment", "MapView is null");
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        map.onPause();
+        if (map != null) {
+            map.onPause();
+        }else {
+            Log.e("FishingFragment", "MapView is null");
+        }
 
         // Don't keep screen on
         Activity activity = getActivity();
@@ -453,5 +478,15 @@ public class FishingFragment extends Fragment {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (map != null) {
+            map.getOverlays().clear();
+            map.onDetach();
+            map = null;
+        }
     }
 }
