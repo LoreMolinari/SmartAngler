@@ -1,5 +1,6 @@
 package com.smartangler.smartangler;
 
+import android.annotation.SuppressLint;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,7 +11,7 @@ public class StepCounterListener implements SensorEventListener {
 
     private long initialStepCount = -1;
     public static int stepCount = 0;
-    private TextView stepCountsView;
+    private final TextView stepCountsView;
 
     public StepCounterListener(TextView stepCountsView) {
         this.stepCountsView = stepCountsView;
@@ -36,6 +37,7 @@ public class StepCounterListener implements SensorEventListener {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateUI() {
         stepCountsView.setText("Steps: " + stepCount);
     }

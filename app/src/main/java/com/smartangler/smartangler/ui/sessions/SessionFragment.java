@@ -1,8 +1,7 @@
 package com.smartangler.smartangler.ui.sessions;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +32,7 @@ public class SessionFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @SuppressLint("SetTextI18n")
     private void loadStatistics() {
         List<Object[]> sessions = SmartAnglerSessionHelper.loadAllSessions(requireContext());
 

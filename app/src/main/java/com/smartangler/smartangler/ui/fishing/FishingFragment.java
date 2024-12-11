@@ -3,6 +3,7 @@ package com.smartangler.smartangler.ui.fishing;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -67,7 +68,7 @@ public class FishingFragment extends Fragment {
     private List<FishEntry> fishEntries;
     private FishEntryAdapter adapter;
     private long startTime = 0L;
-    private Handler timerHandler = new Handler();
+    private final Handler timerHandler = new Handler();
     private String currentSessionId;
     private boolean isSessionActive = false;
     private Integer fish_caught = 0;
@@ -203,6 +204,7 @@ public class FishingFragment extends Fragment {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void stopFishingSession() {
         int stepCount = StepCounterListener.stepCount;
         if (isSessionActive) {
@@ -248,7 +250,7 @@ public class FishingFragment extends Fragment {
         return new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
     }
 
-    private Runnable updateTimerThread = new Runnable() {
+    private final Runnable updateTimerThread = new Runnable() {
         public void run() {
             long timeInMilliseconds = System.currentTimeMillis() - startTime;
             int seconds = (int) (timeInMilliseconds / 1000);
@@ -448,7 +450,7 @@ public class FishingFragment extends Fragment {
         super.onResume();
         if (map != null) {
             map.onResume();
-        }else {
+        } else {
             Log.e("FishingFragment", "MapView is null");
         }
     }
@@ -458,7 +460,7 @@ public class FishingFragment extends Fragment {
         super.onPause();
         if (map != null) {
             map.onPause();
-        }else {
+        } else {
             Log.e("FishingFragment", "MapView is null");
         }
 

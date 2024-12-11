@@ -89,7 +89,7 @@ public class PhotoFrame extends DialogFragment {
             if (recyclerView != null && recyclerView.getAdapter() != null) {
 
                 int dialogWidth = (int) (screenWidth * 0.9);
-                int maxHeight = (int)(screenHeight * 0.8);
+                int maxHeight = (int) (screenHeight * 0.8);
 
                 dialog.getWindow().setLayout(dialogWidth, maxHeight);
             }
@@ -97,9 +97,8 @@ public class PhotoFrame extends DialogFragment {
     }
 
 
-
     private class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
-        private List<Object[]> photos;
+        private final List<Object[]> photos;
 
         PhotoAdapter(List<Object[]> photos) {
             this.photos = photos;

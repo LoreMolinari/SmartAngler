@@ -18,8 +18,8 @@ public class CastDetectorListener implements SensorEventListener {
     public static int castsCounter = 0;
     private final ArrayList<Integer> accSeries = new ArrayList<>();
     private int lastAddedIndex = 1;
-    private TextView counterPB;
-    private CircularProgressIndicator progressBar;
+    private final TextView counterPB;
+    private final CircularProgressIndicator progressBar;
 
     public CastDetectorListener(TextView castsView, TextView counterPB, CircularProgressIndicator pb) {
         this.castsView = castsView;

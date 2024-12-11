@@ -1,5 +1,6 @@
 package com.smartangler.smartangler.ui.sessions;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import java.util.List;
 public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionViewHolder> {
 
     private List<Object[]> sessions = new ArrayList<>();
-    private OnSessionClickListener listener;
+    private final OnSessionClickListener listener;
 
     public interface OnSessionClickListener {
         void onSessionClick(String sessionId);
@@ -38,6 +39,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
         return new SessionViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull SessionViewHolder holder, int position) {
         Object[] session = sessions.get(position);

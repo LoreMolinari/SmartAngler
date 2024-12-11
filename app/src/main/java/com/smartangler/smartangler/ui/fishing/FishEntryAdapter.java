@@ -16,7 +16,7 @@ import java.util.List;
 
 public class FishEntryAdapter extends RecyclerView.Adapter<FishEntryAdapter.FishEntryViewHolder> {
 
-    private List<FishEntry> fishEntries;
+    private final List<FishEntry> fishEntries;
     private List<FishEntry> filteredFishEntries;
     private int selectedIndex = -1;
 

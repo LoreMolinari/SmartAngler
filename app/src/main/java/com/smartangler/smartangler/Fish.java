@@ -13,15 +13,15 @@ import java.util.List;
 public class Fish {
     private String name;
     private String description;
-    private List<String> techniques;
-    private List<String> baitsAndLures;
-    private List<Season> seasons;
-    private List<TimeOfDay> timesOfDay;
-    private List<FishingLocation> fishingLocations;
+    private final List<String> techniques;
+    private final List<String> baitsAndLures;
+    private final List<Season> seasons;
+    private final List<TimeOfDay> timesOfDay;
+    private final List<FishingLocation> fishingLocations;
 
     public Fish(String name) {
         this.name = name;
-        this.description = new String();
+        this.description = "";
         this.techniques = new ArrayList<>();
         this.baitsAndLures = new ArrayList<>();
         this.seasons = new ArrayList<>();
