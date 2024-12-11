@@ -3,8 +3,8 @@ package com.smartangler.smartangler.FishingLocation;
 import androidx.annotation.NonNull;
 
 public class Vertex {
-    private double latitude;
-    private double longitude;
+    private final double latitude;
+    private final double longitude;
 
     public Vertex(double latitude, double longitude) {
         this.latitude = latitude;

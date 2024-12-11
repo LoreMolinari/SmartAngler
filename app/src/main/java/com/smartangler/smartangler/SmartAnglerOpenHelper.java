@@ -191,7 +191,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         List<Fish> fish = getFishList(context, cursor);
         database.close();
 
-        Log.d("Fish DB", "Fetched fish: " + String.valueOf(fish.size()));
+        Log.d("Fish DB", "Fetched fish: " + fish.size());
         return fish;
     }
 
@@ -258,7 +258,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
             String techniquesString = cursor.getString(cursor.getColumnIndex(KEY_TECHNIQUES));
             if (techniquesString != null) {
-                List<String> techniquesList = Arrays.asList(techniquesString.split(","));
+                String[] techniquesList = techniquesString.split(",");
                 for (String technique : techniquesList) {
                     newFish.addTechnique(technique);
                 }
@@ -266,7 +266,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
             String baitsAndLuresString = cursor.getString(cursor.getColumnIndex(KEY_BAITS_AND_LURES));
             if (baitsAndLuresString != null) {
-                List<String> baitsAndLuresList = Arrays.asList(baitsAndLuresString.split(","));
+                String[] baitsAndLuresList = baitsAndLuresString.split(",");
                 for (String baitOrLure : baitsAndLuresList) {
                     newFish.addBaitOrLure(baitOrLure);
                 }
@@ -274,7 +274,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
             String seasonsString = cursor.getString(cursor.getColumnIndex(KEY_SEASONS));
             if (seasonsString != null) {
-                List<String> seasonsList = Arrays.asList(seasonsString.split(","));
+                String[] seasonsList = seasonsString.split(",");
                 for (String fishSeason : seasonsList) {
                     newFish.addSeason(Fish.Season.valueOf(fishSeason));
                 }
@@ -282,7 +282,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
 
             String timesOfDayString = cursor.getString(cursor.getColumnIndex(KEY_TIMES_OF_DAY));
             if (timesOfDayString != null) {
-                List<String> timesOfDayList = Arrays.asList(timesOfDayString.split(","));
+                String[] timesOfDayList = timesOfDayString.split(",");
                 for (String fishTimeOfDay : timesOfDayList) {
                     newFish.addTimeOfDay(Fish.TimeOfDay.valueOf(fishTimeOfDay));
                 }
@@ -291,7 +291,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             String fishingLocationsString = cursor.getString(cursor.getColumnIndex(KEY_LOCATION_ID));
             if (fishingLocationsString != null) {
                 Log.d("Location queries", "Location found");
-                List<String> fishingLocationsIDStringList = Arrays.asList(fishingLocationsString.split(","));
+                String[] fishingLocationsIDStringList = fishingLocationsString.split(",");
                 for (String fishLocationIdString : fishingLocationsIDStringList) {
                     newFish.addFishingLocation(getFishingLocation(context, Integer.valueOf(fishLocationIdString)));
                 }
@@ -332,7 +332,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
         Cursor cursor = database.rawQuery(selection, selectionArgs);
 
         FishingLocation newFishingLocation = new FishingLocation(null);
-        String locationName = new String();
+        String locationName = "";
 
         cursor.moveToFirst();
         for (int index = 0; index < cursor.getCount(); index++) {
@@ -364,6 +364,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             newFishingLocation.setName(locationName);
             Log.d("Fish DB", String.format("Got location with name %s", locationName));
         }
+        cursor.close();
         return newFishingLocation;
     }
 
@@ -393,16 +394,16 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
             }
             cursor.moveToNext();
         }
+        cursor.close();
         database.close();
 
-        Log.d("Fish DB", "Fetched fishing locations: " + String.valueOf(fishingLocations.size()));
+        Log.d("Fish DB", "Fetched fishing locations: " + fishingLocations.size());
 
         for (FishingLocation fishingLocation : fishingLocations) {
             if (fishingLocation.isPointInsideLocation(currentPosition)) {
                 return fishingLocation;
             }
         }
-
         return null;
     }
 

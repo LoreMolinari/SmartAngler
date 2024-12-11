@@ -1,21 +1,16 @@
 package com.smartangler.smartangler.ui.sessions;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.smartangler.smartangler.R;
 import com.smartangler.smartangler.SmartAnglerSessionHelper;
 import com.smartangler.smartangler.databinding.FragmentSessionsBinding;
 
@@ -25,8 +20,6 @@ public class SessionFragment extends Fragment {
 
     private FragmentSessionsBinding binding;
     private SessionAdapter sessionAdapter;
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
 
     @Nullable
     @Override
@@ -39,12 +32,7 @@ public class SessionFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void setupRecyclerView() {
-        binding.recyclerViewSessions.setLayoutManager(new LinearLayoutManager(requireContext()));
-        sessionAdapter = new SessionAdapter();
-        binding.recyclerViewSessions.setAdapter(sessionAdapter);
-    }
-
+    @SuppressLint("SetTextI18n")
     private void loadStatistics() {
         List<Object[]> sessions = SmartAnglerSessionHelper.loadAllSessions(requireContext());
 
@@ -71,6 +59,22 @@ public class SessionFragment extends Fragment {
         sessionAdapter.setSessions(sessions);
     }
 
+    private void setupRecyclerView() {
+        binding.recyclerViewSessions.setLayoutManager(new LinearLayoutManager(requireContext()));
+        sessionAdapter = new SessionAdapter(new SessionAdapter.OnSessionClickListener() {
+            @Override
+            public void onSessionClick(String sessionId) {
+                showPhotosForSession(sessionId);
+            }
+        });
+        binding.recyclerViewSessions.setAdapter(sessionAdapter);
+    }
+
+    private void showPhotosForSession(String sessionId) {
+        PhotoFrame dialogFragment = PhotoFrame.newInstance(sessionId);
+        dialogFragment.show(getChildFragmentManager(), "PhotoDialog");
+    }
+
     private String formatTime(int totalMinutes) {
         int hours = totalMinutes / 60;
         int minutes = totalMinutes % 60;
@@ -81,14 +85,6 @@ public class SessionFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (toggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
 

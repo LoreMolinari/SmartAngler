@@ -1,6 +1,7 @@
 package com.smartangler.smartangler.ui.statistics;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,8 @@ public class StatisticsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupChartToggleGroup();
-        setupInitialChart();
+
+        binding.stepsButton.setChecked(true);
         updateChart(R.id.stepsButton);
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
@@ -57,21 +59,16 @@ public class StatisticsFragment extends Fragment {
         });
     }
 
-    private void setupInitialChart() {
-        binding.chartToggleGroup.check(R.id.stepsButton);
-        cartesian = AnyChart.column();
-        cartesian.background().fill(getBackgroundColor());
-        binding.anyChartView.setChart(cartesian);
-    }
-
     private void updateChart(int checkedId) {
         binding.loadingBar.setVisibility(View.VISIBLE);
         binding.anyChartView.setVisibility(View.GONE);
 
+        Log.d("Fuck", String.valueOf(checkedId));
         List<DataEntry> data;
         String title, xAxisTitle, yAxisTitle;
 
         if (checkedId == R.id.stepsButton) {
+            Log.d("Fuck", "Here");
             data = createStepsData();
             title = "Steps";
             xAxisTitle = "Session";

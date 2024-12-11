@@ -7,34 +7,19 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-
     <string name="menu_statistics">Statistics</string>
     <string name="menu_action">Fishing</string>
     <string name="fish_DB">Fish Database</string>
 
     <string name="num_steps">0</string>
-    <string name="goal">Goal: 50</string>
-    <string name="progress">0</string>
     <string name="steps">Steps</string>
     <string name="start_text">Start</string>
     <string name="stop_text">Stop</string>
     <string name="acc_sensor_not_available">Acc. sensor not available</string>
     <string name="sensor_not_available">Sensor not available</string>
-    <string name="step_detector_sensor_not_available">STEP_DETECTOR sensor not available</string>
-    <string name="step_permission_denied">Step permission is denied </string>
-    <string name="favorite">Favourite</string>
-    <string name="content_description_favorite">Your favourites!</string>
-    <string name="settings">Settings</string>
-    <string name="content_description_search">You can find the settings here</string>
-    <string name="daily_steps">Completed steps today:</string>
-    <string name="zero">0</string>
-    <string name="today">Today</string>
-    <string name="get_all_steps">Get all steps</string>
-    <string name="delete_all_steps">Delete all steps</string>
     <string name="take_picture">Take picture</string>
+    <string name="fishphoto">fishPhoto</string>
+    <string name="menu_home">Home\n</string>
 
     <!-- Fish data -->
     <string name="perch">Perch</string>
@@ -66,6 +51,9 @@
     <string name="totalSteps">Total Steps: 0</string>
     <string name="totalCasts">Total Casts: 0</string>
     <string name="timerZero">00:00</string>
+    <string name="photos">Photos</string>
+    <string name="close">Close</string>
+    <string name="noPhotos">No Photos</string>
 
     <!-- Fishing fragment   -->
     <string name="steps_counter">Steps: <xliff:g id="steps_number">%d</xliff:g></string>
@@ -85,4 +73,6 @@
     <string name="location_name">Location name: <xliff:g id="location">%s</xliff:g></string>
     <string name="location_name_unknown">Location name unknown</string>
     <string name="no_fish_likely">Sorry, it looks like you aren\'t likely to find any fish in these conditions</string>
+
+
 </resources>

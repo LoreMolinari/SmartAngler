@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
-    private List<Fish> fishList;
+    private final List<Fish> fishList;
 
     public ItemAdapter(List<Fish> fishList) {
         this.fishList = fishList;
