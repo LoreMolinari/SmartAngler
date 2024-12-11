@@ -66,6 +66,9 @@
     <string name="totalSteps">Total Steps: 0</string>
     <string name="totalCasts">Total Casts: 0</string>
     <string name="timerZero">00:00</string>
+    <string name="photos">Photos</string>
+    <string name="close">Close</string>
+    <string name="noPhotos">No Photos</string>
 
     <!-- Fishing fragment   -->
     <string name="steps_counter">Steps: <xliff:g id="steps_number">%d</xliff:g></string>

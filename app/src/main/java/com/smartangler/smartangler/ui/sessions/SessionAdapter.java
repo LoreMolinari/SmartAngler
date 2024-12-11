@@ -16,6 +16,15 @@ import java.util.List;
 public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionViewHolder> {
 
     private List<Object[]> sessions = new ArrayList<>();
+    private OnSessionClickListener listener;
+
+    public interface OnSessionClickListener {
+        void onSessionClick(String sessionId);
+    }
+
+    public SessionAdapter(OnSessionClickListener listener) {
+        this.listener = listener;
+    }
 
     public void setSessions(List<Object[]> sessions) {
         this.sessions = sessions;
@@ -50,7 +59,9 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
         holder.castsTextView.setText("Casts: " + casts);
 
         holder.itemView.setOnClickListener(v -> {
-            // TODO eventually click for photos
+            if (listener != null) {
+                listener.onSessionClick(sessionId);
+            }
         });
     }
 
