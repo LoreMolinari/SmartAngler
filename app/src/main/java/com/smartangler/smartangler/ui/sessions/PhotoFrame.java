@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.smartangler.smartangler.R;
 import com.smartangler.smartangler.SmartAnglerSessionHelper;
 
@@ -115,10 +116,13 @@ public class PhotoFrame extends DialogFragment {
         public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
             Object[] photo = photos.get(position);
             byte[] imageData = (byte[]) photo[2];
-            // Qui dovresti usare una libreria come Glide o Picasso per caricare l'immagine
-            // Per semplicità, usiamo BitmapFactory direttamente
-            holder.imageView.setImageBitmap(android.graphics.BitmapFactory.decodeByteArray(imageData, 0, imageData.length));
+
+            Glide.with(holder.itemView.getContext())
+                    .load(imageData)
+                    .centerCrop()
+                    .into(holder.imageView);
         }
+
 
         @Override
         public int getItemCount() {
