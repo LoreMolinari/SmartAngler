@@ -1,6 +1,7 @@
 package com.smartangler.smartangler.ui.sessions;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,28 +33,10 @@ public class SessionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSessionsBinding.inflate(inflater, container, false);
 
-        setupToolbar();
         setupRecyclerView();
         loadStatistics();
 
         return binding.getRoot();
-    }
-
-    private void setupToolbar() {
-
-        drawerLayout = requireActivity().findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(
-                requireActivity(),
-                drawerLayout,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
-        );
-
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     private void setupRecyclerView() {
