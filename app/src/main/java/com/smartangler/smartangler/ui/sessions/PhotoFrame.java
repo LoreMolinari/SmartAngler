@@ -24,7 +24,6 @@ public class PhotoFrame extends DialogFragment {
 
     private static final String ARG_SESSION_ID = "session_id";
     private static final int MAX_PHOTOS_PER_ROW = 2;
-    private static final int MAX_ROWS = 3;
     private boolean hasPhotos = false;
 
     public static PhotoFrame newInstance(String sessionId) {

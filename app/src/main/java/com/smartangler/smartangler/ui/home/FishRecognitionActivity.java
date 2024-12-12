@@ -1,14 +1,14 @@
 package com.smartangler.smartangler.ui.home;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
@@ -18,10 +18,8 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.smartangler.smartangler.BuildConfig;
-
 import com.smartangler.smartangler.R;
 
-import java.io.ByteArrayOutputStream;
 import java.util.concurrent.Executors;
 
 public class FishRecognitionActivity extends AppCompatActivity {
@@ -47,28 +45,33 @@ public class FishRecognitionActivity extends AppCompatActivity {
         textViewRecognition = findViewById(R.id.textViewRecognition);
 
         textViewRecognition.setMovementMethod(new ScrollingMovementMethod());
-        Log.d("Secrets Plugin", "BuildConfig.apiKey: " + BuildConfig.apiKey);
 
         Bundle extras = getIntent().getExtras();
 
-        if (extras != null && extras.containsKey("imageBitmap")) {
-            Bitmap imageBitmap = (Bitmap) extras.get("imageBitmap");
-            imageViewFish.setImageBitmap(imageBitmap);
-            recognizeFish(imageBitmap);
+        if (extras != null) {
+            Bitmap imageBitmap = null;
+
+            if (extras.containsKey("imageBitmap")) {
+                imageBitmap = (Bitmap) extras.get("imageBitmap");
+            } else if (extras.containsKey("imageByteArray")) {
+                byte[] byteArray = extras.getByteArray("imageByteArray");
+                if (byteArray != null) {
+                    imageBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                }
+            }
+
+            if (imageBitmap != null) {
+                imageViewFish.setImageBitmap(imageBitmap);
+                recognizeFish(imageBitmap);
+            } else {
+                textViewRecognition.setText(R.string.no_image_received_for_recognition);
+            }
         }
-
-
-        String image = extras.toString();
-
     }
 
 
     private void recognizeFish(Bitmap imageBitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-
-        String prompt = "Please analyze this fish image and provide: Species identification (common and scientific name), Key physical characteristics, Typical size and weight range, Natural habitat and geographical distribution, Any distinctive features that help with identification";
+        String prompt = "Please analyze this fish image and provide: Species identification (common and scientific name), Key physical characteristics, Typical size and weight range, Natural habitat and geographical distribution, Any distinctive features that help with identification. Please provide the information in plain text without any formatting or special characters for emphasis.";
 
         Content content = new Content.Builder()
                 .addText(prompt)
@@ -85,12 +88,11 @@ public class FishRecognitionActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Throwable t) {
-                runOnUiThread(() -> updateRecognitionText("Errore nel riconoscimento: " + t.getMessage()));
+                runOnUiThread(() -> updateRecognitionText("Error on recognition: " + t.getMessage()));
             }
         }, Executors.newSingleThreadExecutor());
     }
 
-    // Metodo per aggiornare il testo di riconoscimento
     private void updateRecognitionText(String recognitionResult) {
         textViewRecognition.setText(recognitionResult);
     }
