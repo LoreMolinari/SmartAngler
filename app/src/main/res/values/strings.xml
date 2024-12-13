@@ -78,6 +78,4 @@
     <string name="take_photo">Take Photo</string>
     <string name="upload_photo">Upload Photo</string>
     <string name="no_image_received_for_recognition">No image received for recognition.</string>
-
-
 </resources>
