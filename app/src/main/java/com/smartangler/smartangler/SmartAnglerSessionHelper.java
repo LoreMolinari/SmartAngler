@@ -189,13 +189,4 @@ public class SmartAnglerSessionHelper extends SQLiteOpenHelper {
 
         return sessions;
     }
-
-    public static void deleteAllData(Context context) {
-        SmartAnglerSessionHelper databaseHelper = new SmartAnglerSessionHelper(context);
-        SQLiteDatabase database = databaseHelper.getWritableDatabase();
-        int deletedPhotos = database.delete(PHOTO_TABLE_NAME, null, null);
-        int deletedSessions = database.delete(SESSION_TABLE_NAME, null, null);
-        database.close();
-        Log.d("SmartAngler", "Eliminati " + deletedPhotos + " foto e " + deletedSessions + " sessioni.");
-    }
 }

@@ -1,9 +1,14 @@
 package com.smartangler.smartangler.ui.home;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -33,6 +39,7 @@ import com.smartangler.smartangler.R;
 import com.smartangler.smartangler.SmartAnglerOpenHelper;
 import com.smartangler.smartangler.databinding.FragmentHomeBinding;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -49,6 +56,10 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
 
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_UPLOAD = 2;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -87,6 +98,10 @@ public class HomeFragment extends Fragment {
                 refreshConditions();
             }
         });
+
+        binding.buttonTakePhoto.setOnClickListener(v -> checkCameraPermission());
+        binding.buttonUploadPhoto.setOnClickListener(v -> checkStoragePermission());
+
 
         return root;
     }
@@ -202,6 +217,97 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private void checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_IMAGE_CAPTURE);
+        } else {
+            openCamera();
+        }
+    }
+
+    public void checkStoragePermission() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES}, REQUEST_IMAGE_UPLOAD);
+            } else {
+                openGallery();
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_IMAGE_UPLOAD);
+            } else {
+                openGallery();
+            }
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case REQUEST_IMAGE_CAPTURE:
+                    openCamera();
+                    break;
+                case REQUEST_IMAGE_UPLOAD:
+                    openGallery();
+                    break;
+            }
+        } else {
+            Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openCamera() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+    }
+
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, REQUEST_IMAGE_UPLOAD);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            Intent recognitionIntent = new Intent(getActivity(), FishRecognitionActivity.class);
+            Bitmap imageBitmap;
+
+            switch (requestCode) {
+                case REQUEST_IMAGE_CAPTURE:
+                    Bundle extras = data.getExtras();
+                    if (extras != null) {
+                        imageBitmap = (Bitmap) extras.get("data");
+                        recognitionIntent.putExtra("imageBitmap", imageBitmap);
+                        startActivity(recognitionIntent);
+                    }
+                    break;
+
+                case REQUEST_IMAGE_UPLOAD:
+                    Uri selectedImageUri = data.getData();
+                    if (selectedImageUri != null) {
+                        try {
+                            Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), selectedImageUri);
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            originalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                            byte[] byteArray = stream.toByteArray();
+
+                            Intent intent = new Intent(getContext(), FishRecognitionActivity.class);
+                            intent.putExtra("imageByteArray", byteArray);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "Error on loading", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    break;
+            }
+        }
+    }
 
     @Override
     public void onDestroyView() {

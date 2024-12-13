@@ -11,7 +11,6 @@ import com.smartangler.smartangler.FishingLocation.FishingLocation;
 import com.smartangler.smartangler.FishingLocation.Vertex;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,9 +28,7 @@ public class SmartAnglerOpenHelper extends SQLiteOpenHelper {
     public static final String KEY_BAITS_AND_LURES = "baits_and_lures";
     public static final String KEY_SEASONS = "seasons";
     public static final String KEY_TIMES_OF_DAY = "times_of_day";
-    public static final String KEY_LATITUTE_TYPO = "latitute";
     public static final String KEY_LONGITUDE = "longitude";
-    public static final String KEY_LOCATIONS = "locations";
 
     // FishingLocation DB
     public static final String LOCATIONS_TABLE_NAME = "fishing_location";

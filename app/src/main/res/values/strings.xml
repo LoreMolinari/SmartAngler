@@ -73,6 +73,9 @@
     <string name="location_name">Location name: <xliff:g id="location">%s</xliff:g></string>
     <string name="location_name_unknown">Location name unknown</string>
     <string name="no_fish_likely">Sorry, it looks like you aren\'t likely to find any fish in these conditions</string>
-
-
+    <string name="fish_recognition">Fish Recognition</string>
+    <string name="llm">Waiting for LLM…</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="no_image_received_for_recognition">No image received for recognition.</string>
 </resources>
