@@ -17,6 +17,9 @@ jobs:
     - name: Setup environment
       run: echo "API_KEY_GEMINI=${{ secrets.APIKEYGEMINI }}" >> $GITHUB_ENV
 
+    - name: Create properties file
+      run: echo "apiKey=${{ secrets.APIKEYGEMINI }}" > /home/runner/work/SmartAngler/SmartAngler/local.properties
+
     - name: set up JDK 17
       uses: actions/setup-java@v4
       with:
