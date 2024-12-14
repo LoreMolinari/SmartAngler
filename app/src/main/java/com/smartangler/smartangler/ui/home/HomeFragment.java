@@ -40,6 +40,8 @@ import com.smartangler.smartangler.SmartAnglerOpenHelper;
 import com.smartangler.smartangler.databinding.FragmentHomeBinding;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -274,7 +276,6 @@ public class HomeFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK && data != null) {
-            Intent recognitionIntent = new Intent(getActivity(), FishRecognitionActivity.class);
             Bitmap imageBitmap;
 
             switch (requestCode) {
@@ -282,30 +283,54 @@ public class HomeFragment extends Fragment {
                     Bundle extras = data.getExtras();
                     if (extras != null) {
                         imageBitmap = (Bitmap) extras.get("data");
-                        recognitionIntent.putExtra("imageBitmap", imageBitmap);
-                        startActivity(recognitionIntent);
+                        ImageToCache(imageBitmap);
                     }
                     break;
 
                 case REQUEST_IMAGE_UPLOAD:
                     Uri selectedImageUri = data.getData();
                     if (selectedImageUri != null) {
-                        try {
-                            Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), selectedImageUri);
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            originalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                            byte[] byteArray = stream.toByteArray();
-
-                            Intent intent = new Intent(getContext(), FishRecognitionActivity.class);
-                            intent.putExtra("imageByteArray", byteArray);
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Toast.makeText(getContext(), "Error on loading", Toast.LENGTH_SHORT).show();
-                        }
+                        UriToCache(selectedImageUri);
                     }
                     break;
             }
+        }
+    }
+
+    private void ImageToCache(Bitmap bitmap) {
+        try {
+            File cacheDir = requireContext().getCacheDir();
+            File tempFile = new File(cacheDir, "uploaded_image.jpg");
+            FileOutputStream fos = new FileOutputStream(tempFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+
+            Intent intent = new Intent(getContext(), FishRecognitionActivity.class);
+            intent.putExtra("imagePath", tempFile.getAbsolutePath());
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Error saving image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void UriToCache(Uri imageUri) {
+        try {
+            Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(
+                    requireContext().getContentResolver(), imageUri);
+
+            File cacheDir = requireContext().getCacheDir();
+            File tempFile = new File(cacheDir, "uploaded_image.jpg");
+            FileOutputStream fos = new FileOutputStream(tempFile);
+            originalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+
+            Intent intent = new Intent(getContext(), FishRecognitionActivity.class);
+            intent.putExtra("imagePath", tempFile.getAbsolutePath());
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Error saving image", Toast.LENGTH_SHORT).show();
         }
     }
 

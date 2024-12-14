@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.guava)
     implementation(libs.reactive.streams)
     implementation(libs.secrets.gradle.plugin)
+    implementation(libs.material.v1100)
 }
 java {
     toolchain {

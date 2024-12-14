@@ -1,8 +1,9 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.SmartAngler" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/light_md_theme_primary</item>
         <item name="colorOnPrimary">@color/light_md_theme_onPrimary</item>
@@ -59,7 +60,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.SmartAngler.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.SmartAngler.AppBarOverlay" parent="ThemeOverlay.Material3.ActionBar">
+        <item name="colorOnPrimary">@color/light_md_theme_onBackground</item>
+        <item name="colorSurface">@color/light_md_theme_surface</item>
+    </style>
 
-    <style name="Theme.SmartAngler.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.SmartAngler.PopupOverlay" parent="ThemeOverlay.Material3.Light">
+        <item name="colorSurface">@color/light_md_theme_surface</item>
+        <item name="colorOnSurface">@color/light_md_theme_onSurface</item>
+    </style>
 </resources>
