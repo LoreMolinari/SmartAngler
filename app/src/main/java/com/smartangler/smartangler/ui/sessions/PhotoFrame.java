@@ -58,6 +58,8 @@ public class PhotoFrame extends DialogFragment {
 
         recyclerView.setNestedScrollingEnabled(true);
 
+        adapter.notifyDataSetChanged();
+
         return view;
     }
 
@@ -88,9 +90,11 @@ public class PhotoFrame extends DialogFragment {
             if (recyclerView != null && recyclerView.getAdapter() != null) {
 
                 int dialogWidth = (int) (screenWidth * 0.9);
-                int maxHeight = (int) (screenHeight * 0.8);
 
-                dialog.getWindow().setLayout(dialogWidth, maxHeight);
+                int calculatedHeight = (int) (screenHeight * 0.4);
+
+                int dialogHeight = Math.min(calculatedHeight, (int) (screenHeight * 0.8));
+                dialog.getWindow().setLayout(dialogWidth, dialogHeight);
             }
         }
     }
@@ -115,10 +119,17 @@ public class PhotoFrame extends DialogFragment {
             Object[] photo = photos.get(position);
             byte[] imageData = (byte[]) photo[2];
 
-            Glide.with(holder.itemView.getContext())
-                    .load(imageData)
-                    .centerCrop()
-                    .into(holder.imageView);
+            if (imageData != null && imageData.length > 0) {
+                Glide.with(holder.itemView.getContext())
+                        .load(imageData)
+                        .fitCenter()
+                        .into(holder.imageView);
+            } else {
+                Glide.with(holder.itemView.getContext())
+                        .load(R.drawable.generic_fish)
+                        .fitCenter()
+                        .into(holder.imageView);
+            }
         }
 
 
@@ -133,6 +144,7 @@ public class PhotoFrame extends DialogFragment {
             PhotoViewHolder(View itemView) {
                 super(itemView);
                 imageView = itemView.findViewById(R.id.imageViewPhoto);
+
             }
         }
     }

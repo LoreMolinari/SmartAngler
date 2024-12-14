@@ -1,14 +1,18 @@
 package com.smartangler.smartangler.ui.home;
 
+import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
@@ -20,6 +24,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.smartangler.smartangler.BuildConfig;
 import com.smartangler.smartangler.R;
 
+import java.io.File;
 import java.util.concurrent.Executors;
 
 public class FishRecognitionActivity extends AppCompatActivity {
@@ -31,6 +36,7 @@ public class FishRecognitionActivity extends AppCompatActivity {
             BuildConfig.apiKey
     );
     GenerativeModelFutures model = GenerativeModelFutures.from(gm);
+    String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,32 +46,24 @@ public class FishRecognitionActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         imageViewFish = findViewById(R.id.imageViewFish);
         textViewRecognition = findViewById(R.id.textViewRecognition);
 
         textViewRecognition.setMovementMethod(new ScrollingMovementMethod());
 
-        Bundle extras = getIntent().getExtras();
-
-        if (extras != null) {
-            Bitmap imageBitmap = null;
-
-            if (extras.containsKey("imageBitmap")) {
-                imageBitmap = (Bitmap) extras.get("imageBitmap");
-            } else if (extras.containsKey("imageByteArray")) {
-                byte[] byteArray = extras.getByteArray("imageByteArray");
-                if (byteArray != null) {
-                    imageBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-                }
-            }
-
+        imagePath = getIntent().getStringExtra("imagePath");
+        if (imagePath != null) {
+            Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
             if (imageBitmap != null) {
                 imageViewFish.setImageBitmap(imageBitmap);
                 recognizeFish(imageBitmap);
             } else {
                 textViewRecognition.setText(R.string.no_image_received_for_recognition);
             }
+        } else {
+            textViewRecognition.setText(R.string.no_image_received_for_recognition);
         }
     }
 
@@ -95,5 +93,17 @@ public class FishRecognitionActivity extends AppCompatActivity {
 
     private void updateRecognitionText(String recognitionResult) {
         textViewRecognition.setText(recognitionResult);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        File imageFile = new File(imagePath);
+        if (imageFile.exists()) {
+            boolean deleted = imageFile.delete();
+            if (!deleted) {
+                Log.w("FishRecognitionActivity", "Failed to delete temporary image file.");
+            }
+        }
     }
 }
