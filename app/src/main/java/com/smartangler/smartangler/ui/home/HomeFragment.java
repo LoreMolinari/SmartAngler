@@ -78,10 +78,12 @@ public class HomeFragment extends Fragment {
         refreshButton.setOnClickListener(v -> refreshConditions());
 
         seasonText = root.findViewById(R.id.current_season_text);
-        seasonText.setText(getString(R.string.current_season, Fish.getCurrentSeason()));
+        seasonText.setText(getString(R.string.current_season,
+                Fish.getCurrentSeason().toString().charAt(0) + Fish.getCurrentSeason().toString().substring(1).toLowerCase()));
 
         timeOfDayText = root.findViewById(R.id.current_time_of_day_text);
-        timeOfDayText.setText(getString(R.string.current_time_of_day, Fish.getCurrentTimeOfDay()));
+        timeOfDayText.setText(getString(R.string.current_time_of_day,
+                Fish.getCurrentTimeOfDay().toString().charAt(0) + Fish.getCurrentTimeOfDay().toString().substring(1).toLowerCase()));
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
@@ -111,8 +113,10 @@ public class HomeFragment extends Fragment {
     private void refreshConditions() {
         Log.d("Conditions refresh", "Conditions refreshed");
 
-        seasonText.setText(getString(R.string.current_season, Fish.getCurrentSeason()));
-        timeOfDayText.setText(getString(R.string.current_time_of_day, Fish.getCurrentTimeOfDay()));
+        seasonText.setText(getString(R.string.current_season,
+                Fish.getCurrentSeason().toString().charAt(0) + Fish.getCurrentSeason().toString().substring(1).toLowerCase()));
+        timeOfDayText.setText(getString(R.string.current_time_of_day,
+                Fish.getCurrentTimeOfDay().toString().charAt(0) + Fish.getCurrentTimeOfDay().toString().substring(1).toLowerCase()));
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
