@@ -77,9 +77,9 @@ public class StatisticsFragment extends Fragment {
             yAxisTitle = "Number of fish";
         } else if (checkedId == R.id.castingButton) {
             data = createCastingData();
-            title = "Castings";
+            title = "Casts";
             xAxisTitle = "Session";
-            yAxisTitle = "Number of castings";
+            yAxisTitle = "Number of casts";
         } else {
             binding.loadingBar.setVisibility(View.GONE);
             return;
