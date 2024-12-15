@@ -14,11 +14,11 @@ public class StepCounterListener implements SensorEventListener {
     private long initialStepCount = -1;
     public static int stepCount = 0;
     private final TextView stepCountsView;
-    private CircularProgressIndicator progressIndicator;
+    private final CircularProgressIndicator progressBar;
 
     public StepCounterListener(TextView stepCountsView, CircularProgressIndicator pb) {
         this.stepCountsView = stepCountsView;
-        this.progressIndicator = pb;
+        this.progressBar = pb;
     }
 
     @Override
@@ -41,9 +41,9 @@ public class StepCounterListener implements SensorEventListener {
 
     }
 
-    @SuppressLint("SetTextI18n")
     private void updateUI() {
-        stepCountsView.setText("Steps: " + stepCount);
-        progressIndicator.setProgress(stepCount);
+        String update = "Steps: " + stepCount;
+        stepCountsView.setText(update);
+        progressBar.setProgress(stepCount);
     }
 }

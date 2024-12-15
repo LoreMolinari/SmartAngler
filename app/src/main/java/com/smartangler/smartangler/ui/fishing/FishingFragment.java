@@ -73,7 +73,6 @@ public class FishingFragment extends Fragment {
     private boolean isSessionActive = false;
     private Integer fish_caught = 0;
     private int totalMinutes = 0;
-    private int fishCounter=0;
     private TextView castsLabel;
     private TextView stepsLabel;
     private TextView fishLabel;
@@ -122,12 +121,15 @@ public class FishingFragment extends Fragment {
 
         progressBarCasts.setMax(10);
         progressBarCasts.setProgress(0);
+        progressBarCasts.setIndicatorColor(getResources().getColor(R.color.light_md_theme_primaryFixedDim));
 
-        progressBarSteps.setMax(10);
+        progressBarSteps.setMax(50);
         progressBarSteps.setProgress(0);
+        progressBarSteps.setIndicatorColor(getResources().getColor(R.color.light_md_theme_primaryFixedDim));
 
-        progressBarFish.setMax(10);
+        progressBarFish.setMax(5);
         progressBarFish.setProgress(0);
+        progressBarFish.setIndicatorColor(getResources().getColor(R.color.light_md_theme_primaryFixedDim));
 
         castsLabel = root.findViewById(R.id.casts_label);
         castsLabel.setText(getString(R.string.casts_counter, 0));
@@ -191,7 +193,7 @@ public class FishingFragment extends Fragment {
             fishLabel.setText(getString(R.string.fish_counter, 0));
 
             if (stepCounter != null) {
-                sensorListener = new StepCounterListener(stepsLabel, progressBarFish);
+                sensorListener = new StepCounterListener(stepsLabel, progressBarSteps);
                 sensorManager.registerListener(sensorListener, stepCounter, SensorManager.SENSOR_DELAY_NORMAL);
                 Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_SHORT).show();
             } else {
@@ -248,8 +250,6 @@ public class FishingFragment extends Fragment {
             castsLabel.setText(getString(R.string.casts_counter, 0));
             stepsLabel.setText(getString(R.string.steps_counter, 0));
             fishLabel.setText(getString(R.string.fish_counter, 0));
-
-            fishCounter = 0;
 
             Toast.makeText(requireContext(), "Fishing session ended", Toast.LENGTH_SHORT).show();
             sensorManager.unregisterListener(sensorListener);
@@ -401,9 +401,8 @@ public class FishingFragment extends Fragment {
                 return true;
             });
 
-            fishCounter += 1;
-            fishLabel.setText(String.format("Fish: %d", fishCounter));
-            progressBarFish.setProgress(fishCounter);
+            fishLabel.setText(String.format("Fish: %d", fish_caught));
+            progressBarFish.setProgress(fish_caught);
 
             if (map != null) {
                 updateMap();
