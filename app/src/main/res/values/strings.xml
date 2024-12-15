@@ -58,6 +58,7 @@
     <!-- Fishing fragment   -->
     <string name="steps_counter">Steps: <xliff:g id="steps_number">%d</xliff:g></string>
     <string name="casts_counter">Casts: <xliff:g id="casts_number">%d</xliff:g></string>
+    <string name="fish_counter">Fish: <xliff:g id="fish_number">%d</xliff:g></string>
 
     <!-- Analytics -->
     <string name="casting">Casting</string>

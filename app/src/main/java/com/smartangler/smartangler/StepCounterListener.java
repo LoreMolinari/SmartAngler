@@ -7,14 +7,18 @@ import android.hardware.SensorEventListener;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+
 public class StepCounterListener implements SensorEventListener {
 
     private long initialStepCount = -1;
     public static int stepCount = 0;
     private final TextView stepCountsView;
+    private CircularProgressIndicator progressIndicator;
 
-    public StepCounterListener(TextView stepCountsView) {
+    public StepCounterListener(TextView stepCountsView, CircularProgressIndicator pb) {
         this.stepCountsView = stepCountsView;
+        this.progressIndicator = pb;
     }
 
     @Override
@@ -40,5 +44,6 @@ public class StepCounterListener implements SensorEventListener {
     @SuppressLint("SetTextI18n")
     private void updateUI() {
         stepCountsView.setText("Steps: " + stepCount);
+        progressIndicator.setProgress(stepCount);
     }
 }

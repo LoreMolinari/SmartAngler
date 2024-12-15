@@ -73,10 +73,13 @@ public class FishingFragment extends Fragment {
     private boolean isSessionActive = false;
     private Integer fish_caught = 0;
     private int totalMinutes = 0;
-    private TextView stepCountsView;
-    private TextView counterPB;
-    private TextView castsView;
-    private CircularProgressIndicator progressBar;
+    private int fishCounter=0;
+    private TextView castsLabel;
+    private TextView stepsLabel;
+    private TextView fishLabel;
+    private CircularProgressIndicator progressBarCasts;
+    private CircularProgressIndicator progressBarSteps;
+    private CircularProgressIndicator progressBarFish;
     private Sensor stepCounter;
     private Sensor accSensor;
     private SensorManager sensorManager;
@@ -112,15 +115,27 @@ public class FishingFragment extends Fragment {
         setupButtons();
 
         View root = binding.getRoot();
-        stepCountsView = root.findViewById(R.id.steps_text);
-        stepCountsView.setText(getString(R.string.steps_counter, 0));
-        counterPB = root.findViewById(R.id.counter);
-        progressBar = root.findViewById(R.id.progressBar);
-        progressBar.setMax(50);
-        progressBar.setProgress(0);
-        castsView = root.findViewById(R.id.casts_text);
-        castsView.setText(getString(R.string.casts_counter, 0));
-        binding.progressBar.setMax(10);
+
+        progressBarCasts = root.findViewById(R.id.casts_progress);
+        progressBarSteps = root.findViewById(R.id.steps_progress);
+        progressBarFish = root.findViewById(R.id.fish_progress);
+
+        progressBarCasts.setMax(10);
+        progressBarCasts.setProgress(0);
+
+        progressBarSteps.setMax(10);
+        progressBarSteps.setProgress(0);
+
+        progressBarFish.setMax(10);
+        progressBarFish.setProgress(0);
+
+        castsLabel = root.findViewById(R.id.casts_label);
+        castsLabel.setText(getString(R.string.casts_counter, 0));
+        stepsLabel = root.findViewById(R.id.steps_label);
+        stepsLabel.setText(getString(R.string.steps_counter, 0));
+        fishLabel = root.findViewById(R.id.fish_label);
+        fishLabel.setText(getString(R.string.fish_counter, 0));
+
 
         try {
             sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -168,13 +183,15 @@ public class FishingFragment extends Fragment {
             SmartAnglerOpenHelper databaseOpenHelper = new SmartAnglerOpenHelper(this.getContext());
             SQLiteDatabase database = databaseOpenHelper.getWritableDatabase();
 
-            progressBar.setProgress(0);
-            counterPB.setText("0");
-            castsView.setText(getString(R.string.casts_counter, 0));
-            stepCountsView.setText(getString(R.string.steps_counter, 0));
+            progressBarCasts.setProgress(0);
+            progressBarSteps.setProgress(0);
+            progressBarFish.setProgress(0);
+            castsLabel.setText(getString(R.string.casts_counter, 0));
+            stepsLabel.setText(getString(R.string.steps_counter, 0));
+            fishLabel.setText(getString(R.string.fish_counter, 0));
 
             if (stepCounter != null) {
-                sensorListener = new StepCounterListener(stepCountsView);
+                sensorListener = new StepCounterListener(stepsLabel, progressBarFish);
                 sensorManager.registerListener(sensorListener, stepCounter, SensorManager.SENSOR_DELAY_NORMAL);
                 Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_SHORT).show();
             } else {
@@ -182,7 +199,7 @@ public class FishingFragment extends Fragment {
             }
 
             if (accSensor != null) {
-                castDetectorListener = new CastDetectorListener(castsView, binding.counter, binding.progressBar);
+                castDetectorListener = new CastDetectorListener(castsLabel, progressBarCasts);
                 sensorManager.registerListener(castDetectorListener, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
                 CastDetectorListener.resetCounter();
                 Toast.makeText(getContext(), R.string.start_text, Toast.LENGTH_SHORT).show();
@@ -225,8 +242,15 @@ public class FishingFragment extends Fragment {
             updateButtonStates();
             timerHandler.removeCallbacks(updateTimerThread);
             binding.timerText.setText("00:00:00");
-            binding.counter.setText("0");
-            binding.progressBar.setProgress(0);
+            progressBarCasts.setProgress(0);
+            progressBarSteps.setProgress(0);
+            progressBarFish.setProgress(0);
+            castsLabel.setText(getString(R.string.casts_counter, 0));
+            stepsLabel.setText(getString(R.string.steps_counter, 0));
+            fishLabel.setText(getString(R.string.fish_counter, 0));
+
+            fishCounter = 0;
+
             Toast.makeText(requireContext(), "Fishing session ended", Toast.LENGTH_SHORT).show();
             sensorManager.unregisterListener(sensorListener);
             Toast.makeText(getContext(), R.string.stop_text, Toast.LENGTH_SHORT).show();
@@ -376,6 +400,10 @@ public class FishingFragment extends Fragment {
                 }
                 return true;
             });
+
+            fishCounter += 1;
+            fishLabel.setText(String.format("Fish: %d", fishCounter));
+            progressBarFish.setProgress(fishCounter);
 
             if (map != null) {
                 updateMap();
