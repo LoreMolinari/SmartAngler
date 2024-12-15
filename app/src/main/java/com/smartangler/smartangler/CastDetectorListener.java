@@ -18,12 +18,10 @@ public class CastDetectorListener implements SensorEventListener {
     public static int castsCounter = 0;
     private final ArrayList<Integer> accSeries = new ArrayList<>();
     private int lastAddedIndex = 1;
-    private final TextView counterPB;
     private final CircularProgressIndicator progressBar;
 
-    public CastDetectorListener(TextView castsView, TextView counterPB, CircularProgressIndicator pb) {
+    public CastDetectorListener(TextView castsView, CircularProgressIndicator pb) {
         this.castsView = castsView;
-        this.counterPB = counterPB;
         this.progressBar = pb;
     }
 
@@ -55,7 +53,6 @@ public class CastDetectorListener implements SensorEventListener {
                 castsCounter += 1;
                 String castsText = "Casts: " + castsCounter;
                 castsView.setText(castsText);
-                counterPB.setText(String.format("%d", castsCounter));
                 progressBar.setProgress(castsCounter);
                 Log.d("Cast detection", "Cast detected with peak at " + valuesInWindow.get(i));
             }

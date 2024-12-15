@@ -61,6 +61,7 @@ public class StatisticsFragment extends Fragment {
     private void updateChart(int checkedId) {
         binding.loadingBar.setVisibility(View.VISIBLE);
         binding.anyChartView.setVisibility(View.GONE);
+        binding.noDataText.setVisibility(View.GONE);
 
         List<DataEntry> data;
         String title, xAxisTitle, yAxisTitle;
@@ -81,6 +82,12 @@ public class StatisticsFragment extends Fragment {
             xAxisTitle = "Session";
             yAxisTitle = "Number of casts";
         } else {
+            binding.loadingBar.setVisibility(View.GONE);
+            return;
+        }
+
+        if (data.isEmpty()) {
+            binding.noDataText.setVisibility(View.VISIBLE);
             binding.loadingBar.setVisibility(View.GONE);
             return;
         }
