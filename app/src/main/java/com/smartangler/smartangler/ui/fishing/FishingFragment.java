@@ -19,6 +19,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -89,6 +90,7 @@ public class FishingFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
     private GeoPoint currentLocation;
     private boolean isStartMarkerAdded = false;
+    private PowerManager.WakeLock wakeLock;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -182,6 +184,13 @@ public class FishingFragment extends Fragment {
             adapter.notifyDataSetChanged();
             Toast.makeText(requireContext(), "Fishing session started", Toast.LENGTH_SHORT).show();
 
+            // Acquire WakeLock to keep screen on
+            PowerManager powerManager = (PowerManager) requireContext().getSystemService(Context.POWER_SERVICE);
+            if (powerManager != null) {
+                wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "SmartAngler:WakeLock");
+                wakeLock.acquire();
+            }
+
             SmartAnglerOpenHelper databaseOpenHelper = new SmartAnglerOpenHelper(this.getContext());
             SQLiteDatabase database = databaseOpenHelper.getWritableDatabase();
 
@@ -238,6 +247,11 @@ public class FishingFragment extends Fragment {
                     stepCount,
                     CastDetectorListener.castsCounter
             );
+
+            // Release WakeLock
+            if (wakeLock != null && wakeLock.isHeld()) {
+                wakeLock.release();
+            }
 
             fish_caught = 0;
             isSessionActive = false;
@@ -473,6 +487,26 @@ public class FishingFragment extends Fragment {
     }
 
     @Override
+    public void onStop(){
+        super.onStop();
+
+        if (map != null) {
+            map.onPause();
+        } else {
+            Log.e("FishingFragment", "MapView is null");
+        }
+
+        // Remove FLAG_KEEP_SCREEN_ON when fragment is stopped
+        Activity activity = getActivity();
+        if (activity != null) {
+            Window window = activity.getWindow();
+            if (window != null) {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (map != null) {
@@ -480,22 +514,34 @@ public class FishingFragment extends Fragment {
         } else {
             Log.e("FishingFragment", "MapView is null");
         }
+
+        // Keep screen on during active session
+        if (isSessionActive) {
+            Activity activity = getActivity();
+            if (activity != null) {
+                Window window = activity.getWindow();
+                if (window != null) {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
+            }
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
         if (map != null) {
             map.onPause();
         } else {
             Log.e("FishingFragment", "MapView is null");
         }
 
-        // Don't keep screen on
+        // Remove FLAG_KEEP_SCREEN_ON when fragment is paused
         Activity activity = getActivity();
         if (activity != null) {
             Window window = activity.getWindow();
-            if (window != null && (window.getAttributes().flags & WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) != 0) {
+            if (window != null) {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         }
@@ -516,6 +562,9 @@ public class FishingFragment extends Fragment {
             map.getOverlays().clear();
             map.onDetach();
             map = null;
+        }
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
         }
     }
 }
