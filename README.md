@@ -24,6 +24,8 @@ SmartAngler is an Android app designed to enhance the fishing experience with fe
 - From the terminal:
   ```./gradlew installDebug```
 
+**NB**: The app won't build without an apiKey in the local.properties file. This is needed for the LLM
+
 ## Technologies Used
 
 - Language: Java
@@ -58,8 +60,4 @@ SmartAngler is an Android app designed to enhance the fishing experience with fe
 - Expanded fish database, locations, gear, and techniques
 - General performance enhancements
 - Better picture management (local storage)
-
-## License
-
-IDK
 
