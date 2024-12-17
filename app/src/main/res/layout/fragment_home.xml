@@ -126,6 +126,22 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ask_ai_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:text="@string/llm_button_desc"
+                app:icon="@drawable/ic_menu_camera"
+                app:iconGravity="textStart"
+                app:layout_constraintBottom_toTopOf="@+id/home_fish_recycler"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/status_card" />
+
             <TextView
                 android:id="@+id/no_fish_likely_text"
                 android:layout_width="0dp"
@@ -150,7 +166,7 @@
                 android:layout_marginBottom="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/status_card" />
+                app:layout_constraintTop_toBottomOf="@+id/ask_ai_button" />
 
             <LinearLayout
                 android:id="@+id/buttonContainer"
