@@ -27,10 +27,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.ai.client.generativeai.GenerativeModel;
+import com.google.ai.client.generativeai.java.GenerativeModelFutures;
+import com.google.ai.client.generativeai.type.Content;
+import com.google.ai.client.generativeai.type.GenerateContentResponse;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.smartangler.smartangler.BuildConfig;
 import com.smartangler.smartangler.Fish;
 import com.smartangler.smartangler.FishingLocation.FishingLocation;
 import com.smartangler.smartangler.FishingLocation.Vertex;
@@ -43,6 +51,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class HomeFragment extends Fragment {
 
@@ -53,7 +62,7 @@ public class HomeFragment extends Fragment {
     private FishingLocation currentFishingLocation;
 
     private Button refreshButton, askAIButton;
-    private TextView seasonText, timeOfDayText, locationText, locationNameText, noFishLikelyText;
+    private TextView seasonText, timeOfDayText, locationText, locationNameText, noFishLikelyText, askAIText;
     private RecyclerView recyclerView;
     private FragmentHomeBinding binding;
 
@@ -97,6 +106,8 @@ public class HomeFragment extends Fragment {
         locationNameText.setText(getString(R.string.location_name_unknown));
 
         noFishLikelyText = root.findViewById(R.id.no_fish_likely_text);
+
+        askAIText = root.findViewById(R.id.llm_suggestion_text);
 
         swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -164,7 +175,40 @@ public class HomeFragment extends Fragment {
     }
 
     private void askAI() {
+        String askAIPrompt = String.format("Give me some general fishing advice. It is currently a %s %s. I am likely to find the following fish: %s",
+                Fish.getCurrentSeason(),
+                Fish.getCurrentTimeOfDay(),
+                SmartAnglerOpenHelper.getFishByConditions(getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay(), currentVertex));
 
+        GenerativeModel gm = new GenerativeModel(
+                "gemini-1.5-flash",
+                BuildConfig.apiKey
+        );
+        GenerativeModelFutures model = GenerativeModelFutures.from(gm);
+
+        askAIText.setVisibility(View.VISIBLE);
+
+        Content content = new Content.Builder()
+                .addText(askAIPrompt)
+                .build();
+
+        ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
+        Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
+            @Override
+            public void onSuccess(GenerateContentResponse result) {
+                String recognitionResult = result.getText();
+                getActivity().runOnUiThread(() -> updateSuggestionText(recognitionResult));
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                getActivity().runOnUiThread(() -> updateSuggestionText("Error on recognition: " + t.getMessage()));
+            }
+        }, Executors.newSingleThreadExecutor());
+    }
+
+    private void updateSuggestionText(String suggestion) {
+        askAIText.setText(suggestion);
     }
 
     private void makeFishCards() {
