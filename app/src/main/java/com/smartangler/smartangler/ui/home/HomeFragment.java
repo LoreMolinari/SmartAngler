@@ -27,10 +27,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.ai.client.generativeai.GenerativeModel;
+import com.google.ai.client.generativeai.java.GenerativeModelFutures;
+import com.google.ai.client.generativeai.type.Content;
+import com.google.ai.client.generativeai.type.GenerateContentResponse;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.smartangler.smartangler.BuildConfig;
 import com.smartangler.smartangler.Fish;
 import com.smartangler.smartangler.FishingLocation.FishingLocation;
 import com.smartangler.smartangler.FishingLocation.Vertex;
@@ -43,6 +51,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class HomeFragment extends Fragment {
 
@@ -52,7 +61,7 @@ public class HomeFragment extends Fragment {
     private Vertex currentVertex;
     private FishingLocation currentFishingLocation;
 
-    private Button refreshButton;
+    private Button refreshButton, askAIButton;
     private TextView seasonText, timeOfDayText, locationText, locationNameText, noFishLikelyText;
     private RecyclerView recyclerView;
     private FragmentHomeBinding binding;
@@ -76,6 +85,9 @@ public class HomeFragment extends Fragment {
 
         refreshButton = root.findViewById(R.id.refresh_button);
         refreshButton.setOnClickListener(v -> refreshConditions());
+
+        askAIButton = root.findViewById(R.id.ask_ai_button);
+        askAIButton.setOnClickListener(v -> askAI());
 
         seasonText = root.findViewById(R.id.current_season_text);
         seasonText.setText(getString(R.string.current_season,
@@ -158,6 +170,41 @@ public class HomeFragment extends Fragment {
             });
         }
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void askAI() {
+        String askAIPrompt = String.format("Give me some general fishing advice. It is currently a %s %s.",
+                Fish.getCurrentSeason(),
+                Fish.getCurrentTimeOfDay());
+
+        List<Fish> fish = SmartAnglerOpenHelper.getFishByConditions(getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay(), currentVertex);
+
+        if (!fish.isEmpty()) {
+            askAIPrompt = askAIPrompt.concat(" I am likely to find the following fish: ");
+            for (int i = 0; i < fish.size(); i ++) {
+                askAIPrompt = askAIPrompt.concat(fish.get(i).getName());
+                if (i < fish.size() - 1) {
+                    askAIPrompt =askAIPrompt.concat(", ");
+                }
+            }
+            askAIPrompt = askAIPrompt.concat(".");
+        }
+
+        if (currentFishingLocation != null && currentFishingLocation.getName() != null) {
+            askAIPrompt = askAIPrompt.concat(String.format(" I am currently at %s.", currentFishingLocation.getName()));
+        }
+
+        askAIPrompt = askAIPrompt.concat(" Do not format your response with markdown and avoid double spaces. Separate long portions of text into paragraphs. Assume the user has a decent level of knowledge when it comes to fishing.");
+
+        GenerativeModel gm = new GenerativeModel(
+                "gemini-1.5-flash",
+                BuildConfig.apiKey
+        );
+        GenerativeModelFutures model = GenerativeModelFutures.from(gm);
+
+        Intent intent = new Intent(getContext(), AskAIActivity.class);
+        intent.putExtra("prompt", askAIPrompt);
+        startActivity(intent);
     }
 
     private void makeFishCards() {
