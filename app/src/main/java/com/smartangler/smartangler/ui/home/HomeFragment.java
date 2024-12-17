@@ -190,7 +190,7 @@ public class HomeFragment extends Fragment {
             askAIPrompt = askAIPrompt.concat(".");
         }
 
-        askAIPrompt = askAIPrompt.concat(" Do not format your response with markdown. Assume the user has a decent level of knowledge when it comes to fishing.");
+        askAIPrompt = askAIPrompt.concat(" Do not format your response with markdown and avoid double spaces. Assume the user has a decent level of knowledge when it comes to fishing.");
 
         GenerativeModel gm = new GenerativeModel(
                 "gemini-1.5-flash",
