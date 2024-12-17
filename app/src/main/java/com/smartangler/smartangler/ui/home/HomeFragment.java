@@ -61,10 +61,8 @@ public class HomeFragment extends Fragment {
     private Vertex currentVertex;
     private FishingLocation currentFishingLocation;
 
-    private View askAICard;
-
     private Button refreshButton, askAIButton;
-    private TextView seasonText, timeOfDayText, locationText, locationNameText, noFishLikelyText, askAIText;
+    private TextView seasonText, timeOfDayText, locationText, locationNameText, noFishLikelyText;
     private RecyclerView recyclerView;
     private FragmentHomeBinding binding;
 
@@ -81,8 +79,6 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        askAICard = root.findViewById(R.id.llm_suggestion_card);
 
         recyclerView = root.findViewById(R.id.home_fish_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -110,8 +106,6 @@ public class HomeFragment extends Fragment {
         locationNameText.setText(getString(R.string.location_name_unknown));
 
         noFishLikelyText = root.findViewById(R.id.no_fish_likely_text);
-
-        askAIText = root.findViewById(R.id.llm_suggestion_text);
 
         swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -207,10 +201,6 @@ public class HomeFragment extends Fragment {
         Intent intent = new Intent(getContext(), AskAIActivity.class);
         intent.putExtra("prompt", askAIPrompt);
         startActivity(intent);
-    }
-
-    private void updateSuggestionText(String suggestion) {
-        askAIText.setText(suggestion);
     }
 
     private void makeFishCards() {
