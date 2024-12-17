@@ -61,6 +61,8 @@ public class HomeFragment extends Fragment {
     private Vertex currentVertex;
     private FishingLocation currentFishingLocation;
 
+    private View askAICard;
+
     private Button refreshButton, askAIButton;
     private TextView seasonText, timeOfDayText, locationText, locationNameText, noFishLikelyText, askAIText;
     private RecyclerView recyclerView;
@@ -79,6 +81,8 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        askAICard = root.findViewById(R.id.llm_suggestion_card);
 
         recyclerView = root.findViewById(R.id.home_fish_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -175,10 +179,24 @@ public class HomeFragment extends Fragment {
     }
 
     private void askAI() {
-        String askAIPrompt = String.format("Give me some general fishing advice. It is currently a %s %s. I am likely to find the following fish: %s",
+        String askAIPrompt = String.format("Give me some general fishing advice. It is currently a %s %s.",
                 Fish.getCurrentSeason(),
-                Fish.getCurrentTimeOfDay(),
-                SmartAnglerOpenHelper.getFishByConditions(getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay(), currentVertex));
+                Fish.getCurrentTimeOfDay());
+
+        List<Fish> fish = SmartAnglerOpenHelper.getFishByConditions(getContext(), Fish.getCurrentSeason(), Fish.getCurrentTimeOfDay(), currentVertex);
+
+        if (!fish.isEmpty()) {
+            askAIPrompt = askAIPrompt.concat(" I am likely to find the following fish: ");
+            for (int i = 0; i < fish.size(); i ++) {
+                askAIPrompt = askAIPrompt.concat(fish.get(i).getName());
+                if (i < fish.size() - 1) {
+                    askAIPrompt =askAIPrompt.concat(", ");
+                }
+            }
+            askAIPrompt = askAIPrompt.concat(".");
+        }
+
+        askAIPrompt = askAIPrompt.concat("Do not format your response.");
 
         GenerativeModel gm = new GenerativeModel(
                 "gemini-1.5-flash",
@@ -187,6 +205,9 @@ public class HomeFragment extends Fragment {
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
 
         askAIText.setVisibility(View.VISIBLE);
+        askAICard.setVisibility(View.VISIBLE);
+
+        Log.d("AI suggestions", askAIPrompt);
 
         Content content = new Content.Builder()
                 .addText(askAIPrompt)
