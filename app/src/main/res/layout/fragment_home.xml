@@ -135,7 +135,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1"
                 android:text="@string/llm_button_desc"
-                app:icon="@drawable/ic_menu_camera"
+                app:icon="@drawable/robot"
                 app:iconGravity="textStart"
                 app:layout_constraintBottom_toTopOf="@+id/home_fish_recycler"
                 app:layout_constraintEnd_toEndOf="parent"
