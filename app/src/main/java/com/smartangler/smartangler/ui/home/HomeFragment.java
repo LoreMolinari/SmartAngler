@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
     private Vertex currentVertex;
     private FishingLocation currentFishingLocation;
 
-    private Button refreshButton;
+    private Button refreshButton, askAIButton;
     private TextView seasonText, timeOfDayText, locationText, locationNameText, noFishLikelyText;
     private RecyclerView recyclerView;
     private FragmentHomeBinding binding;
@@ -76,6 +76,9 @@ public class HomeFragment extends Fragment {
 
         refreshButton = root.findViewById(R.id.refresh_button);
         refreshButton.setOnClickListener(v -> refreshConditions());
+
+        askAIButton = root.findViewById(R.id.ask_ai_button);
+        askAIButton.setOnClickListener(v -> askAI());
 
         seasonText = root.findViewById(R.id.current_season_text);
         seasonText.setText(getString(R.string.current_season,
@@ -158,6 +161,10 @@ public class HomeFragment extends Fragment {
             });
         }
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void askAI() {
+
     }
 
     private void makeFishCards() {
