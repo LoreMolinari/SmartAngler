@@ -204,28 +204,9 @@ public class HomeFragment extends Fragment {
         );
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
 
-        askAIText.setVisibility(View.VISIBLE);
-        askAICard.setVisibility(View.VISIBLE);
-
-        Log.d("AI suggestions", askAIPrompt);
-
-        Content content = new Content.Builder()
-                .addText(askAIPrompt)
-                .build();
-
-        ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
-        Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
-            @Override
-            public void onSuccess(GenerateContentResponse result) {
-                String recognitionResult = result.getText();
-                getActivity().runOnUiThread(() -> updateSuggestionText(recognitionResult));
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                getActivity().runOnUiThread(() -> updateSuggestionText("Error on recognition: " + t.getMessage()));
-            }
-        }, Executors.newSingleThreadExecutor());
+        Intent intent = new Intent(getContext(), AskAIActivity.class);
+        intent.putExtra("prompt", askAIPrompt);
+        startActivity(intent);
     }
 
     private void updateSuggestionText(String suggestion) {

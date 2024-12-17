@@ -68,6 +68,7 @@
     <string name="home_title">Welcome to SmartAngler</string>
     <string name="refresh_button_desc">Refresh</string>
     <string name="llm_button_desc">Ask AI for suggestions</string>
+    <string name="llm_error">LLM error</string>
     <string name="current_season">Current season: <xliff:g id="season">%s</xliff:g></string>
     <string name="current_time_of_day">Current time of day: <xliff:g id="time_of_day">%s</xliff:g></string>
     <string name="current_location">Current location: <xliff:g id="latitude">%f</xliff:g> <xliff:g id="longitude">%f</xliff:g></string>
