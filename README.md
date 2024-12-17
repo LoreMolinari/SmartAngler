@@ -11,6 +11,11 @@ SmartAngler is an Android app designed to enhance the fishing experience with fe
 
 ## Installation and Setup
 
+### Pre-built
+You can find pre build APKs in the actions tab or in the releases
+
+### Manual
+
 1. Clone the repository:
   ```git clone https://github.com/LoreMolinari/SmartAngler.git```
 
