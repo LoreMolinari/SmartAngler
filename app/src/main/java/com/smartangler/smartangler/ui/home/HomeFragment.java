@@ -196,7 +196,7 @@ public class HomeFragment extends Fragment {
             askAIPrompt = askAIPrompt.concat(".");
         }
 
-        askAIPrompt = askAIPrompt.concat("Do not format your response.");
+        askAIPrompt = askAIPrompt.concat(" Do not format your response.");
 
         GenerativeModel gm = new GenerativeModel(
                 "gemini-1.5-flash",
