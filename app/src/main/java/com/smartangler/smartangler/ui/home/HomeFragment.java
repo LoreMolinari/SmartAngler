@@ -190,6 +190,10 @@ public class HomeFragment extends Fragment {
             askAIPrompt = askAIPrompt.concat(".");
         }
 
+        if (currentFishingLocation != null && currentFishingLocation.getName() != null) {
+            askAIPrompt = askAIPrompt.concat(String.format(" I am currently at %s.", currentFishingLocation.getName()));
+        }
+
         askAIPrompt = askAIPrompt.concat(" Do not format your response with markdown and avoid double spaces. Separate long portions of text into paragraphs. Assume the user has a decent level of knowledge when it comes to fishing.");
 
         GenerativeModel gm = new GenerativeModel(
